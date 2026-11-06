@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "family": "invoice",
+  "id": "standard",
+  "title": "Invoice",
+  "sourceWorkbook": "6. WLR-Energy-Invoice-Template (Revision 01-09-26).xlsm",
+  "sourceSheet": "Invoice Template",
+  "fields": [
+    {
+      "key": "date",
+      "label": "Date",
+      "type": "date",
+      "cell": "L12"
+    },
+    {
+      "key": "reference",
+      "label": "Reference No.",
+      "type": "text",
+      "cell": "L13"
+    },
+    {
+      "key": "currency",
+      "label": "Currency",
+      "type": "currency",
+      "cell": "M14",
+      "options": [
+        "MYR",
+        "USD"
+      ]
+    },
+    {
+      "key": "sstRate",
+      "label": "SST (%)",
+      "type": "number",
+      "cell": "M15"
+    }
+  ],
+  "clientFields": [
+    {
+      "key": "company",
+      "label": "Company",
+      "type": "text",
+      "cell": "B20"
+    },
+    {
+      "key": "address",
+      "label": "Address",
+      "type": "multiline",
+      "cell": "B21"
+    },
+    {
+      "key": "contact",
+      "label": "Contact Person",
+      "type": "text",
+      "cell": "B24"
+    },
+    {
+      "key": "tel",
+      "label": "Tel",
+      "type": "text",
+      "cell": "B25"
+    },
+    {
+      "key": "email",
+      "label": "Email",
+      "type": "email",
+      "cell": "B26"
+    },
+    {
+      "key": "poNumber",
+      "label": "Purchase Order No.",
+      "type": "text",
+      "cell": "J20"
+    },
+    {
+      "key": "poDate",
+      "label": "Date",
+      "type": "date",
+      "cell": "J21"
+    },
+    {
+      "key": "operator",
+      "label": "Operator",
+      "type": "text",
+      "cell": "J22"
+    },
+    {
+      "key": "rig",
+      "label": "Rig",
+      "type": "text",
+      "cell": "J23"
+    },
+    {
+      "key": "well",
+      "label": "Well",
+      "type": "text",
+      "cell": "J24"
+    },
+    {
+      "key": "loadOut",
+      "label": "Load Out",
+      "type": "text",
+      "cell": "J25"
+    }
+  ],
+  "items": {
+    "initialRows": 7,
+    "firstRow": 30,
+    "lastRow": 36,
+    "columns": [
+      {
+        "key": "no",
+        "label": "No"
+      },
+      {
+        "key": "description",
+        "label": "Description"
+      },
+      {
+        "key": "unit",
+        "label": "Unit"
+      },
+      {
+        "key": "qty",
+        "label": "Qty"
+      },
+      {
+        "key": "hireFrom",
+        "label": "Hire From"
+      },
+      {
+        "key": "hireTo",
+        "label": "Hire To"
+      },
+      {
+        "key": "duration",
+        "label": "Rental Duration (Day)",
+        "calculated": true
+      },
+      {
+        "key": "dailyRate",
+        "label": "Daily Rental Rate"
+      },
+      {
+        "key": "amount",
+        "label": "Total Amount",
+        "calculated": true
+      }
+    ]
+  },
+  "calculations": {
+    "duration": "Inclusive days: Hire To - Hire From + 1",
+    "lineAmount": "duration × dailyRate (exact Excel formula M30 = K30*L30; Qty is not multiplied)",
+    "subtotal": "SUM(line amounts)",
+    "sst": "subtotal × SST% / 100",
+    "grandTotal": "subtotal + SST"
+  },
+  "notes": [
+    {
+      "no": "1",
+      "title": "Please remit to:",
+      "lines": [
+        "Account Name: WELLORA ENERGY SDN. BHD.",
+        "Account No: 3-2509132-14 (MYR Account)",
+        "Name of Bank: Public Bank Berhad",
+        "SWIFT Code: PBBEMYKL",
+        "Bank Address: Ground Floor Bangunan Public Bank, No.5 Jalan Merdeka, 87000 W.P. Labuan."
+      ]
+    },
+    {
+      "no": "2",
+      "text": "Any query to this Invoice must be made within seven (7) days."
+    },
+    {
+      "no": "3",
+      "text": "Late Payment: Payment for this Invoice is due in full within thirty (30) days from the invoice date. A late payment interest rate of 2% per month will be applied to any unpaid remaining balance after the due date."
+    },
+    {
+      "no": "4",
+      "text": "Please send us your payment transfer slip to our email at liang.ss@welloraenergy.com once the payment is made."
+    }
+  ],
+  "bankAccounts": {
+    "MYR": "3-2509132-14 (MYR Account)",
+    "USD": "3590804224 (USD Account)"
+  },
+  "signatures": {
+    "roles": [
+      "Prepared By",
+      "Reviewed By",
+      "Approved By"
+    ],
+    "columns": [
+      "Name",
+      "Position",
+      "Date",
+      "Signature"
+    ]
+  },
+  "print": {
+    "paper": "A4",
+    "orientation": "portrait",
+    "sourcePrintArea": "A1:N59",
+    "sourceScale": 33
+  },
+  "hasPhotos": false
+}

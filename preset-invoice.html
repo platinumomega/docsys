@@ -1,0 +1,168 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DocSystem — Invoice</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef2f6;color:#14263c;font:13px Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;padding:8px 12px;border:1px solid #cbd5e1;background:#fff;border-radius:6px}button.primary{background:#183b67;color:white}input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:6px;background:white;padding:8px}textarea{resize:vertical;min-height:75px}header{background:#122034;color:white;padding:12px 18px}header h2{margin:0}.bar{padding:10px 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff}.bar small{margin-left:auto}.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;max-width:1800px;margin:auto;padding:0 8px;align-items:start}.card{border:1px solid #dce3ea;background:white;border-radius:10px;padding:15px;margin:12px 0}.card h3{font-size:14px;margin:0 0 12px}label{display:flex;flex-direction:column;gap:4px;min-width:0}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.wide{grid-column:1/-1}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%}th,td{border:1px solid #aebcc9;padding:6px;text-align:left}th{background:#eaf0f6;font-size:11px}.items-editor input,.items-editor textarea{min-width:72px;padding:5px;border:0}.items-editor textarea{min-width:160px;min-height:50px}.items-editor button{padding:4px 7px}.sign-editor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.sign-editor fieldset{min-width:0;border:1px solid #ddd;border-radius:8px;display:flex;flex-direction:column;gap:8px}.sign-editor legend{font-weight:bold}.note-editor{display:grid;gap:8px}.muted{color:#65758a;font-size:12px}.preview-header{display:flex;justify-content:space-between;padding:12px 3px}.paper{width:210mm;min-height:297mm;padding:12mm 13mm 12mm;background:white;color:#000;margin:0 auto 16px;box-shadow:0 4px 15px #0002;font:7.6pt Arial,sans-serif}.inv-head{display:grid;grid-template-columns:58% 42%;min-height:47mm}.inv-ident img{display:block;max-height:23mm;object-fit:contain}.inv-right{display:flex;flex-direction:column;justify-content:space-between;align-items:stretch}.inv-title{text-align:right;color:#d6a900;font-size:16pt;font-weight:700;line-height:1.2;white-space:pre-wrap;overflow-wrap:anywhere}.inv-meta{margin:8mm 0 0 auto;width:100%;font-size:7pt}.inv-meta-line{display:grid;grid-template-columns:24mm minmax(0,1fr);gap:1mm;min-height:4mm;align-items:baseline}.inv-meta-line b{text-align:right;white-space:nowrap}.inv-meta-line span{white-space:nowrap}.inv-section{border:1px solid #333;margin:2mm 0 3mm;break-inside:avoid}.inv-band{background:black;color:white;text-align:center;font-weight:bold;padding:1.1mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}.inv-client{display:grid;grid-template-columns:56% 44%;min-height:27mm}.inv-client>div{padding:1mm 1mm 1mm 0}.inv-client>div+div{border-left:1px solid #999}.inv-client .line{display:grid;grid-template-columns:24mm minmax(0,1fr);min-height:4mm}.inv-client .line b{text-align:right;padding-right:1mm;white-space:nowrap;font-weight:normal}.inv-client .line span{padding-left:1mm;white-space:pre-wrap;overflow-wrap:anywhere}.inv-client .line.address{min-height:11mm}.inv-client .line.address span{display:block;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;line-height:1.35}.inv-client .line.address b{align-self:start}.inv-client .line{align-items:start}.inv-client>div+div .line{grid-template-columns:27mm minmax(0,1fr)}.inv-table{table-layout:fixed;font-size:7.2pt}.inv-table th{background:#000;color:#fff;border:1px solid #444;text-align:center;font-weight:bold;line-height:1.2;padding:.9mm .3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}.inv-table td{border:1px solid #777;height:8mm;vertical-align:top;padding:1mm .6mm;white-space:pre-wrap;overflow-wrap:anywhere}.inv-table .number{text-align:right}.inv-totals{width:100%;table-layout:fixed;border-collapse:collapse;margin:0 0 2mm}.inv-totals td{border:0}.inv-totals .num{width:13%;border:1px solid #333;text-align:right;padding:1.4mm}.inv-totals .lbl{width:12%;border:1px solid #333;text-align:right;font-weight:bold;white-space:nowrap;padding:1.4mm .7mm}.inv-words{min-height:5mm;font-size:7pt;margin:2mm 0}.inv-notes{border:1px solid #333;margin:2mm 0 3mm;break-inside:avoid;font-size:7pt}.inv-note{display:grid;grid-template-columns:7mm minmax(0,1fr);padding:.5mm 1mm;white-space:pre-wrap;line-height:1.3}.inv-note>span:first-child{text-align:center}.inv-sign{table-layout:fixed;margin:3mm 0}.inv-sign th{background:#000;color:white;text-align:center;padding:1mm;border:1px solid #333;-webkit-print-color-adjust:exact;print-color-adjust:exact}.inv-sign td{border:1px solid #777;height:10mm;padding:1mm;white-space:pre-wrap}.inv-sign .role{background:#000;color:#fff;text-align:center;font-weight:bold;-webkit-print-color-adjust:exact;print-color-adjust:exact}body.embedded header,body.embedded .bar{display:none}body.embedded{background:transparent}
+@media(max-width:1100px){html,body{max-width:100%;overflow-x:hidden}.workspace{width:100%;max-width:100%;min-width:0;grid-template-columns:minmax(0,1fr)}.workspace>.editor,.workspace>.preview-column,.workspace>.preview-container,.workspace .card,.workspace .fields,.workspace .section-fields,.workspace .sign-editor,.workspace .photo-editor{min-width:0;max-width:100%}.workspace input,.workspace textarea,.workspace select{min-width:0;max-width:100%}.preview-column,.preview-container,#paper{width:100%;max-width:100%;min-width:0;overflow-x:hidden}.paper{max-width:100%}}@media(max-width:690px){.fields,.sign-editor{grid-template-columns:1fr}.paper{zoom:.72;max-width:none}}
+@media print{@page{size:A4 portrait;margin:0}html,body{width:210mm!important;background:white!important}header,.bar,.editor,.preview-header{display:none!important}.workspace{display:block!important;margin:0!important;padding:0!important;width:210mm!important}.preview-column{width:210mm!important}.paper{zoom:1!important;width:210mm!important;min-height:297mm!important;max-height:297mm!important;box-shadow:none!important;margin:0!important;break-after:page}.paper:last-child{break-after:auto!important}}
+</style><style id="mobileA4Fit20261102">
+/* Shared mobile A4 preview: fit available width without changing print geometry. */
+@media screen and (max-width:1099px){
+ .paper{max-width:none!important;transform:none!important}
+ .preview-only,.preview-container,.preview-column{max-width:100%;min-width:0;overflow-x:hidden!important}
+}
+</style><style id="invoiceMobilePreviewGuard20261102">@media screen and (max-width:1099px){.preview-column,#paper{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}.preview-column .paper{max-width:none!important}}</style></head><body><header><h2>Invoice Preset</h2></header><div class="bar"><button id="newBtn">New</button><button id="saveBtn" class="primary">Save Online</button><button id="printBtn">Print / PDF</button><small id="status">Loading…</small></div><div class="workspace"><div class="editor">
+<section class="card"><h3>Invoice Details</h3><div id="invoiceFields" class="fields"></div></section>
+<section class="card"><h3>Client Information</h3><div id="clientFields" class="fields"></div></section>
+<section class="card"><h3>Rental / Invoice Items</h3><div class="table-wrap"><table class="items-editor" id="itemsEditor"></table></div><p><button id="addRow">+ Add Row</button> <button id="removeRow">Remove Last</button></p><div id="totalSummary" class="muted"></div></section>
+<section class="card"><h3>Notes / Payment Details</h3><p class="muted">Original workbook's 4 notes and bank details; edit the note text as needed.</p><div id="notesEditor" class="note-editor"></div></section>
+<section class="card"><h3>Signatures</h3><div id="signatureFields" class="sign-editor"></div></section>
+</div><div class="preview-column"><div class="preview-header"><strong>Live A4 Invoice Preview</strong><small id="pageCount"></small></div><div id="paper"></div></div></div>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
+import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,collection,query,where,limit,getDocs,serverTimestamp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
+import {savePresetCopy,readPresetCopy} from './preset-user-templates.js?v=20261101-copy-1';
+import {paginatePresetDocument} from './preset-pagination.js?v=20261101-single-controller2';
+import {sharedPresetSlot,expandPresetText,richPresetText} from './preset-shared.js?v=20261101-common2';
+const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const app=initializeApp({apiKey:"AIzaSyDPIAoqy9mbWU-4M4kPK9mfSjtVSSA2gI8",authDomain:"docsystem-c29ec.firebaseapp.com",projectId:"docsystem-c29ec",storageBucket:"docsystem-c29ec.firebasestorage.app",messagingSenderId:"25451628479",appId:"1:25451628479:web:ec00096fc84d744c48c30a"});
+const auth=getAuth(app),db=getFirestore(app),params=new URLSearchParams(location.search);
+if(params.get('embedded')==='1')document.body.classList.add('embedded');
+let user=null,role='user',profiles=[],profile=null,globals={},template=null,state=null,docId=params.get('docId')||null,savedCompany=null,savedHeader=null,rendering=false,saving=false,loaded=false;
+const posted=(type,data={})=>{if(window.parent!==window)window.parent.postMessage({type:'docsystem-preset-'+type,...data},location.origin)};
+function notify(value){$('status').textContent=value;posted('status',{status:value})}
+function business(){const c=profile?.company||{};return savedCompany||{id:profile?.id||'',name:c.name||'',logo:c.logo||'',info:typeof c.headerText==='string'&&c.headerText.trim()?c.headerText:(c.fields||[]).filter(x=>x?.value&&x.place!=='footer').map(x=>(x.label?x.label+': ':'')+x.value).join('\n'),placeholders:globals,defaultCurrency:c.defaultCurrency||'MYR'}}
+function header(){return savedHeader||profile?.presetHeader||{}}
+function expanded(v){return expandPresetText(v,business(),globals)}
+function blank(){return {fields:{date:new Date().toISOString().slice(0,10),reference:'',currency:business().defaultCurrency||'MYR',sstRate:'0'},client:Object.fromEntries(template.clientFields.map(f=>[f.key,''])),items:Array.from({length:7},(_,i)=>({no:String(i+1),description:'',unit:'',qty:'',hireFrom:'',hireTo:'',dailyRate:''})),notes:template.notes.map(n=>n.no==='1'?n.lines.join('\n'):n.text),noteVisibility:[],extraNotes:[],signatures:Object.fromEntries(template.signatures.roles.map(x=>[x,{name:'',position:'',date:''}]))}}
+const currencySymbol=()=>state.fields.currency==='USD'?'USD':'MYR',money=n=>Number(n||0).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2}),count=n=>Number(n)||0;
+function dates(r){if(!r.hireFrom||!r.hireTo)return null;const a=new Date(r.hireFrom+'T12:00:00'),b=new Date(r.hireTo+'T12:00:00');if(Number.isNaN(a.getTime())||Number.isNaN(b.getTime()))return null;return Math.max(0,Math.round((b-a)/86400000)+1)}
+function rowTotal(r){const days=dates(r);return days===null?0:days*count(r.dailyRate)}
+function subtotal(){return state.items.reduce((v,r)=>v+rowTotal(r),0)}
+function tax(){return subtotal()*Math.max(0,count(state.fields.sstRate))/100}
+function total(){return subtotal()+tax()}
+function amountWords(amount){
+ const singles=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+ const tens=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+ function under1000(n){
+  let out=[];if(n>=100){out.push(singles[Math.floor(n/100)]+' hundred');n%=100}
+  if(n>=20){out.push(tens[Math.floor(n/10)]+(n%10?'-'+singles[n%10]:''))}
+  else if(n>0)out.push(singles[n]);
+  return out.join(' ');
+ }
+ function integer(n){
+  if(!n)return 'zero';
+  let out=[];for(const [v,label] of [[1000000000,'billion'],[1000000,'million'],[1000,'thousand'],[1,'']]){
+   const group=Math.floor(n/v);if(group){out.push(under1000(group)+(label?' '+label:''));n%=v}
+  }return out.join(' ');
+ }
+ const currency=currencySymbol()==='USD'?'US dollars':'Malaysian ringgit',minor=currencySymbol()==='USD'?'cents':'sen';
+ const centsTotal=Math.round(Math.max(0,Number(amount)||0)*100);
+ const major=Math.floor(centsTotal/100),cents=centsTotal%100;
+ if(major>999999999999)return money(amount)+' '+currency;
+ return integer(major)+' '+currency+(cents?' and '+integer(cents)+' '+minor:' only');
+}
+function dateText(v){if(!v)return '';const d=new Date(v+'T12:00:00');return Number.isNaN(d.getTime())?v:d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function control(label,key,val,group,type='text'){const t=type==='multiline'?'textarea':'input';let inner=t==='textarea'?'<textarea rows="'+(key==='address'?5:3)+'" data-group="'+group+'" data-key="'+key+'" placeholder="'+(key==='address'?'Address line 1&#10;Address line 2&#10;City / State / Postcode':'')+'" style="white-space:pre-wrap;min-height:'+(key==='address'?'118px':'75px')+'">'+esc(val)+'</textarea>':'<input data-group="'+group+'" data-key="'+key+'" type="'+(type==='date'?'date':type==='email'?'email':type==='number'?'number':'text')+'" '+(type==='number'?'step="any"':'')+' value="'+esc(val)+'">';if(type==='currency')inner='<select data-group="'+group+'" data-key="'+key+'"><option value="MYR" '+(val==='MYR'?'selected':'')+'>MYR</option><option value="USD" '+(val==='USD'?'selected':'')+'>USD</option></select>';return '<label class="'+(type==='multiline'?'wide':'')+'">'+esc(label)+inner+'</label>'}
+function draw(){if(!state||!template)return;$('invoiceFields').innerHTML=template.fields.map(f=>control(f.label,f.key,state.fields[f.key], 'fields',f.type)).join('');$('clientFields').innerHTML=template.clientFields.map(f=>control(f.label,f.key,state.client[f.key],'client',f.type)).join('');drawRows();drawNotes();drawSignatures();render()}
+function drawRows(){const cols=template.items.columns;$('itemsEditor').innerHTML='<thead><tr>'+cols.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'<th></th></tr></thead><tbody>'+state.items.map((r,i)=>'<tr>'+cols.map(c=>'<td>'+ (c.calculated?'<span>'+esc(c.key==='duration'?(dates(r)??''):money(rowTotal(r)))+'</span>':c.key==='description'?'<textarea data-row="'+i+'" data-col="'+c.key+'">'+esc(r[c.key])+'</textarea>':'<input data-row="'+i+'" data-col="'+c.key+'" '+(['hireFrom','hireTo'].includes(c.key)?'type="date"':(['qty','dailyRate'].includes(c.key)?'type="number" step="any"':'type="text"'))+' value="'+esc(r[c.key])+'">')+'</td>').join('')+'<td><button data-remove-row="'+i+'">×</button></td></tr>').join('')+'</tbody>';$('totalSummary').textContent='Sub-Total: '+money(subtotal())+' · SST: '+money(tax())+' · Grand Total: '+money(total())+' '+currencySymbol()}
+function drawNotes(){
+ const hidden=Array.isArray(state.noteVisibility)?state.noteVisibility:[];
+ const extras=Array.isArray(state.extraNotes)?state.extraNotes:[];
+ const originals=state.notes.map((n,i)=>'<div style="border:1px solid #d9e2eb;border-radius:6px;padding:9px;margin:7px 0">'+
+ '<label style="display:flex;flex-direction:row;align-items:center;gap:8px"><input style="width:auto" type="checkbox" data-note-visible="'+i+'" '+(hidden[i]===false?'':'checked')+'>Show Note '+(i+1)+' (original, locked)</label>'+
+ '<div style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;padding:8px;background:#f6f8fa;border-radius:5px">'+esc(n)+'</div></div>').join('');
+ const additions=extras.map((n,i)=>'<div style="border:1px solid #d9e2eb;border-radius:6px;padding:9px;margin:7px 0">'+
+ '<label style="display:flex;flex-direction:row;align-items:center;gap:8px"><input type="checkbox" style="width:auto" data-invoice-extra-visible="'+i+'" '+(n.enabled===false?'':'checked')+'>Show additional statement '+(i+1)+'</label>'+
+ '<label>Custom statement<textarea data-invoice-extra-note="'+i+'" rows="3">'+esc(n.text||'')+'</textarea></label>'+
+ '<button type="button" data-invoice-remove-note="'+i+'">Remove added statement</button></div>').join('');
+ $('notesEditor').innerHTML='<p class="muted">The original notes cannot be deleted or edited here. Show or hide each note and add your own. Your selections and new statements are saved online with this Invoice.</p>'+
+ originals+'<h4>Additional statements</h4>'+additions+'<button type="button" id="invoiceAddNote">+ Add Statement</button>';
+}
+function drawSignatures(){$('signatureFields').innerHTML=template.signatures.roles.map(role=>{const d=state.signatures[role]||{};return '<fieldset><legend>'+esc(role)+'</legend>'+[['Name','name'],['Position','position'],['Date','date']].map(([label,key])=>control(label,key,d[key],'sign:'+role,key==='date'?'date':'text')).join('')+'</fieldset>'}).join('')}
+function render(){
+ if(rendering||!state||!template)return;rendering=true;
+ try{
+  const co=business(),h=header(),head={...co,documentTitle:'INVOICE',documentNumber:state.fields.reference,documentDate:state.fields.date};
+  const color=/^#[0-9a-fA-F]{6}$/.test(h.titleColor||'')?h.titleColor:'#d6a900';
+  const titleSize=Math.max(9,Math.min(36,Number(h.titleSize)||16));
+   const titleFont=['Arial','Georgia','Verdana','Tahoma','Times New Roman','Courier New'].includes(h.titleFont)?h.titleFont:'Arial';
+   const titleAlign=['left','center','right'].includes(h.titleAlign)?h.titleAlign:'right';
+   const titleText=String(h.titleText??'{documentTitle}').replace(/\{documentTitle\}/gi,"INVOICE");
+   const renderedTitle=richPresetText(expandPresetText(titleText,head,globals));
+  const headHtml='<div class="inv-head"><div class="inv-ident">'+sharedPresetSlot('logo',head,h,globals)+sharedPresetSlot('name',head,h,globals)+sharedPresetSlot('details',head,h,globals)+'</div><div class="inv-right"><div class="inv-title" style="color:'+color+';font-size:'+titleSize+'pt;font-family:'+titleFont+';text-align:'+titleAlign+';white-space:pre-wrap">'+renderedTitle+'</div><div class="inv-meta">'+[['Date',dateText(state.fields.date)],['Reference No',state.fields.reference],['Currency',currencySymbol()],['SST (%)',String(state.fields.sstRate||'0')]].map(([label,val])=>'<div class="inv-meta-line"><b>'+esc(label)+':</b><span>'+esc(val)+'</span></div>').join('')+'</div></div></div>';
+  const client=state.client,line=(lab,val)=>'<div class="line'+(lab==='Address'?' address':'')+'"><b>'+esc(lab)+':</b><span>'+esc(expanded(val||'').replace(/\r\n?/g,'\n'))+'</span></div>';
+  const clientHtml='<section class="inv-section"><div class="inv-band">Client Information</div><div class="inv-client"><div>'+line('Company',client.company)+line('Address',client.address)+line('Contact Person',client.contact)+line('Tel',client.tel)+line('Email',client.email)+'</div><div>'+line('Purchase Order No',client.poNumber)+line('Date',dateText(client.poDate))+line('Operator',client.operator)+line('Rig',client.rig)+line('Well',client.well)+line('Load Out',client.loadOut)+'</div></div></section>';
+  const c=template.items.columns,headings=c.map(x=>x.key==='dailyRate'?'Daily Rental Rate ('+currencySymbol()+'/Unit/Day)':x.key==='amount'?'Total Amount ('+currencySymbol()+')':x.label);
+  const table='<table class="inv-table excel-table"><colgroup><col style="width:4%"><col style="width:27%"><col style="width:6%"><col style="width:5%"><col style="width:10%"><col style="width:10%"><col style="width:9%"><col style="width:14%"><col style="width:15%"></colgroup><thead><tr>'+headings.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+state.items.map(r=>'<tr>'+c.map(x=>'<td class="'+(['qty','dailyRate','amount','duration'].includes(x.key)?'number':'')+'">'+esc(x.key==='duration'?(dates(r)??''):x.key==='amount'?money(rowTotal(r)):x.key==='dailyRate'&&r[x.key]?money(r[x.key]):x.key==='hireFrom'||x.key==='hireTo'?(r[x.key]||''):r[x.key])+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+  const totals='<table class="inv-totals"><colgroup><col style="width:75%"><col style="width:12%"><col style="width:13%"></colgroup><tbody>'+[['Sub-Total',subtotal()],['SST ('+Number(state.fields.sstRate||0)+'%)',tax()],['Grand Total',total()]].map(([l,v])=>'<tr><td></td><td class="lbl">'+esc(l)+'</td><td class="num">'+esc(money(v))+'</td></tr>').join('')+'</tbody></table>';
+  const allNotes=[...state.notes.map((note,i)=>({text:note,originalIndex:i,enabled:state.noteVisibility?.[i]!==false})),...(state.extraNotes||[]).map(n=>({text:n.text||'',enabled:n.enabled!==false}))].filter(n=>n.enabled&&String(n.text||'').trim());
+  const notes='<section class="inv-notes"><div class="inv-band">Notes</div>'+allNotes.map((note,i)=>{let content=note.text||'';if(note.originalIndex===0)content=content.replace(/(Account No:\s*)([^\n]+)/i,'$1'+template.bankAccounts[currencySymbol()]);return '<div class="inv-note"><span>'+(i+1)+'</span><span>'+esc(content)+'</span></div>'}).join('')+'</section>';
+  const sign='<table class="inv-sign"><colgroup><col style="width:13%"><col style="width:31%"><col style="width:22%"><col style="width:15%"><col style="width:19%"></colgroup><thead><tr><th></th>'+template.signatures.columns.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+template.signatures.roles.map(role=>{const d=state.signatures[role]||{};return '<tr><td class="role">'+esc(role)+'</td><td>'+esc(expanded(d.name||''))+'</td><td>'+esc(expanded(d.position||''))+'</td><td>'+esc(dateText(d.date))+'</td><td></td></tr>'}).join('')+'</tbody></table>';
+  $('paper').innerHTML='<article class="paper">'+headHtml+clientHtml+table+totals+'<div class="inv-words">'+esc(amountWords(total()).replace(/^./,c=>c.toUpperCase()).replace(/\.*$/,'.'))+'</div>'+notes+sign+'</article>';
+  const n=paginatePresetDocument($('paper'),{fit:'normal'});$('pageCount').textContent=n+' page(s)';fitPreview();posted('height',{height:document.documentElement.scrollHeight+8});
+ }finally{rendering=false}
+}
+function mobileA4AvailableWidth(holder){
+ const viewport=document.documentElement.clientWidth||window.innerWidth;
+ const frameWidth=window.frameElement?.getBoundingClientRect().width||viewport;
+ const container=holder?.getBoundingClientRect().width||viewport;
+ const left=holder?.getBoundingClientRect().left||0;
+ return Math.max(1,Math.min(container,frameWidth,viewport-left)-24);
+}
+function fitPreview(){
+ const holder=document.querySelector('.preview-column');
+ const available=mobileA4AvailableWidth(holder);
+ const scale=Math.min(1,available/(210*96/25.4));
+ $('paper').querySelectorAll('.paper').forEach(p=>{p.style.zoom=String(Math.round(scale*1000)/1000)});
+}
+function newDoc(){if(saving)return;docId=null;savedCompany=null;savedHeader=null;state=activeCopyDefaults?structuredClone(activeCopyDefaults):blank();if(activeCopyDefaults){state.fields.reference='';state.fields.date=new Date().toISOString().slice(0,10)}draw();notify('New Invoice');ready()}
+async function save(){
+ if(saving)return;if(!user)return alert('Sign in first');if(!String(state.fields.reference||'').trim())return alert('Enter Reference No.');if(!business().id)return alert('Select Business Profile');saving=true;
+ try{
+  if(!docId){const hits=await getDocs(query(collection(db,'documents'),where('number','==',state.fields.reference.trim()),limit(100)));if(hits.docs.some(x=>x.data().templateFamily==='invoice'&&x.data().profileId===business().id))return alert('Invoice reference exists for this company. Open it instead.')}
+  const ref=docId?doc(db,'documents',docId):doc(collection(db,'documents')),prior=await getDoc(ref),snap=business();
+  const payload={templateSource:'preset',templateFamily:'invoice',templateId:'standard',templateVersion:1,documentType:'Invoice',number:state.fields.reference.trim(),date:state.fields.date,presetData:state,profileId:snap.id,companySnapshot:snap,presetHeaderSnapshot:savedHeader||structuredClone(profile?.presetHeader||{}),updatedAt:serverTimestamp(),updatedBy:user.uid,...(!prior.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})};
+  await setDoc(ref,payload,{merge:true});docId=ref.id;savedCompany=snap;notify('Saved Invoice '+state.fields.reference);ready();
+ }catch(e){notify('Invoice save failed');alert(e.message)}finally{saving=false}
+}
+async function loadSaved(id){try{const snapshot=await getDoc(doc(db,'documents',id));if(!snapshot.exists())throw Error('Document not found');const d=snapshot.data();if(d.templateFamily!=='invoice')throw Error('This is not an Invoice');docId=id;state=d.presetData;savedCompany=d.companySnapshot||null;savedHeader=d.presetHeaderSnapshot||null;profile=profiles.find(p=>p.id===d.profileId)||profile;draw();notify('Opened Invoice '+d.number);ready()}catch(e){notify('Cannot open Invoice: '+e.message)}}
+function ready(){posted('ready',{profiles:profiles.map(p=>({id:p.id,name:p.company?.name||'Business'})),selected:business().id,locked:!!docId,status:$('status').textContent})}
+function chooseBusiness(id){if(docId){ready();return}const found=profiles.find(p=>p.id===id);if(!found)return;profile=found;state.fields.currency=business().defaultCurrency||'MYR';draw();ready()}
+window.printDoc=()=>{render();window.print()};
+
+let presetCopyApplied=false,activeCopyDefaults=null;
+async function saveAsNewPresetTemplate(name){
+ if(new URLSearchParams(location.search).get('configure')!=='1')return;
+ if(!user||!state)return alert('Sign in and open a preset first');
+ if(!name||!name.trim())return;
+ try{
+  const saved=await savePresetCopy({user,family:'invoice',basePresetId:'standard',name,state,profileId:business().id});
+  notify('Template saved: '+saved.name);
+  posted('template-saved',{name:saved.name,id:saved.id});
+ }catch(error){alert('Could not save template copy: '+error.message)}
+}
+async function openSavedPresetCopy(){
+ const copyId=params.get('copyId');
+ if(presetCopyApplied||!copyId||docId||!user)return;
+ try{
+  const copy=await readPresetCopy({user,id:copyId,family:'invoice'});
+  presetCopyApplied=true;
+  docId=null;savedCompany=null;savedHeader=null;
+  const selected=profiles.find(p=>p.id===copy.profileId);
+  if(selected)profile=selected;
+  state=copy.defaults;
+  activeCopyDefaults=structuredClone(copy.defaults);
+  state.fields.reference='';state.items=Array.isArray(state.items)?state.items:[];
+  draw();notify('Template copy ready: '+copy.name+' · New document');ready();
+ }catch(error){presetCopyApplied=true;notify('Template copy could not open: '+error.message)}
+}
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==window.parent||e.data?.type!=='docsystem-preset-command')return;const a=e.data.action;if(a==='save-template'){saveAsNewPresetTemplate(e.data.name);return}if(a==='new')newDoc();else if(a==='save')save();else if(a==='print')window.printDoc();else if(a==='business')chooseBusiness(e.data.profileId);else if(a==='view')render()});
+document.addEventListener('input',e=>{const d=e.target.dataset;
+ if(d.noteVisible!==undefined){state.noteVisibility??=[];state.noteVisibility[Number(d.noteVisible)]=e.target.checked;render();return}
+ if(d.invoiceExtraVisible!==undefined){state.extraNotes[Number(d.invoiceExtraVisible)].enabled=e.target.checked;render();return}
+ if(d.invoiceExtraNote!==undefined){state.extraNotes[Number(d.invoiceExtraNote)].text=e.target.value;render();return}if(d.group){const obj=d.group.startsWith('sign:')?(state.signatures[d.group.slice(5)]??={}):state[d.group];if(obj)obj[d.key]=e.target.value;render()}else if(d.row!==undefined){state.items[Number(d.row)][d.col]=e.target.value;const tr=e.target.closest('tr');if(tr){const v=tr.querySelectorAll('td span');if(v[0])v[0].textContent=dates(state.items[Number(d.row)])??'';if(v[1])v[1].textContent=money(rowTotal(state.items[Number(d.row)]))} $('totalSummary').textContent='Sub-Total: '+money(subtotal())+' · SST: '+money(tax())+' · Grand Total: '+money(total())+' '+currencySymbol();render()}});
+document.addEventListener('change',e=>{if(e.target.matches('[data-group="fields"][data-key="currency"]')){state.fields.currency=e.target.value;drawRows();render()}});
+document.addEventListener('click',e=>{const id=e.target.id;if(id==='invoiceAddNote'){state.extraNotes??=[];state.extraNotes.push({text:'',enabled:true});drawNotes();render();return}if(e.target.dataset.invoiceRemoveNote!==undefined){state.extraNotes.splice(Number(e.target.dataset.invoiceRemoveNote),1);drawNotes();render();return}if(id==='newBtn')newDoc();else if(id==='saveBtn')save();else if(id==='printBtn')window.printDoc();else if(id==='addRow'){state.items.push({no:String(state.items.length+1),description:'',unit:'',qty:'',hireFrom:'',hireTo:'',dailyRate:''});drawRows();render()}else if(id==='removeRow'){if(state.items.length>1){state.items.pop();drawRows();render()}}else if(e.target.dataset.removeRow!==undefined){state.items.splice(Number(e.target.dataset.removeRow),1);if(!state.items.length)state.items=[{no:'1',description:'',unit:'',qty:'',hireFrom:'',hireTo:'',dailyRate:''}];drawRows();render()}});
+onAuthStateChanged(auth,async u=>{user=u;if(!u){notify('Sign in to DocSystem first');return}try{const p=await getDoc(doc(db,'users',u.uid));role=p.data()?.role||'user'}catch{}try{const snap=await getDoc(doc(db,'appSettings','main'));const settings=snap.data()?.settings||{};globals=settings.globalPlaceholders||{};profiles=Array.isArray(settings.profiles)?settings.profiles.filter(p=>p?.company):[];profile=profiles.find(p=>p.id===settings.activeProfileId)||profiles[0]||null;if(!loaded){const rsp=await fetch('./templates/invoice/standard.json',{cache:'no-store'});if(!rsp.ok)throw Error('Invoice definition missing');template=await rsp.json();state=blank();loaded=true}if(docId)await loadSaved(docId);else if(params.get('copyId'))await openSavedPresetCopy();else{draw();notify('Invoice ready');ready()}}catch(e){notify('Invoice could not initialize: '+e.message)}});
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(()=>{fitPreview();posted('height',{height:document.documentElement.scrollHeight+8})}).observe(document.querySelector('.workspace'));
+</script></body></html>

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "catalogName": "DocSystem Preset Template Registry",
+  "updated": "2026-11-01",
+  "families": [
+    {
+      "id": "quotation",
+      "name": "Quotation",
+      "manifest": "quotation/index.json",
+      "editor": "preset-quotation.html",
+      "templateCount": 5,
+      "status": "current-editor-active-json-prepared-not-live-sourced"
+    },
+    {
+      "id": "purchase-order",
+      "name": "Purchase Order",
+      "manifest": "po/index.json",
+      "editor": "preset-po.html",
+      "templateCount": 6,
+      "status": "po-editor-initial-integration-ready-for-browser-testing"
+    },
+    {
+      "id": "delivery-ticket",
+      "name": "Delivery Ticket / DO",
+      "manifest": "do/index.json",
+      "editor": "preset-do.html",
+      "templateCount": 1,
+      "status": "editor-integrated-pending-live-A4-and-Firebase-verification"
+    },
+    {
+      "id": "returning-ticket",
+      "name": "Returning Ticket",
+      "manifest": "return/index.json",
+      "editor": "preset-return.html",
+      "templateCount": 1,
+      "status": "editor-integrated-pending-live-A4-and-Firebase-verification"
+    },
+    {
+      "id": "invoice",
+      "name": "Invoice",
+      "manifest": "invoice/index.json",
+      "editor": "preset-invoice.html",
+      "templateCount": 1,
+      "status": "integrated-pending-live-A4-and-Firebase-verification"
+    }
+  ],
+  "isolation": {
+    "keepSeparate": true,
+    "sharedCapabilities": [
+      "businessProfile",
+      "A4print",
+      "firebaseDocumentPersistence",
+      "documentList",
+      "presetHeaderShortcodes",
+      "singleA4PaginationController"
+    ],
+    "neverMixFieldsBetweenFamilies": true
+  },
+  "restorePoint": {
+    "branch": "restore/working-before-quotation-po-json-2026-10-31",
+    "commit": "3b10bd8a866176b9775ba27e7e41214d10bbaf66"
+  },
+  "note": "Quotation, PO, DO, Returning Ticket and Invoice have isolated template definitions. Invoice follows the uploaded rental invoice workbook with independent notes, SST, currency and signature fields."
+}

@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DocSystem</title>
+<link rel="icon" href="favicon-32x32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style id="printPaperRule">@page{size:A4 portrait;margin:0}.layout-settings{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}.layout-panel{min-width:0;display:flex;flex-direction:column;gap:8px;padding:10px;background:#f8fafc;border:1px solid #ddd;border-radius:8px}.layout-block{background:white;border:1px solid #ddd;border-radius:6px;padding:8px;min-width:0}.layout-block textarea{margin:6px 0}.flex-layout{display:grid;width:100%;align-items:start;gap:4mm}.flex-layout.cHead{min-height:0;grid-template-columns:unset}.flex-layout>div{overflow-wrap:anywhere}.layout-preserve{white-space:pre-wrap;overflow-wrap:anywhere}.footer-layout{font-size:9px}
+.panel-editor{min-height:135px;font-family:'Courier New',monospace;white-space:pre-wrap;resize:vertical;tab-size:4} .layout-panel{min-width:0} .layout-preserve{white-space:pre-wrap;overflow-wrap:anywhere}
+.shortcode-line{display:block;min-height:1em;white-space:pre-wrap;overflow-wrap:anywhere}.shortcode-line .logo{vertical-align:middle}
+.panel-inline-tools{display:flex;gap:5px;flex-wrap:wrap;margin:3px 0}.panel-inline-tools button{min-width:34px}
+main{display:block!important;max-width:1500px}.workspace{width:100%;min-width:0}.workspace-view-tabs{display:flex;gap:8px;margin:0 0 14px}.workspace-view{border:1px solid #cad6e4;background:#f7f9fc;color:#324157;border-radius:9px;padding:10px 18px;cursor:pointer;font-weight:600}.workspace-view.active{background:#193f72;color:#fff;border-color:#193f72}main.working-mode>.preview{position:absolute!important;left:-200vw!important;top:0!important;visibility:hidden!important;width:210mm!important;pointer-events:none!important}main.preview-mode #create>.workspace-form{display:none!important}main.preview-mode>.preview{display:block;width:100%;overflow:auto}main.preview-mode .workspace-view-tabs{margin-bottom:14px}main.preview-mode #create{display:block!important}main:not(.preview-mode):not(.working-mode)>.preview{display:none}main.preview-mode .workspace{display:block}@media(max-width:680px){.workspace-view-tabs{position:relative;gap:6px}.workspace-view{flex:1;padding:11px 7px}}@media print{main.working-mode>.preview,main.preview-mode>.preview{position:static!important;left:auto!important;top:auto!important;visibility:visible!important;pointer-events:auto!important;width:100%!important;display:block!important}main .workspace-view-tabs{display:none!important}}
+</style>
+<style>
+html:not(.auth-ready) body > header, html:not(.auth-ready) body > nav, html:not(.auth-ready) body > main {display:none!important}
+#authGate[hidden]{display:none!important}#authGate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:#eef2f6;padding:18px}#authCard{background:white;border:1px solid #dfe5ec;border-radius:14px;padding:24px;width:min(100%,390px);box-shadow:0 12px 35px #0001}#authCard h2{margin:0 0 6px}#authCard form{display:grid;gap:12px;margin-top:16px}#authMessage{color:#475569;line-height:1.4;font-size:13px}#authAccount{font-size:12px;color:#cbd5e1;margin-right:6px}
+
+*{box-sizing:border-box}html,body{width:100%;max-width:100%;overflow-x:hidden}body{margin:0;font-family:Arial,sans-serif;background:#eef2f6;color:#111827}header{position:sticky;top:0;z-index:20;background:#111827;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}h1{font-size:22px;margin:0}.sub{font-size:12px;color:#cbd5e1}.actions{display:flex;gap:8px;flex-wrap:wrap}button,.filebtn{border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:8px 11px;font-weight:700;cursor:pointer}.filebtn input{display:none}.primary{background:#2563eb;color:#fff;border-color:#2563eb}.tabs{position:sticky;top:64px;z-index:19;background:#fff;border-bottom:1px solid #d9e0e7;padding:8px 12px;display:flex;gap:6px;overflow:auto}.tab{border:0;background:transparent;color:#475569}.tab.active{background:#111827;color:#fff}main{display:grid;grid-template-columns:minmax(0,540px) minmax(0,1fr);gap:16px;max-width:1500px;margin:16px auto;padding:0 16px 30px}.workspace,.preview,.panel,.card{min-width:0}.panel{display:none}.panel.active{display:block}.card{background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:14px;margin-bottom:12px}.card h2{font-size:15px;margin:0 0 10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#334155;min-width:0}input,select,textarea{font:inherit;width:100%;max-width:100%;min-width:0;padding:8px 9px;border:1px solid #cbd5e1;border-radius:7px;background:#fff}.between{display:flex;justify-content:space-between;align-items:center;gap:8px}.muted{font-size:12px;color:#64748b;font-weight:400}.stack{display:flex;flex-direction:column;gap:8px}.cfg>*{min-width:0}.detailcfg>*{min-width:0}.totalcfg>*{min-width:0}.cfg{display:grid;grid-template-columns:1fr 1.5fr .8fr .75fr auto auto auto;gap:8px;align-items:end;border:1px solid #e2e8f0;background:#f8fafc;border-radius:9px;padding:8px}.detailcfg{display:grid;grid-template-columns:1.2fr .9fr .9fr auto auto auto;gap:8px;align-items:end;border:1px solid #e2e8f0;background:#f8fafc;border-radius:9px;padding:8px}.totalcfg{display:grid;grid-template-columns:1.1fr .8fr .8fr .8fr auto;gap:8px;align-items:end;border:1px solid #e2e8f0;background:#f8fafc;border-radius:9px;padding:8px}.presetbar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}.info .value{white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;line-height:1.35}.small{font-size:12px;padding:6px 8px}.draglist{display:flex;flex-direction:column;gap:7px}.dragcol>*{min-width:0}.dragcol{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid #dbe3ea;border-radius:9px;background:#f8fafc;cursor:grab}.dragcol.dragging{opacity:.45}.draghandle{font-size:18px;color:#64748b;user-select:none}.dragcol .key{font-size:11px;color:#64748b}.danger{color:#b91c1c;border-color:#fecaca}.tblwrap{overflow:auto}.editTable{width:100%;border-collapse:collapse;min-width:620px}.editTable th,.editTable td{border:1px solid #dce2e8;padding:5px}.editTable th{background:#f8fafc;font-size:11px;text-align:left}.editTable input{border:0;padding:6px;background:transparent}.trash{border:0;background:transparent;color:#b91c1c;padding:4px}.previewTitle{display:flex;justify-content:space-between;margin:0 4px 8px}.paper{display:flex;flex-direction:column;width:210mm;min-height:297mm;background:#fff;margin:0 auto 18px;padding:12mm 14mm 19mm;box-shadow:0 4px 18px #0002;position:relative;color:#111;font-size:11px;font-family:var(--font-body,Arial,sans-serif)}.cHead{font-family:var(--font-header,Arial,sans-serif);display:grid;grid-template-columns:26mm 1fr 26mm;align-items:start;text-align:center;min-height:30mm}.logo{max-width:23mm;max-height:23mm;object-fit:contain}.cname{font-size:20px;font-weight:800}.cline{line-height:1.35;margin-top:3px}.cfields{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;column-gap:14px;row-gap:2px;margin-top:3px}.cfield{min-width:0;overflow-wrap:anywhere}.cfield.half{flex:0 1 auto}.cfield.full{flex:0 0 100%;width:100%}.doctitle{font-family:var(--font-title,Arial,sans-serif);text-align:center;font-size:13px;font-weight:800;text-decoration:underline;margin:5px 0 13px}.info{font-family:var(--font-body,Arial,sans-serif);width:100%;border-collapse:collapse;margin-bottom:9px}.info td{padding:2px 3px;vertical-align:top}.info .lab{width:29mm;font-weight:700}.info .colon{width:3mm}.docTable{font-family:var(--font-items,Arial,sans-serif);width:100%;border-collapse:collapse;table-layout:fixed}.docTable th{border-top:1px solid #333;border-bottom:1px solid #333;padding:4px;text-align:center}.docTable td{border-right:1px solid #555;padding:5px 6px;vertical-align:top;overflow-wrap:anywhere}.docTable td:first-child{border-left:1px solid #555}.docTable tbody tr:last-child td{border-bottom:1px solid #555}.num{text-align:right}.notes{font-family:var(--font-body,Arial,sans-serif);white-space:pre-wrap;line-height:1.45;margin-top:8px}.totals{font-family:var(--font-body,Arial,sans-serif);width:78mm;margin:10px 0 0 auto;border-collapse:collapse}.totals td{padding:3px 4px}.totals td:last-child{text-align:right}.totals .grand{border-top:1px solid #333;font-weight:800}.ack{font-family:var(--font-body,Arial,sans-serif);border-top:0;margin-top:auto;margin-bottom:5mm;padding-top:8px;flex-shrink:0}.siggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:10px}.sig{min-height:35mm}.sigtitle{font-weight:700;min-height:12mm;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4}.sigline{margin-top:18mm;border-top:1px solid #555;padding-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;line-height:1.35}.footer{font-family:var(--font-footer,Arial,sans-serif);position:absolute;left:14mm;right:14mm;bottom:6mm;display:flex;justify-content:space-between;gap:12px;font-size:9px;color:#555}.notice{background:#fff7df;border:1px solid #f2d58b;border-radius:10px;padding:12px;font-size:12px;margin-bottom:12px}@media(max-width:1150px){main{grid-template-columns:1fr}.preview{overflow:auto}}@media(max-width:680px){header{position:static}.tabs{position:static}.actions{width:100%}main{display:block;padding:0 8px;margin:8px auto}.workspace{width:100%;max-width:100%}.row,.row3,.cfg,.detailcfg,.totalcfg{grid-template-columns:minmax(0,1fr)}.card{padding:12px;overflow:hidden}.preview,#preview{display:block;width:100%;max-width:100%;min-width:0;overflow:hidden}.previewTitle{margin:8px 0}.paper{display:flex;width:100%;max-width:100%;min-width:0;min-height:auto;aspect-ratio:210/297;margin:0 0 12px 0;padding:5.7vw 6.6vw 9vw;box-shadow:0 2px 10px #0002;font-size:clamp(6px,2.15vw,10px);transform:none}.paper>*{max-width:100%;min-width:0}.cHead{grid-template-columns:12vw minmax(0,1fr) 12vw;min-height:14vw}.logo{max-width:11vw;max-height:11vw}.cname{font-size:clamp(9px,3.5vw,16px);overflow-wrap:anywhere}.cline{overflow-wrap:anywhere}.cfields{column-gap:8px;row-gap:1px}.doctitle{font-size:clamp(8px,2.8vw,12px);margin:1vw 0 2vw;overflow-wrap:anywhere}.info{table-layout:fixed;width:100%;max-width:100%}.info .lab{width:21vw}.info td{padding:.5vw;overflow-wrap:anywhere}.docTable{width:100%;max-width:100%;min-width:0}.docTable th,.docTable td{padding:.7vw}.notes{margin-top:1.5vw;overflow-wrap:anywhere}.totals{width:44vw;max-width:100%;margin-top:2vw}.ack{margin-top:auto;margin-bottom:2vw;padding-top:1.2vw}.siggrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:2vw;margin-top:1.5vw}.sig,.sigtitle{min-width:0;overflow-wrap:anywhere}.sig{min-height:16vw}.sigtitle{min-height:5vw}.sigline{margin-top:7vw}.footer{left:6.6vw;right:6.6vw;bottom:2vw;font-size:clamp(5px,1.7vw,8px);min-width:0}.tabs{top:96px}}@media print{body{background:#fff}header,.tabs,.workspace,.previewTitle{display:none!important}main{display:block;max-width:none;margin:0;padding:0}.paper{box-shadow:none;margin:0;width:210mm;height:297mm;min-height:297mm;break-after:page;page-break-after:always}.paper:last-child{break-after:auto;page-break-after:auto}}
+
+.cloud-entry{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #e2e8f0;padding:12px 0;flex-wrap:wrap}.cloud-entry .actions{align-items:center}.cloud-entry select{width:auto;min-width:100px}.cloud-entry button{white-space:nowrap}
+#sig1,#sig2,#sig3,#sigName1,#sigName2,#sigName3,#companyInfo,#companyFooter{font-family:'Courier New',monospace;white-space:pre-wrap;tab-size:4;line-height:1.5} .siggrid .sig{min-width:0} .footer span{white-space:pre-wrap!important;overflow-wrap:anywhere;tab-size:4}
+.fullDivider{width:100%;flex:0 0 auto;border-top:1px solid #777;margin:4mm 0 5mm} .ack{border-top:none!important} 
+.pagination-measure{position:absolute;left:-100000px;top:0;width:210mm;visibility:hidden;pointer-events:none}.pagination-measure .paper{display:flex!important;width:var(--page-w)!important;height:var(--page-h)!important;min-height:var(--page-h)!important;aspect-ratio:auto!important;padding:var(--page-m)!important;margin:0!important;font-size:11px!important;box-shadow:none!important}.pagination-measure .cHead{grid-template-columns:26mm 1fr 26mm!important;min-height:30mm!important}.pagination-measure .footer{left:var(--page-m)!important;right:var(--page-m)!important;bottom:5mm!important} .paper .docTable tbody tr{break-inside:avoid;page-break-inside:avoid}
+@media (min-width:681px){.paper{width:var(--page-w,210mm);min-height:var(--page-h,297mm);height:var(--page-h,297mm);padding:var(--page-m,15mm)}}
+.paper .footer{left:var(--page-m,15mm);right:var(--page-m,15mm);bottom:5mm}
+@media print{html,body{width:auto!important;overflow:visible!important}main,.preview,#preview{display:block!important;width:100%!important;max-width:none!important;overflow:visible!important}.paper{display:flex!important;box-sizing:border-box!important;width:var(--page-w,210mm)!important;height:calc(var(--page-h,297mm) - 1mm)!important;min-height:0!important;max-height:calc(var(--page-h,297mm) - 1mm)!important;padding:var(--page-m,15mm)!important;margin:0!important;box-shadow:none!important;aspect-ratio:auto!important;overflow:hidden!important;break-after:page!important;page-break-after:always!important}.paper:last-child{break-after:auto!important;page-break-after:auto!important}}
+</style>
+<style id="workspaceFullWidthFix">
+/* Override the original two-column editor/preview layout after all legacy styles. */
+@media screen {
+  #docMain { display:block !important; grid-template-columns:none !important; width:100%; max-width:1600px; margin:16px auto; padding:0 16px 32px; }
+  #docMain > .workspace {display:block !important; width:100% !important; max-width:none !important; min-width:0 !important;}
+  #docMain > .preview {display:none !important;}
+  #docMain.working-mode #create .workspace-form {display:block !important; width:100% !important;}
+  #docMain.preview-mode #create .workspace-form {display:none !important;}
+  #docMain.preview-mode > .preview {display:block !important; position:static !important; visibility:visible !important; width:100% !important; max-width:none !important; min-width:0 !important; overflow:auto !important; margin-top:12px;}
+  #docMain .workspace-view-tabs {display:flex; gap:8px; margin-bottom:14px;}
+  #docMain #create .card {width:100%; max-width:none;}
+  #docMain #create .tblwrap {max-width:100%;overflow-x:auto;}
+  @media (max-width:680px) {#docMain{padding:0 8px 24px;margin:8px auto;} #docMain .workspace-view{flex:1;} }
+}
+@media print {
+  #docMain > .preview {display:block !important;position:static !important;visibility:visible !important;width:100% !important;}
+  #docMain .workspace, #docMain .workspace-view-tabs {display:none !important;}
+}
+</style>
+<style id="shortcodeLineLayoutFix">
+/* Permanent stylesheet: printPaperRule is dynamically replaced during preview. */
+#preview .shortcode-line, .pagination-measure .shortcode-line {display:block!important;white-space:pre-wrap!important;overflow-wrap:break-word;min-height:1em;line-height:inherit}
+#preview .shortcode-line + .shortcode-line, .pagination-measure .shortcode-line + .shortcode-line {clear:both}
+#preview .layout-preserve, .pagination-measure .layout-preserve {white-space:pre-wrap!important}
+@media print {.shortcode-line{display:block!important;white-space:pre-wrap!important;min-height:1em}.layout-preserve{white-space:pre-wrap!important}}
+</style>
+<style id="cleanWorkspaceNavigation">
+.clean-subnav{display:flex;gap:8px;flex-wrap:wrap;max-width:1600px;margin:10px auto 0;padding:0 16px}
+.clean-subnav[hidden],#presetWorkspace[hidden],#workspacePresetChoice[hidden]{display:none!important}
+.clean-subnav button{background:#f4f7fb;border:1px solid #cbd6e4;color:#254065;border-radius:7px;padding:9px 13px;cursor:pointer}
+.clean-subnav button.active{background:#193f72;border-color:#193f72;color:#fff}
+.workspace-picker{margin-bottom:12px!important}
+.workspace-picker .row{align-items:end}
+#presetWorkspace{width:100%;min-width:0}
+#presetWorkspaceFrame{display:block;border:0;width:100%;height:1100px;background:#f1f5f9}
+#docMain.preset-editor-mode .workspace-view-tabs,#docMain.preset-editor-mode #create>.workspace-form{display:none!important}
+#docMain.preset-editor-mode>.preview{display:none!important}
+#docMain.preset-editor-mode #create.active{display:block!important}
+#docMain.preset-editor-mode #create.active #presetWorkspace{display:block!important}
+@media print{#docMain.preset-editor-mode{display:none!important}}
+</style><style id="workspaceNavigationRepairs">
+/* Do not display a document editor or its preview under Documents, Templates or Settings. */
+#docMain:not(.on-workspace-tab)>.preview{display:none!important}
+#docMain:not(.on-workspace-tab) #create{display:none!important}
+#docMain.preset-editor-mode #create:not(.active){display:none!important}
+#docMain #presetWorkspace[hidden],#workspacePresetChoice[hidden],#workspaceCustomChoice[hidden],#customLibrary[hidden],#presetLibrary[hidden]{display:none!important}
+#docMain:not(.on-workspace-tab) .workspace-view-tabs{display:none!important}
+#docMain .preview{max-width:100%}
+[data-library-kind].active{background:#193f72;color:white;border-color:#193f72}
+</style><style id="documentToolbarConsistency">
+/* Embedded preset has its own Save / Open / Print toolbar. Do not show custom actions. */
+body.preset-current header #newBtn,body.preset-current header #saveBtn,body.preset-current header #pdfBtn,body.preset-current header .filebtn{display:none!important}
+</style><style id="unifiedWorkspaceToolbarStyle">
+.unified-workspace-toolbar{background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:12px 14px;margin:0 0 14px;display:flex;align-items:end;gap:12px;flex-wrap:wrap;position:relative}
+.unified-workspace-toolbar .workspace-business-label{flex:0 1 235px;min-width:190px}
+.unified-toolbar-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;flex:1 1 610px}
+.unified-toolbar-actions button{width:auto;min-width:0}
+#workspaceStatus{font-size:12px;flex:0 1 auto}
+#docMain.preset-editor-mode #unifiedWorkspaceToolbar,#docMain.working-mode #unifiedWorkspaceToolbar,#docMain.preview-mode #unifiedWorkspaceToolbar{display:flex!important}
+body.preset-current header #newBtn,body.preset-current header #saveBtn,body.preset-current header #pdfBtn{display:none!important}
+@media(max-width:700px){.unified-workspace-toolbar{align-items:stretch}.unified-workspace-toolbar .workspace-business-label{flex:1 1 100%}.unified-toolbar-actions{flex:1 1 100%}.unified-toolbar-actions button{flex:1 1 auto}}
+@media print{#unifiedWorkspaceToolbar{display:none!important}}
+</style><style id="presetSlotSettingsStyle">.preset-header-config-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}.preset-header-config-grid textarea{width:100%;font-family:monospace}#presetHeaderConfigCard{margin-top:18px}@media(max-width:760px){.preset-header-config-grid{grid-template-columns:1fr}}</style><style id="websiteLinkStyle">.doc-website-link,.doc-website-link:link,.doc-website-link:visited{color:inherit!important;text-decoration:none!important;font:inherit}.doc-website-link:hover{text-decoration:none!important}</style><style id="presetDocumentHeadingSettingStyles">.preset-heading-configuration{margin-top:16px;border-top:1px solid #d9e2ef;padding-top:12px}.preset-heading-design-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.preset-heading-design-grid input[type=color],.preset-header-config-grid input[type=color]{height:40px;width:100%;padding:3px}@media(max-width:850px){.preset-heading-design-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}</style><style id="presetHeadingLayoutFix">.preset-heading-configuration{margin-top:14px;border-top:1px solid #d9e2ef;padding-top:12px;display:flex;flex-direction:column;gap:7px}
+.preset-header-config-grid>div{min-width:0}.preset-heading-configuration .panel-inline-tools{margin:0}.preset-heading-configuration p{font-size:12px;margin:0 0 5px}.preset-heading-configuration>strong:not(:first-child){margin-top:14px}.preset-heading-configuration input[type=color]{width:100%;height:40px;padding:3px}</style><style id="splitLiveWorkspace20261031">
+/* Desktop: editable form and live A4 preview side by side.
+   Existing mobile working/preview tabs and preset iframe remain unchanged. */
+@media screen and (min-width:1100px) {
+ #docMain.on-workspace-tab:not(.preset-editor-mode) {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:18px!important;
+  align-items:start;
+  max-width:1800px!important;
+ }
+ #docMain.on-workspace-tab:not(.preset-editor-mode)>.workspace {
+  width:100%!important;min-width:0!important;max-width:none!important;
+ }
+ #docMain.on-workspace-tab:not(.preset-editor-mode) #create>.workspace-form {
+  display:block!important;
+ }
+ #docMain.on-workspace-tab:not(.preset-editor-mode)>.preview {
+  display:block!important;position:sticky!important;top:120px!important;
+  left:auto!important;visibility:visible!important;pointer-events:auto!important;
+  width:100%!important;max-width:none!important;min-width:0!important;
+  overflow:auto!important;max-height:calc(100vh - 140px);
+  margin:0!important;
+ }
+ #docMain.on-workspace-tab:not(.preset-editor-mode) .workspace-view-tabs {
+  display:none!important;
+ }
+}
+/* A narrow screen retains the original separate Working/Preview controls. */
+</style><style id="normalizedWorkspaceAndToolbar20261031">
+/* Both template families use one workspace width. The two working areas remain side by side. */
+@media screen {
+ #docMain.on-workspace-tab {max-width:1800px!important;width:100%!important;}
+ #docMain.on-workspace-tab.preset-editor-mode {
+  display:block!important;grid-template-columns:none!important;
+  max-width:1800px!important;
+ }
+ #docMain.on-workspace-tab.preset-editor-mode>.workspace {width:100%!important;max-width:none!important;}
+ #docMain.on-workspace-tab .workspace-view-tabs,
+ #docMain.on-workspace-tab [data-workspace-view] {display:none!important;}
+ #docMain.on-workspace-tab .unified-toolbar-actions {flex:1 1 400px;}
+ #docMain.on-workspace-tab #presetWorkspace,
+ #docMain.on-workspace-tab #presetWorkspaceFrame {width:100%!important;max-width:100%!important;}
+ /* Narrow view: display both custom editor and live preview sequentially, without mode toggles. */
+ @media(max-width:1099px) {
+  #docMain.on-workspace-tab:not(.preset-editor-mode) {display:block!important;}
+  #docMain.on-workspace-tab:not(.preset-editor-mode) #create>.workspace-form {display:block!important;}
+  #docMain.on-workspace-tab:not(.preset-editor-mode)>.preview {
+   display:block!important;position:static!important;left:auto!important;
+   visibility:visible!important;pointer-events:auto!important;
+   width:100%!important;max-width:none!important;overflow:auto!important;
+   margin-top:16px!important;
+  }
+ }
+}
+</style><style id="customUnifiedPageScroll20261031">
+/* Custom templates share the outer page scrollbar with the working form. */
+@media screen {
+ #docMain.on-workspace-tab:not(.preset-editor-mode)>.preview {
+  position:static!important;
+  top:auto!important;
+  left:auto!important;
+  height:auto!important;
+  max-height:none!important;
+  min-height:0!important;
+  overflow:visible!important;
+  overflow-x:visible!important;
+  overflow-y:visible!important;
+  overscroll-behavior:auto!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+ }
+ #docMain.on-workspace-tab:not(.preset-editor-mode)>.preview #preview {
+  width:100%!important;
+  max-width:100%!important;
+  overflow:visible!important;
+ }
+ #docMain.on-workspace-tab:not(.preset-editor-mode)>.preview #preview>.paper {
+  max-width:none!important;
+  transform:none!important;
+  transform-origin:top center!important;
+ }
+}
+@media print {
+ #preview>.paper {zoom:1!important}
+}
+</style><style id="normalizedPresetFamilySelector20261101">
+/* One consistent hierarchy: Template Source → Document Family → Type. */
+@media screen and (min-width:1000px){
+ #docMain.on-workspace-tab .workspace-picker>.row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:end!important;gap:12px!important}
+ #docMain.on-workspace-tab .workspace-picker>.row>label{width:100%!important;max-width:none!important;min-width:0!important}
+ #docMain.on-workspace-tab .workspace-picker>.row>label select{width:100%!important}
+}
+@media screen and (max-width:999px){
+ #docMain.on-workspace-tab .workspace-picker>.row{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;gap:12px!important}
+}
+</style></head>
+<body>
+<div id="authGate" role="dialog" aria-modal="true" aria-label="DocSystem sign in"><div id="authCard"><h2>DocSystem</h2><p id="authMessage" aria-live="polite">Checking sign-in...</p><form id="authForm"><label>Email<input id="loginEmail" type="email" autocomplete="username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label><button id="authSubmit" type="submit" class="primary">Sign in</button></form></div></div>
+<header><div><h1>DocSystem</h1><div class="sub">Flexible business document generator</div></div><div class="actions"><span id="authAccount" hidden></span><button id="authLogout" type="button">Sign out</button></div></header>
+<nav class="tabs" aria-label="Main navigation"><button class="tab active" data-tab="create">Workspace</button><button class="tab" data-tab="documents">Documents</button><button class="tab" data-tab="library">Templates</button><button id="settingsNavTab" class="tab cloud-admin-only" data-tab="settings">Settings</button></nav>
+<div id="settingsSubnav" class="clean-subnav" hidden>
+<button type="button" data-subpage="company">Business Profiles</button>
+<button type="button" data-subpage="global">Global Settings</button>
+<button type="button" id="cloudMenuUsers" data-subpage="users">Users</button>
+<button type="button" data-subpage="backup">Backup / Restore</button>
+</div>
+
+<main class="working-mode on-workspace-tab" id="docMain">
+<section class="workspace">
+<section id="documents" class="panel"><div class="card"><h2>Saved Documents</h2><div class="row"><label>Month (clear for latest 150)<input type="month" id="cloudMonth"></label><div class="actions" style="align-items:end"><button id="cloudRefresh">Refresh</button></div></div><p id="cloudStatus" class="muted" aria-live="polite">Connecting...</p><div id="cloudList"></div></div></section>
+<section id="users" class="panel"><div class="card"><h2>User Management</h2><p class="muted">Create accounts here using email and a temporary password. No Firebase UID is needed. Share the temporary password securely with the new user.</p><div class="row3"><label>Email<input type="email" id="newUserEmail" autocomplete="off"></label><label>Temporary Password<input type="password" id="newUserPassword" autocomplete="new-password" minlength="6"></label><label>Role<select id="newUserRole"><option value="user">User</option><option value="manager">Manager</option><option id="newSuperadminOption" value="superadmin" hidden>Superadmin</option></select></label></div><p><button id="cloudUserAdd">Create User</button></p><div id="userList"></div></div></section>
+<section id="create" class="panel active"><div class="card workspace-picker"><div class="between"><strong>Create / Edit Document</strong><span class="muted">One workspace for custom and preset documents</span></div><div class="row"><label>Template Source<select id="workspaceTemplateSource"><option value="custom">Custom Templates</option><option value="preset">Preset Templates</option></select></label><label id="workspaceFamilyChoice" hidden>Document Family<select id="workspacePresetFamily" disabled><option value="quotation">Quotation</option><option value="purchase-order">Purchase Order (PO)</option><option value="delivery-ticket">Delivery Ticket / DO</option><option value="returning-ticket">Returning Ticket</option><option value="invoice">Invoice</option></select></label><label id="workspacePresetChoice" hidden>Type<select id="workspacePresetSelect" disabled><option value="rental3">Rental (Qty 3)</option><option value="rental10">Rental (Qty 10)</option><option value="rentcon53">Rental + Consumables (Qty 5+3)</option><option value="rentcon105">Rental + Consumables (Qty 10+5)</option><option value="specialtkr">Rental — Special TKR</option></select></label><label id="workspaceCustomChoice">Custom Document Type<select id="docType"></select></label></div></div>
+<div id="unifiedWorkspaceToolbar" class="unified-workspace-toolbar" role="toolbar" aria-label="Document workspace actions">
+<label class="workspace-business-label">Business Profile<select id="businessProfile" aria-label="Business Profile"></select></label>
+<div class="unified-toolbar-actions">
+<button type="button" id="newBtn">New</button>
+<button type="button" id="workspaceOpenSaved">Open Saved</button>
+<button type="button" id="saveBtn">Save Online</button>
+<button type="button" id="pdfBtn" class="primary">Print / PDF</button>
+</div><span id="workspaceStatus" class="muted" role="status">Ready</span>
+</div><div id="presetWorkspace" hidden><iframe id="presetWorkspaceFrame" title="Preset quotation editor" loading="lazy"></iframe></div><div class="workspace-form">
+<div class="card"><div class="row3"><label>Document Title<input id="docTitle"></label></div><div class="row" style="margin-top:10px"><label>Document Currency<select id="docCurrency"></select></label><div class="muted" style="align-self:end">Currencies available for the selected business profile</div></div></div>
+<div class="card"><h2>Document Details</h2><div id="docFields" class="stack"></div></div>
+<div class="card"><div class="between"><h2>Items</h2><button id="addItem" class="small">+ Add Row</button></div><div class="tblwrap"><table id="items" class="editTable"></table></div></div>
+<div class="card"><h2>Notes / Delivery Info</h2><textarea id="notes" rows="4"></textarea></div></div>
+</section>
+<section id="company" class="panel">
+<div class="card"><div class="between"><h2>Business Profiles</h2><span class="muted">Select the business to manage or delete an unwanted profile.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button id="deleteProfile" class="danger small">Delete Selected Business</button></div></div></div>
+<div class="card"><h2>Currencies</h2><p class="muted">Set allowed currencies for this business. The default is selected for new documents; saved documents retain their selected currency.</p><div id="currencySettings"></div><div class="row"><label>Currency code (e.g. USD)<input id="newCurrencyCode" maxlength="3" placeholder="USD"></label><label>Display symbol (e.g. US$)<input id="newCurrencySymbol" placeholder="US$"></label></div><p><button type="button" id="addCurrency" class="small">+ Add Currency</button></p></div>
+<div class="card"><h2>Business Identity</h2><p class="muted">Shared company details used by all custom and preset documents. Enter the company name once here.</p><div class="row"><label>Company Name<input id="companyName"></label><label>Logo<input id="logoFile" type="file" accept="image/*"></label></div><div style="margin-top:8px"><button id="removeLogo" class="small">Remove Logo</button></div></div>
+
+<div class="card"><h2>Company Details</h2><div class="muted" style="margin-bottom:8px">Registration number, address, telephone, website and other details only. Do not repeat the company name; both custom and preset documents use the Business Identity name automatically. Formatting and line breaks are preserved.</div><div class="panel-inline-tools"><button type="button" class="small" data-company-format="bold">B</button><button type="button" class="small" data-company-format="italic">I</button><button type="button" class="small" data-company-format="underline">U</button><button type="button" class="small" data-company-format="size">Size</button><button type="button" class="small" data-company-format="font">Font</button></div><textarea id="companyInfo" rows="7" spellcheck="false" style="min-height:170px;white-space:pre-wrap" placeholder="Registration No.: 123456-A&#10;Address line 1&#10;Tel: 123          Fax: 456"></textarea></div>
+<div class="card"><h2>Footer Text</h2><textarea id="companyFooter" rows="3"></textarea></div>
+</section>
+<section id="global" class="panel"><div class="card"><h2>Reusable Placeholders</h2><p class="muted">Define a name and text once, then insert {name} in any header or footer panel. Changes apply across business profiles. Built-in: {logo}, {companyName}, {companyname}, {companyInfo}, {doctype}, {docno}, {docdate}, {page}. Other preset fields are editable.</p><div id="globalPlaceholders"></div><div class="row"><label>Placeholder name<input id="newPlaceholderKey" placeholder="tagline" pattern="[a-zA-Z][a-zA-Z0-9_]*"></label><label>Reusable text<textarea id="newPlaceholderValue" rows="3" placeholder="Delivering Reliability Beneath the Surface"></textarea></label></div><button type="button" id="addPlaceholder">+ Add Placeholder</button></div></section>
+<section id="library" class="panel"><div class="card"><h2>Template Library</h2><p class="muted">Ready-made presets use their own layouts and forms; custom templates keep the designs created in DocSystem.</p><div class="row"><button class="small active" data-library-kind="preset" aria-pressed="true">Preset Templates</button><button class="small" data-library-kind="custom" aria-pressed="false">Custom Templates</button></div><div id="presetLibrary">
+<div class="card" id="presetTemplateConfigurator">
+<div class="between"><h3>Configure Preset Templates</h3><button type="button" class="small cloud-admin-only" id="togglePresetConfigurator">Configure Preset Templates</button></div>
+<p class="muted">Duplicate and edit any original preset, including its available statements, then save a separate reusable template. Built-in presets stay protected.</p>
+<div id="presetConfigWorkspace" hidden>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:12px 0">
+<label>Document Family<select id="presetConfigureFamily"><option value="quotation">Quotation</option><option value="purchase-order">Purchase Order</option><option value="delivery-ticket">Delivery Ticket</option><option value="returning-ticket">Returning Ticket</option><option value="invoice">Invoice</option></select></label>
+<label>Original Preset<select id="presetConfigureType"></select></label>
+<label>New Template Name<input id="presetConfigureName" placeholder="e.g. Offshore Rental Quotation" maxlength="100"></label>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+<button type="button" class="small" id="presetConfigLoad">Load Original</button>
+<button type="button" class="small primary" id="presetConfigSave">Save as New Template</button>
+</div>
+<p id="presetConfigStatus" class="muted">Select an original preset to customize.</p>
+<iframe id="presetConfigureFrame" title="Configure preset copy" loading="lazy" style="display:block;width:100%;min-height:900px;border:1px solid #e3e8ef;border-radius:10px;background:#fff"></iframe>
+</div></div>
+<h3>My Saved Preset Templates</h3><p class="muted">Copies of built-in templates are saved separately. You can edit their default fields and save further versions without changing the originals.</p><div id="presetCopyLibraryList" class="stack"></div><h3>Wellora — Quotation Presets</h3><div class="stack">
+<div class="cloud-entry"><div><b>Rental (Qty 3)</b><div class="muted">Quotation · Ready-Made Preset</div></div><button type="button" class="small" data-open-preset="rental3">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Rental (Qty 10)</b><div class="muted">Quotation · Ready-Made Preset</div></div><button type="button" class="small" data-open-preset="rental10">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Rental + Consumables (Qty 5+3)</b><div class="muted">Quotation · Ready-Made Preset</div></div><button type="button" class="small" data-open-preset="rentcon53">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Rental + Consumables (Qty 10+5)</b><div class="muted">Quotation · Ready-Made Preset</div></div><button type="button" class="small" data-open-preset="rentcon105">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Rental — Special TKR</b><div class="muted">Quotation · Ready-Made Preset</div></div><button type="button" class="small" data-open-preset="specialtkr">Use in Workspace</button></div>
+</div><h3>Wellora — Purchase Order Presets</h3><div class="stack"><div class="cloud-entry"><div><b>Purchase — Credit</b><div class="muted">Purchase Order · Ready-Made Preset</div></div><button type="button" class="small" data-open-po-preset="purchase-credit">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Purchase — Cash</b><div class="muted">Purchase Order · Ready-Made Preset</div></div><button type="button" class="small" data-open-po-preset="purchase-cash">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Purchase — Progress Claim</b><div class="muted">Purchase Order · Ready-Made Preset</div></div><button type="button" class="small" data-open-po-preset="purchase-progress-claim">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Rental</b><div class="muted">Purchase Order · Ready-Made Preset</div></div><button type="button" class="small" data-open-po-preset="rental">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Inspection / Repair</b><div class="muted">Purchase Order · Ready-Made Preset</div></div><button type="button" class="small" data-open-po-preset="inspection-repair">Use in Workspace</button></div>
+<div class="cloud-entry"><div><b>Logistics</b><div class="muted">Purchase Order · Ready-Made Preset</div></div><button type="button" class="small" data-open-po-preset="logistics">Use in Workspace</button></div></div><h3>Wellora — Delivery Ticket / DO Presets</h3><div class="stack"><div class="cloud-entry"><div><b>Standard Delivery Ticket</b><div class="muted">Delivery Ticket · Ready-Made Preset</div></div><button type="button" class="small" data-open-do-preset="standard">Use in Workspace</button></div></div><h3>Wellora — Returning Ticket Presets</h3><div class="stack"><div class="cloud-entry"><div><b>Standard Returning Ticket</b><div class="muted">Returning Ticket · Ready-Made Preset</div></div><button type="button" class="small" data-open-return-preset="standard">Use in Workspace</button></div></div><h3>Wellora — Invoice Presets</h3><div class="stack"><div class="cloud-entry"><div><b>Standard Invoice</b><div class="muted">Invoice · Ready-Made Preset</div></div><button type="button" class="small" data-open-invoice-preset="standard">Use in Workspace</button></div></div><div class="card cloud-admin-only" id="presetHeaderConfigCard">
+<h3>Shared Preset Header & Document Heading</h3>
+<p class="muted">Set once per Business Profile for all Quotation and Purchase Order presets. Logo, company name, business details, document heading, and formatting are shared across preset document families.</p>
+<label>Business Profile<select id="presetHeaderProfileSelect"></select></label>
+<div class="preset-header-config-grid">
+ <div>
+  <strong>Logo area</strong>
+  <label>Shortcode<textarea rows="3" data-preset-header-field="logo" placeholder="{logo}"></textarea></label>
+  <label>Logo width (mm)<input type="number" min="10" max="70" data-preset-header-logo-width value="35"></label>
+<div class="preset-heading-configuration">
+<strong>Document heading (right side)</strong>
+<p class="muted">Use {documentTitle} for the heading entered in Workspace. Apply B, I, U, Size, Font or Color to selected text, just like Company Name.</p>
+<label>Font<select data-preset-header-style="title:font"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Times New Roman">Times New Roman</option><option value="Courier New">Courier New</option></select></label>
+<label>Size (pt)<input type="number" min="8" max="36" data-preset-header-size="title" value="16"></label>
+<label>Color<input type="color" data-preset-header-color="title" value="#d6a900"></label>
+<label>Alignment<select data-preset-header-style="title:align"><option value="left">Left</option><option value="center">Center</option><option value="right" selected>Right</option></select></label>
+<div class="panel-inline-tools" aria-label="Format document heading"><button type="button" class="small" data-preset-inline="titleText:bold">B</button><button type="button" class="small" data-preset-inline="titleText:italic">I</button><button type="button" class="small" data-preset-inline="titleText:underline">U</button><button type="button" class="small" data-preset-inline="titleText:size">Size</button><button type="button" class="small" data-preset-inline="titleText:font">Font</button><button type="button" class="small" data-preset-inline="titleText:color">Color</button></div><textarea rows="3" data-preset-header-field="titleText" spellcheck="false" placeholder="{documentTitle}"></textarea>
+<strong>Additional heading lines</strong>
+<label>Font<select data-preset-header-style="extra:font"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Times New Roman">Times New Roman</option><option value="Courier New">Courier New</option></select></label>
+<label>Size (pt)<input type="number" min="6" max="24" data-preset-header-size="extra" value="9"></label>
+<label>Color<input type="color" data-preset-header-color="extra" value="#111111"></label>
+<label>Alignment<select data-preset-header-style="extra:align"><option value="left">Left</option><option value="center">Center</option><option value="right" selected>Right</option></select></label><div class="panel-inline-tools" aria-label="Format additional heading lines"><button type="button" class="small" data-preset-inline="extraText:bold">B</button><button type="button" class="small" data-preset-inline="extraText:italic">I</button><button type="button" class="small" data-preset-inline="extraText:underline">U</button><button type="button" class="small" data-preset-inline="extraText:size">Size</button><button type="button" class="small" data-preset-inline="extraText:font">Font</button><button type="button" class="small" data-preset-inline="extraText:color">Color</button></div><textarea rows="3" data-preset-header-field="extraText" spellcheck="false" placeholder="{headingLines}"></textarea>
+ </div>
+ </div>
+ <div>
+  <strong>Company name area</strong>
+  <label>Font<select data-preset-header-style="name:font"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Times New Roman">Times New Roman</option><option value="Courier New">Courier New</option></select></label>
+  <label>Default size (pt)<input type="number" min="6" max="36" data-preset-header-size="name" value="13"></label><label>Default color<input type="color" data-preset-header-color="name" value="#081527"></label>
+  <label>Alignment<select data-preset-header-style="name:align"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label>
+  <div class="panel-inline-tools" aria-label="Format company name selection"><button type="button" class="small" data-preset-inline="name:bold">B</button><button type="button" class="small" data-preset-inline="name:italic">I</button><button type="button" class="small" data-preset-inline="name:underline">U</button><button type="button" class="small" data-preset-inline="name:size">Size</button><button type="button" class="small" data-preset-inline="name:font">Font</button><button type="button" class="small" data-preset-inline="name:color">Color</button></div>
+  <textarea rows="4" data-preset-header-field="name" placeholder="{companyName}" spellcheck="false"></textarea>
+ </div>
+ <div>
+  <strong>Company details area</strong>
+  <label>Font<select data-preset-header-style="details:font"><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Verdana">Verdana</option><option value="Tahoma">Tahoma</option><option value="Times New Roman">Times New Roman</option><option value="Courier New">Courier New</option></select></label>
+  <label>Default size (pt)<input type="number" min="6" max="36" data-preset-header-size="details" value="8"></label><label>Default color<input type="color" data-preset-header-color="details" value="#111111"></label>
+  <label>Alignment<select data-preset-header-style="details:align"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label>
+  <div class="panel-inline-tools" aria-label="Format company details selection"><button type="button" class="small" data-preset-inline="details:bold">B</button><button type="button" class="small" data-preset-inline="details:italic">I</button><button type="button" class="small" data-preset-inline="details:underline">U</button><button type="button" class="small" data-preset-inline="details:size">Size</button><button type="button" class="small" data-preset-inline="details:font">Font</button><button type="button" class="small" data-preset-inline="details:color">Color</button></div>
+  <textarea rows="5" data-preset-header-field="details" placeholder="{companyInfo}" spellcheck="false"></textarea>
+ </div>
+</div></div></div><div id="customLibrary" hidden><div class="card" id="customTemplateConfigurator"><div class="between"><h3>Configure Custom Templates</h3><button type="button" class="small cloud-admin-only" data-open-custom-template>Configure Custom Templates</button></div><p class="muted">Set up and adjust custom document templates and layouts for the selected Business Profile.</p></div><h3>Custom Document Templates</h3><p class="muted">Choose a document type to start editing. Managers can adjust its layout separately.</p><div id="customTemplateList" class="stack"></div></div></div></section>
+<section id="template" class="panel">
+<div class="card"><h2>Shared Custom Document Header & Footer</h2><p class="muted">This layout belongs to the selected Business Profile and applies to <strong>all custom document types</strong> for that business (Quotation, Invoice, Delivery Order, etc.). It is independent of company data and preset designs. Only inserted shortcodes such as {logo}, {companyName} and {companyInfo} appear on the document.</p><p class="muted" id="customLayoutSaveStatus" role="status">Changes save automatically.</p></div>
+<div class="card"><h2>Header Layout</h2><p class="muted">Choose full width, two columns or three columns. Add, move and remove content in each panel.</p><div id="headerLayoutControls"></div></div>
+<div class="card"><h2>Footer Layout</h2><div id="footerLayoutControls"></div></div>
+<div class="card"><h2>Current Document Settings</h2><div class="muted" style="margin-bottom:8px">Business Profile → Document → Template Settings. Each business keeps its own version of every document template.</div><div class="row3"><label>Business Profile<select id="tplBusinessProfile"></select></label><label>Type<select id="tplType"></select></label><label>Title<input id="tplTitle"></label></div></div>
+<div class="card"><div class="between"><h2>Document Details Fields</h2><button id="addDetailField" class="small">+ Add Field</button></div><div class="muted" style="margin-bottom:8px">Document detail fields are shown one per line and aligned left. Core keys are predefined. Address is multi-line. Any added field uses extra_001, extra_002, etc. Keys are locked so saved JSON documents stay consistent.</div><div id="detailFieldsSetup" class="stack"></div></div>
+<div class="card"><h2>Page Setup</h2><div class="muted">Applies to preview and exported PDF. In the browser print dialog choose the same paper size, and margins: None.</div><div class="row"><label>Paper size<select id="paperSize"><option value="A4">A4 (210 × 297 mm)</option><option value="Letter">US Letter (216 × 279 mm)</option></select></label><label>Margins<select id="pageMargins"><option value="standard">Standard (15 mm)</option><option value="narrow">Narrow (8 mm)</option></select></label></div></div>
+<div class="card"><h2>Full-width Divider</h2><div class="muted" style="margin-bottom:8px">Optional horizontal rule across the document body. Signature blocks have no full-width rule.</div><label>Divider position<select id="dividerPosition"><option value="none">No divider</option><option value="header">Below company header</option><option value="title">Below document title</option></select></label></div>
+<div class="card"><h2>Fonts</h2><div class="muted" style="margin-bottom:8px">Choose common system fonts for different document sections. These are also used when printing to PDF.</div><div class="row3"><label>Company Header<select id="fontHeader"></select></label><label>Document Title<select id="fontTitle"></select></label><label>Details / Body<select id="fontBody"></select></label><label>Item Table<select id="fontItems"></select></label><label>Footer<select id="fontFooter"></select></label></div></div>
+<div class="card"><div class="between"><h2>Column Order</h2><span class="muted">Drag to rearrange</span></div><div class="muted" style="margin-bottom:8px">The order here is used in the editor, preview and PDF.</div><div id="columnOrder" class="draglist"></div></div>
+<div class="card"><div class="between"><h2>Totals</h2><label class="check"><input id="subtotalOn" type="checkbox"> Show subtotal</label></div><div class="muted">Add as many additions or deductions as needed. Percentage adjustments are calculated in order from the running balance.</div><div class="presetbar"><button type="button" class="small" data-totalpreset="tax">+ Tax</button><button type="button" class="small" data-totalpreset="charge">+ Charge</button><button type="button" class="small" data-totalpreset="discount">+ Discount</button><button type="button" class="small" id="addTotalLine">+ Custom</button></div><div id="totalAdjustments" class="stack"></div></div>
+<div class="card"><h2>Signature / Acknowledgement</h2><div class="muted" style="margin-bottom:8px">Enable only the signature blocks needed for this document.</div><div class="row3"><div><label class="check"><input id="sig1On" type="checkbox"> Show Block 1</label><label>Block 1<textarea id="sig1" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName1" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div><div><label class="check"><input id="sig2On" type="checkbox"> Show Block 2</label><label>Block 2<textarea id="sig2" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName2" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div><div><label class="check"><input id="sig3On" type="checkbox"> Show Block 3</label><label>Block 3<textarea id="sig3" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName3" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div></div></div>
+</section>
+<section id="backup" class="panel"><div class="notice">Business profiles and document templates are saved in Firestore for authorized users. JSON import/export is optional for migration and backups.</div><div class="card"><h2>Settings Backup</h2><div class="actions"><label class="filebtn">Open Custom Document JSON<input id="openFile" type="file" accept=".json,application/json"></label><button id="exportSettings">Export Settings</button><label class="filebtn">Import Settings<input id="importSettings" type="file" accept=".json,application/json"></label><button id="resetBtn" class="danger">Reset App</button></div></div></section>
+</section>
+<aside class="preview"><div class="previewTitle"><strong>Preview</strong><span id="pageCount" class="muted"></span></div><div id="preview"></div></aside>
+</main>
+<script>
+const KEY='docfac.settings.v1',clone=o=>JSON.parse(JSON.stringify(o)),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),money=n=>Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),uid=()=>Math.random().toString(36).slice(2,8);
+const defaults={fonts:{header:'Arial, sans-serif',title:'Arial, sans-serif',body:'Arial, sans-serif',items:'Arial, sans-serif',footer:'Arial, sans-serif'},company:{name:'Sample Company Sdn Bhd',logo:'',fields:[{label:'Registration No.',value:'SAMPLE0001',place:'header',layout:'half'},{label:'Address',value:'Sample Address Line 1\nSample Address Line 2\nSample Address Line 3',place:'header',layout:'full'},{label:'Tel',value:'SAMPLE0002',place:'header',layout:'half'},{label:'Email',value:'sample@noagrp.github',place:'header',layout:'half'}],footer:''},templates:{
+'Quotation':{family:'commercial',title:'QUOTATION',fields:[['customer','Customer','multiline','half'],['address','Address','multiline','full'],['docno','Quotation No.','text','half'],['date','Date','text','half'],['terms','Validity / Terms','text','half']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
+'Invoice':{family:'commercial',title:'INVOICE',fields:[['customer','Bill To','multiline','half'],['address','Address','multiline','full'],['docno','Invoice No.','text','half'],['date','Date','text','half'],['terms','Terms','text','half']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
+'Purchase Order':{family:'commercial',title:'PURCHASE ORDER',fields:[['supplier','Supplier','multiline','half'],['address','Address','multiline','full'],['docno','PO No.','text','half'],['date','Date','text','half'],['ref','Reference','text','half']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
+'Delivery Order':{family:'movement',title:'DELIVERY ORDER',fields:[['customer','M/s','multiline','half'],['address','Address','multiline','full'],['docno','Delivery No.','text','half'],['date','Date','text','half'],['orderno','Order No.','text','half']],columns:[['item','Item','number',10],['qty','Quantity','text',17],['description','Description','text',73]],subtotal:false,sig:true,sigEnabled:[true,true,true],sigs:['Received by,\nCustomer / Recipient','Delivered by,\nTransport / Driver','Prepared by,\nSample Company Sdn Bhd'],sigNames:['','',''],adjustments:[]},
+'Receiving Note':{family:'movement',title:'GOODS RECEIVED NOTE',fields:[['supplier','Received From','multiline','half'],['address','Address','multiline','full'],['docno','GRN No.','text','half'],['date','Date','text','half'],['ref','PO / DO Ref.','text','half']],columns:[['item','Item','number',10],['qty','Quantity','text',17],['description','Description','text',73]],subtotal:false,sig:true,sigEnabled:[true,true,false],sigs:['Received / Checked by','Delivered by',''],sigNames:['','',''],adjustments:[]},
+'Payment Voucher':{family:'voucher',title:'PAYMENT VOUCHER',fields:[['party','Pay To','multiline','half'],['address','Address','multiline','full'],['docno','PV No.','text','half'],['date','Date','text','half'],['ref','Reference','text','half'],['paymentref','Payment / Bank Ref.','text','half']],columns:[['item','Item','number',8],['description','Particulars','text',70],['amount','Amount','number',22]],subtotal:true,sig:true,sigEnabled:[true,true,true],sigs:['Prepared by','Checked by','Approved by'],sigNames:['','',''],adjustments:[]},
+'Receipt Voucher':{family:'voucher',title:'RECEIPT VOUCHER',fields:[['party','Received From','multiline','half'],['address','Address','multiline','full'],['docno','RV No.','text','half'],['date','Date','text','half'],['ref','Reference','text','half'],['paymentref','Payment / Bank Ref.','text','half']],columns:[['item','Item','number',8],['description','Particulars','text',70],['amount','Amount','number',22]],subtotal:true,sig:true,sigEnabled:[true,true,true],sigs:['Received by','Checked by','Approved by'],sigNames:['','',''],adjustments:[]},
+'Credit Note':{family:'adjustment',title:'CREDIT NOTE',fields:[['customer','Customer','multiline','half'],['address','Address','multiline','full'],['docno','Credit Note No.','text','half'],['date','Date','text','half'],['ref','Original Invoice Ref.','text','half'],['reason','Reason','multiline','full']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
+'Debit Note':{family:'adjustment',title:'DEBIT NOTE',fields:[['customer','Customer / Supplier','multiline','half'],['address','Address','multiline','full'],['docno','Debit Note No.','text','half'],['date','Date','text','half'],['ref','Original Invoice Ref.','text','half'],['reason','Reason','multiline','full']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
+'Journal Voucher':{family:'journal',title:'JOURNAL VOUCHER',fields:[['docno','JV No.','text','half'],['date','Date','text','half'],['ref','Reference','text','half'],['reason','Narration / Reason','multiline','full']],columns:[['account','Account / Code','text',22],['description','Particulars','text',42],['debit','Debit','number',18],['credit','Credit','number',18]],subtotal:false,sig:true,sigEnabled:[true,true,true],sigs:['Prepared by','Checked by','Approved by'],sigNames:['','',''],adjustments:[]}
+}};
+let settings=(()=>{try{return JSON.parse(localStorage.getItem(KEY))||clone(defaults)}catch{return clone(defaults)}})(),doc;
+function migrateSettings(s){
+  if(!Array.isArray(s.profiles)||!s.profiles.length){
+    let p={id:'business_001',company:clone(s.company||defaults.company),fonts:Object.assign({},defaults.fonts,s.fonts||{}),templates:clone(s.templates||defaults.templates)};
+    s={version:2,activeProfileId:p.id,profiles:[p]};
+  }
+  if(!s.activeProfileId||!s.profiles.some(p=>p.id===s.activeProfileId))s.activeProfileId=s.profiles[0].id;
+  // Replace the previous individual preset headers with one header per Business Profile.
+  // Prefer the Rental (Qty 3) configuration already entered by the user.
+  if(s.presetHeaders){
+   const selected=s.profiles.find(p=>p.id===s.activeProfileId)||s.profiles[0];
+   const existing=s.presetHeaders.rental3||Object.values(s.presetHeaders).find(v=>v&&[v.logo,v.name,v.details].some(Boolean));
+   if(existing&&!selected.presetHeader)selected.presetHeader=clone(existing);
+   delete s.presetHeaders;
+  }
+  return s
+}
+settings=migrateSettings(settings);
+function profile(){return settings.profiles.find(p=>p.id===settings.activeProfileId)||settings.profiles[0]}
+function profileLabel(p){return (p&&p.company&&p.company.name)||'Untitled Business'}
+function nextProfileId(){let n=1,used=new Set(settings.profiles.map(p=>p.id));while(used.has('business_'+String(n).padStart(3,'0')))n++;return'business_'+String(n).padStart(3,'0')}
+const CORE_KEYS=new Set(['customer','supplier','party','address','docno','date','orderno','terms','ref','paymentref','reason','account']);function normalizeTemplateFields(t,values){let extra=1,map={};t.fields=(t.fields||[]).map(f=>{let old=String(f[0]||''),key=CORE_KEYS.has(old)?old:'';if(!key){do{key='extra_'+String(extra++).padStart(3,'0')}while((t.fields||[]).some(x=>x[0]===key))}map[old]=key;return[key,f[1],key==='address'?'multiline':(f[2]||'text'),'full']});if(values){let nv={};Object.entries(values).forEach(([k,v])=>nv[map[k]||k]=v);Object.keys(values).forEach(k=>delete values[k]);Object.assign(values,nv)}if(!Array.isArray(t.sigEnabled))t.sigEnabled=[!!t.sig,!!t.sig,!!t.sig];if(!Array.isArray(t.sigNames))t.sigNames=['','',''];if(!Array.isArray(t.adjustments)){t.adjustments=[];if(t.discount)t.adjustments.push({label:'Discount',operation:'subtract',mode:'percent',value:Number(t.discountRate||0)});if(t.tax)t.adjustments.push({label:t.taxLabel||'Tax',operation:'add',mode:'percent',value:Number(t.taxRate||0)});}return t}
+const DEFAULT_CURRENCIES=[{code:'MYR',symbol:'RM'}];
+function normalizeCurrencies(company){
+  if(!Array.isArray(company.currencies)||!company.currencies.length)company.currencies=clone(DEFAULT_CURRENCIES);
+  company.currencies=company.currencies.filter(x=>x&&/^[A-Z]{3}$/.test(String(x.code||'').toUpperCase())).map(x=>({code:String(x.code).toUpperCase(),symbol:String(x.symbol||x.code).slice(0,12)}));
+  if(!company.currencies.length)company.currencies=clone(DEFAULT_CURRENCIES);
+  if(!company.currencies.some(x=>x.code===company.defaultCurrency))company.defaultCurrency=company.currencies[0].code;
+}
+function renderCurrencies(){
+ const co=profile().company;normalizeCurrencies(co);
+ currencySettings.innerHTML=co.currencies.map(x=>'<div class="cloud-entry"><span><strong>'+esc(x.code)+'</strong> · '+esc(x.symbol)+'</span><div class="actions"><label style="flex-direction:row;align-items:center"><input type="radio" name="defaultCurrency" data-default-currency="'+esc(x.code)+'" '+(co.defaultCurrency===x.code?'checked':'')+'> Default</label><button type="button" class="small danger" data-remove-currency="'+esc(x.code)+'" '+(co.currencies.length===1?'disabled':'')+'>Remove</button></div></div>').join('');
+}
+function documentCurrency(){
+ const co=profile().company;normalizeCurrencies(co);
+ const code=doc.currency||co.defaultCurrency;
+ return co.currencies.find(x=>x.code===code)||{code,symbol:doc.currencySymbol||code};
+}
+function renderDocCurrency(){
+ const co=profile().company;normalizeCurrencies(co);
+ let options=co.currencies.slice(), selected=documentCurrency();
+ if(!options.some(x=>x.code===selected.code))options.push(selected);
+ docCurrency.innerHTML=options.map(x=>'<option value="'+esc(x.code)+'" '+(x.code===selected.code?'selected':'')+'>'+esc(x.code)+' ('+esc(x.symbol)+')'+(co.currencies.some(v=>v.code===x.code)?'':' — saved document')+'</option>').join('');
+}
+function normalizeProfiles(){
+  settings.profiles.forEach(p=>{
+    p.company=p.company||clone(defaults.company);normalizeCurrencies(p.company);p.company.fields=(p.company.fields||[]).map(f=>Object.assign({layout:String(f.label||'').trim().toLowerCase()==='address'?'full':'half'},f));
+    if(p.company.name==='SIN MATU SHIPYARD SDN. BHD.')p.company=clone(defaults.company);
+    p.fonts=Object.assign({},defaults.fonts,p.fonts||{});
+    p.templates=Object.assign(clone(defaults.templates),p.templates||{});
+    Object.values(p.templates).forEach(t=>normalizeTemplateFields(t));
+  })
+}
+normalizeProfiles();
+function nextExtraKey(t){let used=new Set((t.fields||[]).map(f=>f[0]));for(let n=1;n<1000;n++){let k='extra_'+String(n).padStart(3,'0');if(!used.has(k))return k}return 'extra_'+Date.now()}window.addEventListener('docsystem-settings-sync',event=>{
+ if(event.detail?.ok&&activeWorkspacePreset()){
+  const frame=document.getElementById('presetWorkspaceFrame');
+  if(frame&&!frame.getAttribute('src'))setWorkspaceSource('preset',true);
+ }
+ const note=document.getElementById('customLayoutSaveStatus');
+ if(!note)return;
+ note.textContent=event.detail?.ok?'Saved online in Firebase':'Online save failed: '+(event.detail?.message||'Unknown error');
+});
+function saveSettings(){
+ localStorage.setItem(KEY,JSON.stringify(settings));
+ window.DocSystemCloud?.settingsChanged();
+ const note=document.getElementById('customLayoutSaveStatus');
+ if(note)note.textContent='Saved locally · syncing to Firebase';
+}
+function tpl(){return profile().templates[doc.type]}
+function blankRow(){let r={};tpl().columns.forEach(c=>r[c[0]]=c[0]==='item'?String(doc?.items?.length+1||1):'');return r}
+function switchProfile(id,preferredType){
+  if(!settings.profiles.some(p=>p.id===id))return;
+  settings.activeProfileId=id;
+  let types=Object.keys(profile().templates),type=profile().templates[preferredType]?preferredType:types[0];
+  newDoc(type);window.DocSystemCloud?.changedDocument();refresh()
+}
+function makeProfile(copyCurrent){
+  let name=prompt('Business profile name',copyCurrent?profileLabel(profile())+' Copy':'New Business');
+  if(name===null)return;
+  name=name.trim()||'Untitled Business';
+  let p=copyCurrent?clone(profile()):{company:clone(defaults.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates)};
+  p.id=nextProfileId();p.company.name=name;
+  normalizeCurrencies(p.company);
+  Object.values(p.templates).forEach(t=>normalizeTemplateFields(t));
+  settings.profiles.push(p);settings.activeProfileId=p.id;
+  newDoc(Object.keys(p.templates)[0]);
+  const frame=document.getElementById('presetWorkspaceFrame');
+  if(frame)frame.removeAttribute('src');
+  refresh()
+}
+function newDoc(type){
+  let t=profile().templates[type],fv={};
+  t.fields.forEach(f=>fv[f[0]]='');
+  if('date'in fv)fv.date=new Date().toISOString().slice(0,10);
+  if('customer'in fv)fv.customer='Sample Customer Sdn Bhd';
+  if('supplier'in fv)fv.supplier='Sample Supplier Sdn Bhd';
+  if('party'in fv)fv.party=type==='Payment Voucher'?'Sample Payee':type==='Receipt Voucher'?'Sample Payer':'Sample Party';
+  if('address'in fv)fv.address='Sample Address Line 1\nSample Address Line 2\nSample Address Line 3';
+  const nos={'Quotation':'SAMPLE-QUO-0001','Invoice':'SAMPLE-INV-0001','Purchase Order':'SAMPLE-PO-0001','Delivery Order':'SAMPLE-DO-0001','Receiving Note':'SAMPLE-GRN-0001','Payment Voucher':'SAMPLE-PV-0001','Receipt Voucher':'SAMPLE-RV-0001','Credit Note':'SAMPLE-CN-0001','Debit Note':'SAMPLE-DN-0001','Journal Voucher':'SAMPLE-JV-0001'};
+  if('docno'in fv)fv.docno=nos[type]||'SAMPLE-0001';
+  if('orderno'in fv)fv.orderno='SAMPLE-PO-0001';
+  if('terms'in fv)fv.terms=type==='Quotation'?'30 Days Validity':'30 Days';
+  if('ref'in fv)fv.ref=type==='Receiving Note'?'SAMPLE-PO-0001':type==='Credit Note'||type==='Debit Note'?'SAMPLE-INV-0001':'SAMPLE-REF-0001';
+  if('paymentref'in fv)fv.paymentref='SAMPLE-BANK-REF';
+  if('reason'in fv)fv.reason='Sample reason / reference';
+  doc={kind:'DocFacDocument',version:1,type,title:t.title,fieldValues:fv,items:[],notes:'',currency:profile().company.defaultCurrency,currencySymbol:profile().company.currencies.find(x=>x.code===profile().company.defaultCurrency)?.symbol||'RM'};
+  doc.items.push(blankRow());
+  let r=doc.items[0];
+  if('item'in r)r.item='1';
+  if('description'in r)r.description=type==='Payment Voucher'||type==='Receipt Voucher'?'Sample payment particulars':'Sample item - 0001';
+  if('qty'in r)r.qty=type==='Delivery Order'||type==='Receiving Note'?'2 Sets':'2';
+  if('unit_price'in r)r.unit_price='1250';
+  if(type==='Payment Voucher'||type==='Receipt Voucher')r.amount='2500';
+  if(type==='Journal Voucher'){r.account='SAMPLE-1000';r.description='Sample journal entry';r.debit='1000';r.credit=''}
+}
+newDoc('Delivery Order');
+function computed(row,c){if(c[2]!=='formula')return row[c[0]]||'';if(c[0]==='amount')return Number(row.qty||0)*Number(row.unit_price||0);return 0}
+function rowIsMeaningful(row){return tpl().columns.some(c=>c[2]!=='formula'&&c[0]!=='item'&&String(row[c[0]]??'').trim()!=='')}function formulaDisplay(row,c){return rowIsMeaningful(row)?money(computed(row,c)):''}function updateFormulaInputs(rowIndex){let t=tpl(),row=doc.items[rowIndex];t.columns.forEach(col=>{if(col[2]!=='formula')return;let el=document.querySelector('[data-ri="'+rowIndex+'"][data-key="'+CSS.escape(col[0])+'"]');if(el)el.value=formulaDisplay(row,col)})}function baseTotal(){let c=tpl().columns.find(c=>c[2]==='formula')||tpl().columns.find(c=>c[0]==='amount');return c?doc.items.reduce((s,r)=>s+Number(c[2]==='formula'?computed(r,c):r[c[0]]||0),0):0}
+function presetHeaderConfig(){
+ const current=profile();
+ if(!current.presetHeader)current.presetHeader={logo:'',name:'',details:'',titleText:'{documentTitle}',extraText:'{headingLines}',logoWidth:35,nameSize:13,detailsSize:8};
+ return current.presetHeader;
+}
+function renderPresetHeaderConfig(){
+ const select=document.getElementById('presetHeaderProfileSelect');if(!select)return;
+ select.innerHTML=settings.profiles.map(p=>'<option value="'+esc(p.id)+'" '+(p.id===settings.activeProfileId?'selected':'')+'>'+esc(profileLabel(p))+'</option>').join('');
+ const config=presetHeaderConfig();
+ document.querySelectorAll('[data-preset-header-field]').forEach(el=>{
+  const key=el.dataset.presetHeaderField,defaults={titleText:'{documentTitle}',extraText:'{headingLines}'};
+  el.value=config[key]===undefined?(defaults[key]||''):config[key];
+ });
+ document.querySelectorAll('[data-preset-header-size]').forEach(el=>el.value=config[el.dataset.presetHeaderSize+'Size']||10);
+ const logoWidth=document.querySelector('[data-preset-header-logo-width]');if(logoWidth)logoWidth.value=config.logoWidth||35;
+ document.querySelectorAll('[data-preset-header-color]').forEach(el=>{const color=config[el.dataset.presetHeaderColor+'Color'];el.value=/^#[0-9a-f]{6}$/i.test(String(color||''))?color:(el.dataset.presetHeaderColor==='title'?'#d6a900':el.dataset.presetHeaderColor==='name'?'#081527':'#111111')});
+ document.querySelectorAll('[data-preset-header-style]').forEach(el=>{const [slot,key]=el.dataset.presetHeaderStyle.split(':');el.value=config[slot+(key==='font'?'Font':'Align')]||(key==='font'?'Arial':(['title','extra'].includes(slot)?'right':'left'))});
+}
+function renderCustomTemplateLibrary(){
+ const root=document.getElementById('customTemplateList');if(!root)return;
+ root.innerHTML=Object.keys(profile().templates).map(type=>'<div class="cloud-entry"><div><b>'+esc(type)+'</b><div class="muted">Custom document · '+esc(profileLabel(profile()))+'</div></div><button type="button" class="small" data-open-custom-doc="'+esc(type)+'">Use in Workspace</button></div>').join('');
+}
+function refresh(){renderSelectors();renderCreate();renderCompany();renderGlobalPlaceholders();renderTemplate();renderCustomTemplateLibrary();renderPresetHeaderConfig();renderPreview();saveSettings()}
+function renderSelectors(){
+  let popts=settings.profiles.map(p=>'<option value="'+esc(p.id)+'" '+(p.id===settings.activeProfileId?'selected':'')+'>'+esc(profileLabel(p))+'</option>').join('');
+  businessProfile.innerHTML=popts;companyProfile.innerHTML=popts;tplBusinessProfile.innerHTML=popts;
+  let a=Object.keys(profile().templates);
+  docType.innerHTML=a.map(x=>'<option '+(x===doc.type?'selected':'')+'>'+esc(x)+'</option>').join('');
+  tplType.innerHTML=docType.innerHTML
+}
+function updateProfileLabels(){
+  [businessProfile,companyProfile,tplBusinessProfile].forEach(sel=>{let o=sel&&sel.querySelector('option[value="'+CSS.escape(settings.activeProfileId)+'"]');if(o)o.textContent=profileLabel(profile())})
+}
+function renderCreate(){let t=tpl();renderDocCurrency();docTitle.value=doc.title;docFields.innerHTML=t.fields.map(f=>{let control=f[2]==='multiline'?'<textarea rows="3" data-field="'+f[0]+'">'+esc(doc.fieldValues[f[0]]||'')+'</textarea>':'<input data-field="'+f[0]+'" value="'+esc(doc.fieldValues[f[0]]||'')+'">';return '<label>'+esc(f[1])+control+'</label>'}).join('');let h='<thead><tr>'+t.columns.map(c=>'<th>'+esc(c[1])+'</th>').join('')+'<th></th></tr></thead><tbody>';doc.items.forEach((r,i)=>h+='<tr>'+t.columns.map(c=>'<td><input data-ri="'+i+'" data-key="'+c[0]+'" '+(c[2]==='formula'?'readonly':'')+' value="'+esc(c[2]==='formula'?formulaDisplay(r,c):r[c[0]]||'')+'"></td>').join('')+'<td><button class="trash" data-del="'+i+'">×</button></td></tr>');items.innerHTML=h+'</tbody>';notes.value=doc.notes||''}
+function companyInfoText(c){
+ return typeof c.headerText==='string'?c.headerText:(c.fields||[]).filter(f=>f.place!=='footer'&&f.value).map(f=>(f.label?f.label+': ':'')+f.value).join('\n');
+}
+const RESERVED_PLACEHOLDERS=new Set(['logo','companyName','companyname','companyInfo','documentType','doctype','footerText','pageNumber','page','docno','docdate']);
+const PRESET_PLACEHOLDERS={
+ regno:'',tagline:'',address:'',telephone:'',mobile:'',fax:'',email:'',website:'',
+ contactPerson:'',taxNo:'',sstNo:'',bankName:'',bankAccount:'',bankAccountName:'',
+ paymentInstructions:'',businessHours:'',referenceNote:''
+};
+function globals(){
+ if(!settings.globalPlaceholders||typeof settings.globalPlaceholders!=='object')settings.globalPlaceholders={};
+ if(!settings.presetPlaceholdersInitialized){
+  for(const [key,value] of Object.entries(PRESET_PLACEHOLDERS))
+   if(!Object.prototype.hasOwnProperty.call(settings.globalPlaceholders,key))settings.globalPlaceholders[key]=value;
+  settings.presetPlaceholdersInitialized=true;
+ }
+ return settings.globalPlaceholders;
+}
+function renderGlobalPlaceholders(){
+ const root=document.getElementById('globalPlaceholders');if(!root)return;
+ root.innerHTML=Object.entries(globals()).map(([key,value])=>'<div class="card"><div class="between"><strong>{'+esc(key)+'}</strong><button type="button" class="small danger" data-placeholder-remove="'+esc(key)+'">Remove</button></div><textarea rows="3" data-placeholder-key="'+esc(key)+'">'+esc(value)+'</textarea></div>').join('')||'<p class="muted">No custom placeholders yet.</p>';
+}
+function customLayoutConfig(area){
+ const p=profile();
+ if(!p.customLayouts){
+  // Adopt the current configured custom layout when consolidating the workspace.
+  const templates=Object.values(p.templates||{});
+  const priority=[p.templates?.[doc.type],...templates].filter(Boolean);
+  const findConfiguredLayout=kind=>priority.map(t=>t.layouts?.[kind]).find(l=>l&&Array.isArray(l.panels)&&l.panels.some(panel=>String(panelText(panel)).trim()));
+  p.customLayouts={
+   header:clone(findConfiguredLayout('header')||{columns:3,panels:[{align:'left',text:''},{align:'center',text:''},{align:'right',text:''}]}),
+   footer:clone(findConfiguredLayout('footer')||{columns:1,panels:[{align:'center',text:''}]})
+  };
+ }
+ return p.customLayouts[area];
+}
+function layoutConfig(area){
+ const layout=customLayoutConfig(area);
+ if(![1,2,3].includes(Number(layout.columns)))layout.columns=area==='header'?3:1;
+ if(!Array.isArray(layout.panels))layout.panels=[];
+ while(layout.panels.length<layout.columns)layout.panels.push({align:'left',text:''});
+ return layout;
+}
+function panelText(p){
+ if(typeof p.text==='string')return p.text;
+ return (p.blocks||[]).map(b=>({logo:'{logo}',name:'{companyName}',info:'{companyInfo}',footerText:'{footerText}',page:'{pageNumber}'}[b.type]||b.text||'')).join('\n');
+}
+const PANEL_FONTS=['Arial, sans-serif','Times New Roman, serif','Georgia, serif','Verdana, sans-serif','Tahoma, sans-serif','Courier New, monospace'];
+function panelStyle(p){if(!p.style)p.style={};return p.style}
+function panelStyleControls(area,i,p){
+ const st=panelStyle(p),prefix=area+':'+i;
+ return '<div class="row panel-style-controls"><label>Font<select data-panel-style="'+prefix+':font">'+PANEL_FONTS.map(font=>'<option value="'+esc(font)+'" '+((st.font||PANEL_FONTS[0])===font?'selected':'')+'>'+esc(font.split(',')[0])+'</option>').join('')+'</select></label><label>Default text size (pt)<input type="number" min="6" max="36" step="1" data-panel-style="'+prefix+':size" value="'+(st.size||10)+'"></label><label>Logo width (mm)<input type="number" min="10" max="70" step="1" data-panel-style="'+prefix+':logoWidth" value="'+(st.logoWidth||23)+'"></label><label>Weight<select data-panel-style="'+prefix+':weight"><option value="normal" '+(st.weight!=='bold'?'selected':'')+'>Regular</option><option value="bold" '+(st.weight==='bold'?'selected':'')+'>Bold</option></select></label><label>Style<select data-panel-style="'+prefix+':italic"><option value="normal" '+(st.italic!=='italic'?'selected':'')+'>Normal</option><option value="italic" '+(st.italic==='italic'?'selected':'')+'>Italic</option></select></label></div>';
+}
+function renderLayoutControls(){
+ for(const area of ['header','footer']){
+  const l=layoutConfig(area),root=document.getElementById(area+'LayoutControls');
+  root.innerHTML='<label>Layout<select data-layout-count="'+area+'">'+[1,2,3].map(n=>'<option value="'+n+'" '+(l.columns===n?'selected':'')+'>'+n+' column'+(n>1?'s':'')+'</option>').join('')+'</select></label><p class="muted">Panel size is the default. Inline [size=14]...[/size] changes selected text only. Size tags in Business Profile text are ignored. The {logo} shortcode uses Logo width (mm). Available: {logo}, {companyName}, {companyInfo}, {documentType}, {footerText}, {pageNumber}.</p><div class="layout-settings">'+l.panels.slice(0,l.columns).map((p,i)=>'<div class="layout-panel"><strong>Panel '+(i+1)+'</strong><label>Alignment<select data-layout-align="'+area+':'+i+'">'+['left','center','right'].map(v=>'<option '+(p.align===v?'selected':'')+'>'+v+'</option>').join('')+'</select></label>'+panelStyleControls(area,i,p)+'<div class="panel-inline-tools"><button type="button" class="small" data-inline-format="'+area+':'+i+':bold">B</button><button type="button" class="small" data-inline-format="'+area+':'+i+':italic">I</button><button type="button" class="small" data-inline-format="'+area+':'+i+':underline">U</button><button type="button" class="small" data-inline-format="'+area+':'+i+':size">Size</button><button type="button" class="small" data-inline-format="'+area+':'+i+':font">Font</button><button type="button" class="small" data-inline-format="'+area+':'+i+':color">Color</button></div><textarea rows="6" class="panel-editor" data-panel-text="'+area+':'+i+'" spellcheck="false">'+esc(panelText(p))+'</textarea></div>').join('')+'</div>';
+ }
+}
+function panelCss(p){
+ const st=panelStyle(p),font=PANEL_FONTS.includes(st.font)?st.font:PANEL_FONTS[0],size=Math.max(6,Math.min(36,Number(st.size)||10));
+ return 'font-family:'+font+';font-size:'+size+'pt;font-weight:'+(st.weight==='bold'?'bold':'normal')+';font-style:'+(st.italic==='italic'?'italic':'normal')+';';
+}
+function websiteLinkMarkup(value){
+ const label=String(value??'').trim();
+ if(!label)return '';
+ const candidate=/^https?:\/\//i.test(label)?label:'https://'+label;
+ try{
+  const u=new URL(candidate);
+  if(!['http:','https:'].includes(u.protocol)||!u.hostname.includes('.')||/\s/.test(label))return esc(label);
+  return '<a class="doc-website-link" href="'+esc(u.href)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+'</a>';
+ }catch(e){return esc(label)}
+}
+function formatPanelText(value){
+ let html=value;
+ html=html.replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<strong>$1</strong>');
+ html=html.replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<em>$1</em>');
+ html=html.replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>');
+ html=html.replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,(_,n,t)=>'<span style="font-size:'+Math.max(6,Math.min(36,Number(n)))+'pt">'+t+'</span>');
+ html=html.replace(/\[font=(Arial|Georgia|Verdana|Tahoma|Courier New|Times New Roman)\]([\s\S]*?)\[\/font\]/gi,(_,n,t)=>'<span style="font-family:'+n+'">'+t+'</span>');
+ html=html.replace(/\[color=(#[0-9a-fA-F]{6})\]([\s\S]*?)\[\/color\]/gi,(_,n,t)=>'<span style="color:'+n+'">'+t+'</span>');
+ return html;
+}
+function layoutHtml(area,page,count){
+ const l=layoutConfig(area),co=profile().company;
+ // Business Profile stores data, and template panels determine all sizing.
+ const withoutProfileSizes=text=>String(text||'').replace(/\[\/?size(?:=\d{1,2})?\]/gi,'');
+ const values={companyName:co.name||'',companyname:co.name||'',companyInfo:withoutProfileSizes(companyInfoText(co)),documentType:doc.title||doc.type||'',doctype:doc.title||doc.type||'',footerText:withoutProfileSizes(co.footer||''),pageNumber:'Page '+page+' of '+count,page:'Page '+page+' of '+count,docno:doc.fieldValues?.docno||'',docdate:doc.fieldValues?.date||''};
+ function renderText(text,logoWidth){
+  function resolve(source,depth){
+   if(depth>4)return esc(source);
+   return String(source||'').split(/(\{[a-zA-Z][a-zA-Z0-9_]*\})/g).map(part=>{
+    const match=/^\{([a-zA-Z][a-zA-Z0-9_]*)\}$/.exec(part);
+    if(!match)return esc(part);
+    const key=match[1];
+    if(key==='logo')return co.logo?'<img class="logo" src="'+esc(co.logo)+'" style="width:'+logoWidth+'mm;max-width:100%;max-height:none;height:auto" alt="Company logo">':'';
+    if(Object.prototype.hasOwnProperty.call(values,key))return key==='companyInfo'||key==='footerText'?formatPanelText(esc(values[key])):esc(values[key]);
+    if(Object.prototype.hasOwnProperty.call(globals(),key))return key==='website'?websiteLinkMarkup(globals()[key]):resolve(globals()[key],depth+1);
+    return esc(part);
+   }).join('');
+  }
+  return String(text||'').replace(/\r\n?/g,'\n').split('\n').map(line=>'<div class="shortcode-line">'+(line?formatPanelText(resolve(line,0)):'&#160;')+'</div>').join('');
+ }
+ return '<div class="flex-layout '+(area==='header'?'cHead':'footer-layout')+'" style="grid-template-columns:repeat('+l.columns+',minmax(0,1fr))">'+l.panels.slice(0,l.columns).map(p=>'<div class="layout-preserve" style="text-align:'+p.align+';min-width:0;'+panelCss(p)+'">'+renderText(panelText(p),Math.max(10,Math.min(70,Number(panelStyle(p).logoWidth)||23)))+'</div>').join('')+'</div>';
+}
+function renderCompany(){let company=profile().company;renderCurrencies();companyName.value=company.name;companyFooter.value=company.footer||'';companyInfo.value=companyInfoText(company)}
+const FONT_OPTIONS=['Arial, sans-serif','Times New Roman, serif','Georgia, serif','Verdana, sans-serif','Tahoma, sans-serif','Trebuchet MS, sans-serif','Courier New, monospace'];function fontOptions(v){return FONT_OPTIONS.map(x=>'<option value="'+esc(x)+'" '+(x===v?'selected':'')+'>'+esc(x.split(',')[0])+'</option>').join('')}function renderTemplate(){let t=tpl();renderLayoutControls();dividerPosition.value=t.dividerPosition||'none';paperSize.value=t.paperSize||'A4';pageMargins.value=t.pageMargins||'standard';tplTitle.value=t.title;detailFieldsSetup.innerHTML=t.fields.map((f,i)=>'<div class="detailcfg"><label>Label<input data-dflabel="'+i+'" value="'+esc(f[1])+'"></label><label>Locked Key<input readonly aria-readonly="true" tabindex="-1" value="'+esc(f[0])+'"></label><label>Input<select data-dftype="'+i+'"><option value="text" '+(f[2]!=='multiline'?'selected':'')+'>Single line</option><option value="multiline" '+(f[2]==='multiline'?'selected':'')+'>Multi-line</option></select></label><button type="button" class="small" data-dfup="'+i+'">↑</button><button type="button" class="small" data-dfdown="'+i+'">↓</button><button type="button" class="danger small" data-dfdel="'+i+'">×</button></div>').join('');fontHeader.innerHTML=fontOptions(profile().fonts.header);fontTitle.innerHTML=fontOptions(profile().fonts.title);fontBody.innerHTML=fontOptions(profile().fonts.body);fontItems.innerHTML=fontOptions(profile().fonts.items);fontFooter.innerHTML=fontOptions(profile().fonts.footer);columnOrder.innerHTML=t.columns.map((col,i)=>'<div class="dragcol" draggable="true" data-colindex="'+i+'"><span class="draghandle">☰</span><div><strong>'+esc(col[1])+'</strong><div class="key">'+esc(col[0])+'</div></div><button type="button" class="small" data-moveup="'+i+'">↑</button><button type="button" class="small" data-movedown="'+i+'">↓</button></div>').join('');subtotalOn.checked=!!t.subtotal;totalAdjustments.innerHTML=(t.adjustments||[]).map((a,i)=>'<div class="totalcfg"><label>Label<input data-adjlabel="'+i+'" value="'+esc(a.label||'')+'"></label><label>Operation<select data-adjop="'+i+'"><option value="add" '+(a.operation!=='subtract'?'selected':'')+'>Add</option><option value="subtract" '+(a.operation==='subtract'?'selected':'')+'>Deduct</option></select></label><label>Type<select data-adjmode="'+i+'"><option value="percent" '+(a.mode!=='fixed'?'selected':'')+'>Percent %</option><option value="fixed" '+(a.mode==='fixed'?'selected':'')+'>Fixed amount</option></select></label><label>Value<input data-adjvalue="'+i+'" type="number" step="0.01" value="'+esc(a.value??0)+'"></label><button class="danger small" data-adjdel="'+i+'">×</button></div>').join('');sig1On.checked=!!t.sigEnabled[0];sig2On.checked=!!t.sigEnabled[1];sig3On.checked=!!t.sigEnabled[2];sig1.value=t.sigs[0]||'';sig2.value=t.sigs[1]||'';sig3.value=t.sigs[2]||'';sigName1.value=t.sigNames[0]||'';sigName2.value=t.sigNames[1]||'';sigName3.value=t.sigNames[2]||''}
+function divider(){return '<div class="fullDivider" aria-hidden="true"></div>'}
+function header(page){let pos=tpl().dividerPosition||'none';return layoutHtml('header',page,1)+(pos==='header'?divider():'')+(layoutConfig('header').panels.slice(0,layoutConfig('header').columns).some(p=>/\{(?:documentType|doctype)\}/i.test(panelText(p)))?'':'<div class="doctitle">'+esc(doc.title)+'</div>')+(pos==='title'?divider():'')+(page>1?'<div class="muted" style="text-align:right">Continuation</div>':'')}
+function info(){let rows=tpl().fields.filter(f=>String(doc.fieldValues[f[0]]??'').trim()!=='').map(f=>'<tr><td class="lab">'+esc(f[1])+'</td><td class="colon">:</td><td class="value">'+esc(doc.fieldValues[f[0]]||'')+'</td></tr>').join('');return rows?'<table class="info">'+rows+'</table>':''}
+function table(rows){let t=tpl();return '<table class="docTable"><colgroup>'+t.columns.map(c=>'<col style="width:'+c[3]+'%">').join('')+'</colgroup><thead><tr>'+t.columns.map(c=>'<th>'+esc(c[1])+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+t.columns.map(c=>'<td class="'+(c[2]!=='text'?'num':'')+'">'+esc(c[2]==='formula'?formulaDisplay(r,c):r[c[0]]||'')+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function totals(){let t=tpl();let cur=documentCurrency().code;let amount=n=>cur+' '+money(n);
+if(t.family==='journal'){
+  let debit=doc.items.reduce((s,r)=>s+Number(r.debit||0),0),credit=doc.items.reduce((s,r)=>s+Number(r.credit||0),0),diff=debit-credit;
+  return '<table class="totals"><tr><td>Total Debit</td><td>'+amount(debit)+'</td></tr><tr><td>Total Credit</td><td>'+amount(credit)+'</td></tr><tr class="grand"><td>'+(Math.abs(diff)<0.000001?'Balanced':'Difference')+'</td><td>'+(Math.abs(diff)<0.000001?'✓':amount(Math.abs(diff)))+'</td></tr></table>'
+}
+let b=baseTotal(),running=b,rows=[];(t.adjustments||[]).forEach(a=>{let v=Number(a.value||0),amt=a.mode==='fixed'?v:running*(v/100);if(a.operation==='subtract'){running-=amt}else{running+=amt}let label=esc(a.label||'Adjustment')+(a.mode==='percent'?' ('+v+'%)':'');rows.push('<tr><td>'+label+'</td><td>'+(a.operation==='subtract'?'-':'+')+amount(amt)+'</td></tr>')});if(!t.subtotal&&rows.length===0)return'';let s='<table class="totals">';if(t.subtotal)s+='<tr><td>Subtotal</td><td>'+amount(b)+'</td></tr>';s+=rows.join('');return s+'<tr class="grand"><td>Total</td><td>'+amount(running)+'</td></tr></table>'}
+function sigs(){let t=tpl();if(!(t.sigEnabled||[]).some(Boolean))return'';let intro=t.family==='movement'?'Please receive the following goods in good order and conditions.<br>Goods sold are not returnable.':'';return '<div class="ack">'+intro+'<div class="siggrid">'+t.sigs.map((s,i)=>t.sigEnabled[i]?'<div class="sig"><div class="sigtitle">'+esc(s)+'</div><div class="sigline">'+esc((t.sigNames||[])[i]||'Signature / Name')+'</div></div>':'<div class="sig sigempty" aria-hidden="true"></div>').join('')+'</div></div>'}
+function footer(p,n){return '<div class="footer">'+layoutHtml('footer',p,n)+'</div>'}
+let paginationBusy=false;
+function renderPreview(){
+  if(paginationBusy)return;
+  paginationBusy=true;
+  try{
+    const pageSize=tpl().paperSize==='Letter'?'Letter':'A4';
+    const narrow=tpl().pageMargins==='narrow';
+    const pw=pageSize==='Letter'?216:210, ph=pageSize==='Letter'?279:297;
+    const margin=narrow?8:15;
+    const layout='--page-w:'+pw+'mm;--page-h:'+ph+'mm;--page-m:'+margin+'mm;';
+    document.getElementById('printPaperRule').textContent='@page {size: '+(pageSize==='Letter'?'letter':'A4')+' portrait; margin: 0;}';
+    const fonts=layout+'--font-header:'+profile().fonts.header+';--font-title:'+profile().fonts.title+';--font-body:'+profile().fonts.body+';--font-items:'+profile().fonts.items+';--font-footer:'+profile().fonts.footer;
+    const segments=[];
+    // Keep document order intact: items first, then notes, totals and signatures.
+    for(const item of doc.items)segments.push({kind:'item',value:item});
+    if(doc.notes)segments.push({kind:'notes'});
+    segments.push({kind:'totals'});
+    if((tpl().sigEnabled||[]).some(Boolean))segments.push({kind:'signatures'});
+    if(!segments.length)segments.push({kind:'totals'});
+    let pages=[{items:[],ending:[]}];
+    const makePage=(pageIndex,final=false)=>{
+      const p=pages[pageIndex];
+      return '<section class="paper" style="'+esc(fonts)+'">'+header(pageIndex+1)+(pageIndex===0?info():'')+table(p.items)+(p.ending.includes('notes')?'<div class="notes">'+esc(doc.notes)+'</div>':'')+(p.ending.includes('totals')?totals():'')+(p.ending.includes('signatures')?sigs():'')+footer(pageIndex+1,pages.length)+'</section>';
+    };
+    // Measure using full-size A4 layout, never the responsive mobile preview.
+    const measureRoot=document.createElement('div');
+    measureRoot.className='pagination-measure';
+    measureRoot.style.width=pw+'mm';
+    document.body.appendChild(measureRoot);
+    const fits=pageIndex=>{
+      measureRoot.innerHTML=makePage(pageIndex);
+      const paper=measureRoot.firstElementChild;
+      const footerEl=paper.querySelector('.footer');
+      const content=Array.from(paper.children).filter(x=>x!==footerEl);
+      const maxBottom=footerEl.getBoundingClientRect().top-4*96/25.4;
+      return content.every(x=>x.getBoundingClientRect().bottom<=maxBottom+1);
+    };
+    try{
+      for(const segment of segments){
+        let last=pages[pages.length-1];
+        if(segment.kind==='item')last.items.push(segment.value);
+        else last.ending.push(segment.kind);
+        if(!fits(pages.length-1)){
+          if(segment.kind==='item')last.items.pop();
+          else last.ending.pop();
+          if(!last.items.length&&!last.ending.length && pages.length===1){
+            // An oversized single row cannot fit this page; move to continuation.
+            pages.push({items:[],ending:[]});
+          }else{
+            pages.push({items:[],ending:[]});
+          }
+          last=pages[pages.length-1];
+          if(segment.kind==='item')last.items.push(segment.value);
+          else last.ending.push(segment.kind);
+        }
+      }
+    }finally{measureRoot.remove()}
+    // Remove empty trailing pages.
+    pages=pages.filter((p,i)=>i===0||p.items.length||p.ending.length);
+    preview.innerHTML=pages.map((_,i)=>makePage(i)).join('');
+    pageCount.textContent=pages.length+' page'+(pages.length===1?'':'s');
+    fitCustomA4Preview();
+  }finally{paginationBusy=false}
+}
+// Visual scale applies only to the screen preview; pagination keeps true A4 dimensions.
+function fitCustomA4Preview(){
+ const main=document.getElementById('docMain');
+ const holder=main?.querySelector(':scope > .preview');
+ const papers=holder?.querySelectorAll('#preview > .paper');
+ if(!holder||!papers?.length)return;
+ const width=holder.clientWidth-12;
+ const a4Width=(document.getElementById('docType')?.value && tpl().paperSize==='Letter'?216:210)*96/25.4;
+ const scale=Math.min(1,Math.max(0.3,width/a4Width));
+ const zoom=String(Math.round(scale*1000)/1000);
+ papers.forEach(p=>{if(p.style.zoom!==zoom)p.style.zoom=zoom});
+}
+if(typeof ResizeObserver!=='undefined'){
+ const customPreviewColumn=document.querySelector('#docMain > .preview');
+ if(customPreviewColumn)new ResizeObserver(()=>fitCustomA4Preview()).observe(customPreviewColumn);
+}else window.addEventListener('resize',fitCustomA4Preview);
+function download(name,obj){let b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),500)}
+function setWorkspaceView(view){
+ const mode=view==='preview'?'preview':'working',main=document.getElementById('docMain');
+ document.querySelectorAll('[data-workspace-view]').forEach(b=>{const on=b.dataset.workspaceView===mode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+ if(document.getElementById('workspaceTemplateSource').value==='preset'){sendPresetCommand('view',{preview:mode==='preview'});return}
+ main.classList.toggle('preview-mode',mode==='preview');
+ main.classList.toggle('working-mode',mode==='working');
+ if(mode==='preview')renderPreview();
+}
+function sendPresetCommand(action,extra={}){
+ const frame=document.getElementById('presetWorkspaceFrame');
+ if(!frame?.contentWindow||!frame.getAttribute('src')){document.getElementById('workspaceStatus').textContent='Preset editor is not loaded';return}
+ frame.contentWindow.postMessage({type:'docsystem-preset-command',action,...extra},location.origin);
+}
+function activeWorkspacePreset(){return document.getElementById('workspaceTemplateSource').value==='preset'}
+function syncPresetBusiness(){if(activeWorkspacePreset())sendPresetCommand('business',{profileId:document.getElementById('businessProfile').value})}
+function workspaceAction(action){
+ if(activeWorkspacePreset()){
+  if(action==='new'){if(confirm('Start a new preset document? Unsaved changes will be lost.'))sendPresetCommand('new');return}
+  if(action==='save')return sendPresetCommand('save');
+  if(action==='print'){
+   const frame=document.getElementById('presetWorkspaceFrame');
+   try{if(typeof frame.contentWindow?.printDoc==='function')return frame.contentWindow.printDoc();}
+   catch(e){console.warn('Preset print unavailable',e)}
+   document.getElementById('workspaceStatus').textContent='Preset editor not ready to print';return;
+  }
+ }else{
+  if(action==='new'){if(confirm('Start a new custom document?')){newDoc(doc.type);window.DocSystemCloud?.changedDocument();refresh()}return}
+  if(action==='save')return window.DocSystemCloud?.saveDocument();
+  if(action==='print'){renderPreview();window.print();return}
+ }
+}
+function showDocPage(page){
+ if(window.DocSystemRole==="user" && ["library","template","templates","company","global","users","backup","settings"].includes(page))page="create";
+ const settings=['company','global','users','backup'],template=['library','template'];
+ const root=page==='settings'?'company':page==='templates'?'library':page;
+ const target=settings.includes(root)?'settings':template.includes(root)?'library':root;
+ document.querySelectorAll('nav.tabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===target));
+ document.querySelectorAll('.workspace>.panel').forEach(p=>p.classList.toggle('active',p.id===root));
+ document.getElementById('settingsSubnav').hidden=target!=='settings';
+ 
+ document.querySelectorAll('.clean-subnav button').forEach(b=>b.classList.toggle('active',b.dataset.subpage===root));
+ document.body.classList.toggle('preset-current',root==='create'&&document.getElementById('workspaceTemplateSource').value==='preset');
+ // Only the Workspace may show the separate document preview.
+ document.getElementById('docMain').classList.toggle('on-workspace-tab',root==='create');
+ if(root==='create'&&document.getElementById('workspaceTemplateSource').value==='custom')setWorkspaceView('working');
+ if(root==='create')document.getElementById('workspaceStatus').textContent=activeWorkspacePreset()?'Preset document ready':'Custom document ready';
+}
+const poPresetChoices=[['purchase-credit','Purchase — Credit'],['purchase-cash','Purchase — Cash'],['purchase-progress-claim','Purchase — Progress Claim'],['rental','Rental'],['inspection-repair','Inspection / Repair'],['logistics','Logistics']];
+const deliveryTicketPresetChoices=[['standard','Standard Delivery Ticket']];
+const returningTicketPresetChoices=[['standard','Standard Returning Ticket']];
+const invoicePresetChoices=[['standard','Standard Invoice']];
+const quotationPresetChoices=[['rental3','Rental (Qty 3)'],['rental10','Rental (Qty 10)'],['rentcon53','Rental + Consumables (Qty 5+3)'],['rentcon105','Rental + Consumables (Qty 10+5)'],['specialtkr','Rental — Special TKR']];
+
+function presetConfiguratorTypes(){
+ const family=document.getElementById('presetConfigureFamily').value;
+ const choices=family==='purchase-order'?poPresetChoices:family==='delivery-ticket'?deliveryTicketPresetChoices:family==='returning-ticket'?returningTicketPresetChoices:family==='invoice'?invoicePresetChoices:quotationPresetChoices;
+ document.getElementById('presetConfigureType').innerHTML=choices.map(([id,title])=>'<option value="'+esc(id)+'">'+esc(title)+'</option>').join('');
+}
+function loadPresetConfigurator(copyId=null){
+ const family=document.getElementById('presetConfigureFamily').value,base=document.getElementById('presetConfigureType').value;
+ const editor={'quotation':'preset-quotation.html','purchase-order':'preset-po.html','delivery-ticket':'preset-do.html','returning-ticket':'preset-return.html','invoice':'preset-invoice.html'}[family];
+ if(!editor)return;
+ const frame=document.getElementById('presetConfigureFrame');frame.dataset.family=family;frame.dataset.base=base;
+ frame.src=editor+'?version=20261101-config-mode4&embedded=1&configure=1&preset='+encodeURIComponent(base)+(copyId?'&copyId='+encodeURIComponent(copyId):'');
+ document.getElementById('presetConfigStatus').textContent='Editing '+family+' / '+base+'. Saving creates a separate template.';
+}
+presetConfiguratorTypes();
+
+function fillPresetTypes(preserve=false){
+ const family=document.getElementById('workspacePresetFamily').value;
+ const select=document.getElementById('workspacePresetSelect'),previous=select.value;
+ const choices=family==='purchase-order'?poPresetChoices:family==='delivery-ticket'?deliveryTicketPresetChoices:family==='returning-ticket'?returningTicketPresetChoices:family==='invoice'?invoicePresetChoices:quotationPresetChoices;
+ select.innerHTML=choices.map(([id,label])=>'<option value="'+id+'">'+esc(label)+'</option>').join('');
+ if(preserve&&choices.some(([id])=>id===previous))select.value=previous;
+}
+function setWorkspaceSource(source,reload=false,documentId=null,copyId=null){
+ const preset=source==='preset',main=document.getElementById('docMain');
+ document.getElementById('workspaceTemplateSource').value=preset?'preset':'custom';
+ document.getElementById('workspacePresetChoice').hidden=!preset;
+ document.getElementById('workspaceFamilyChoice').hidden=!preset;
+ document.getElementById('workspacePresetFamily').disabled=!preset;
+ document.getElementById('workspaceCustomChoice').hidden=preset;
+ document.getElementById('workspacePresetSelect').disabled=!preset;
+ document.getElementById('presetWorkspace').hidden=!preset;
+
+ main.classList.toggle('preset-editor-mode',preset);
+ document.body.classList.toggle('preset-current',preset&&document.getElementById('create').classList.contains('active'));
+ document.getElementById('workspaceStatus').textContent=preset?'Loading preset document…':'Custom document ready';
+ document.querySelectorAll('[data-workspace-view]').forEach(b=>{const on=b.dataset.workspaceView==='working';b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
+ if(preset){
+  const id=document.getElementById('workspacePresetSelect').value;
+  const family=document.getElementById('workspacePresetFamily').value;
+  const editor=family==='invoice'?'preset-invoice.html?version=20261102-multiline-address1':family==='returning-ticket'?'preset-return.html?version=20261101-save-preset-copies2':family==='delivery-ticket'?'preset-do.html?version=20261101-save-preset-copies2':family==='purchase-order'?'preset-po.html?version=20261101-clause-fields-inline1':'preset-quotation.html?version=20261101-clause-fields-inline1';
+  const url=editor+'&preset='+encodeURIComponent(id)+'&embedded=1'+(documentId?'&docId='+encodeURIComponent(documentId):'')+(copyId?'&copyId='+encodeURIComponent(copyId):'');
+  const frame=document.getElementById('presetWorkspaceFrame');
+  if(reload||!frame.getAttribute('src'))frame.src=url;
+ }else{
+  renderSelectors();document.getElementById('businessProfile').disabled=false;
+  main.classList.remove('preview-mode');main.classList.add('working-mode');
+  document.querySelectorAll('[data-workspace-view]').forEach(b=>{const active=b.dataset.workspaceView==='working';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+ }
+}
+window.addEventListener('message',e=>{
+ if(e.origin===location.origin&&e.source===document.getElementById('presetConfigureFrame')?.contentWindow){
+  if(e.data?.type==='docsystem-preset-template-saved'){
+   document.getElementById('presetConfigStatus').textContent='Saved new template: '+(e.data.name||'');
+   window.DocSystemCloud?.loadSavedPresetCopies();
+  }else if(e.data?.type==='docsystem-preset-status'){
+   document.getElementById('presetConfigStatus').textContent=e.data.status||'Ready';
+  }else if(e.data?.type==='docsystem-preset-height'&&Number.isFinite(Number(e.data.height))){
+   document.getElementById('presetConfigureFrame').style.height=Math.max(850,Math.min(6000,Number(e.data.height)+20))+'px';
+  }
+  return;
+ }
+ if(e.origin!==window.location.origin||e.source!==document.getElementById('presetWorkspaceFrame').contentWindow)return;
+ if(e.data?.type==='docsystem-preset-ready'){
+  const profileList=Array.isArray(e.data.profiles)?e.data.profiles:[];
+  const selection=document.getElementById('businessProfile');
+  if(profileList.length){
+   const expected=settings.activeProfileId,found=profileList.some(p=>p.id===expected);
+   selection.innerHTML=profileList.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.name)+'</option>').join('');
+   if(!e.data.locked&&!found){selection.disabled=true;document.getElementById('workspaceStatus').textContent='Business settings not synchronized yet. Do not save this preset.';return}
+   selection.value=e.data.locked?(e.data.selected||profileList[0].id):expected;
+   if(!e.data.locked&&e.data.selected!==expected)sendPresetCommand('business',{profileId:expected});
+  }
+  selection.disabled=!!e.data.locked;
+  document.getElementById('workspaceStatus').textContent=e.data.status||'Preset ready';
+  return;
+ }
+ if(e.data?.type==='docsystem-preset-status'){document.getElementById('workspaceStatus').textContent=e.data.status||'Preset ready';return}
+ if(e.data?.type==='docsystem-preset-view'){document.querySelectorAll('[data-workspace-view]').forEach(b=>{const on=b.dataset.workspaceView===(e.data.preview?'preview':'working');b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});return}
+ if(e.data?.type==='docsystem-preset-height'&&Number.isFinite(e.data.height)){
+  document.getElementById('presetWorkspaceFrame').style.height=Math.max(560,Math.min(20000,Math.ceil(e.data.height)))+'px';
+ }
+});
+document.addEventListener('click',e=>{
+ const presetInline=e.target.closest('[data-preset-inline]');
+ if(presetInline){
+  const [slot,kind]=presetInline.dataset.presetInline.split(':');
+  const editor=document.querySelector('[data-preset-header-field="'+slot+'"]');
+  if(!editor)return;
+  const begin=editor.selectionStart,end=editor.selectionEnd,selected=editor.value.slice(begin,end);
+  let open='',close='';
+  if(kind==='bold'){open='[b]';close='[/b]'}
+  if(kind==='italic'){open='[i]';close='[/i]'}
+  if(kind==='underline'){open='[u]';close='[/u]'}
+  if(kind==='size'){const n=prompt('Selected-text size in points (6–36):','12');if(n===null)return;open='[size='+Math.max(6,Math.min(36,Number(n)||12))+']';close='[/size]'}
+  if(kind==='font'){
+   const name=prompt('Font: Arial, Georgia, Verdana, Tahoma, Courier New, Times New Roman','Arial');
+   if(name===null)return;
+   if(!['Arial','Georgia','Verdana','Tahoma','Courier New','Times New Roman'].includes(name))return alert('Unsupported font');
+   open='[font='+name+']';close='[/font]';
+  }
+  if(kind==='color'){
+   const selectedColor=prompt('HEX text color (e.g. #17365D):','#17365D');
+   if(selectedColor===null)return;
+   if(!/^#[0-9a-fA-F]{6}$/.test(selectedColor.trim()))return alert('Enter a valid 6-digit HEX color.');
+   open='[color='+selectedColor.trim()+']';close='[/color]';
+  }
+  editor.value=editor.value.slice(0,begin)+open+selected+close+editor.value.slice(end);
+  editor.focus();editor.setSelectionRange(begin+open.length,begin+open.length+selected.length);
+  presetHeaderConfig()[slot]=editor.value;saveSettings();return;
+ }
+
+ if(e.target.id==='workspaceOpenSaved'){showDocPage('documents');return}
+ if(e.target.id==='newBtn'){workspaceAction('new');return}
+ if(e.target.id==='saveBtn'){workspaceAction('save');return}
+ if(e.target.id==='togglePresetConfigurator'){const panel=document.getElementById('presetConfigWorkspace');panel.hidden=!panel.hidden;if(!panel.hidden&&!document.getElementById('presetConfigureFrame').getAttribute('src'))loadPresetConfigurator();return}
+ if(e.target.id==='presetConfigLoad'){loadPresetConfigurator();return}
+ if(e.target.id==='presetConfigSave'){const name=document.getElementById('presetConfigureName').value.trim();if(!name)return alert('Enter a new template name');const frame=document.getElementById('presetConfigureFrame');if(!frame.getAttribute('src')||frame.dataset.family!==document.getElementById('presetConfigureFamily').value||frame.dataset.base!==document.getElementById('presetConfigureType').value)return alert('Click Load Original to load the selected preset before saving');frame.contentWindow.postMessage({type:'docsystem-preset-command',action:'save-template',name},location.origin);return}
+ const editCopy=e.target.closest('[data-edit-preset-copy]');
+ if(editCopy){const family=editCopy.dataset.copyFamily,base=editCopy.dataset.copyBase,id=editCopy.dataset.editPresetCopy;if(!['quotation','purchase-order','delivery-ticket','returning-ticket','invoice'].includes(family))return;document.getElementById('presetConfigureFamily').value=family;presetConfiguratorTypes();document.getElementById('presetConfigureType').value=base;document.getElementById('presetConfigWorkspace').hidden=false;document.getElementById('presetConfigureName').value='';loadPresetConfigurator(id);return}
+ const savedCopy=e.target.closest('[data-open-preset-copy]');
+ if(savedCopy){const family=savedCopy.dataset.copyFamily,base=savedCopy.dataset.copyBase,copyId=savedCopy.dataset.openPresetCopy;
+  if(!['quotation','purchase-order','delivery-ticket','returning-ticket','invoice'].includes(family))return;
+  document.getElementById('workspacePresetFamily').value=family;fillPresetTypes();
+  const options=document.getElementById('workspacePresetSelect');if(!Array.from(options.options).some(o=>o.value===base))return;
+  options.value=base;setWorkspaceSource('preset',true,null,copyId);showDocPage('create');return;
+ }
+ if(e.target.id==='pdfBtn'){workspaceAction('print');return}
+ const invoiceItem=e.target.closest('[data-open-invoice-preset]');
+ if(invoiceItem){document.getElementById('workspacePresetFamily').value='invoice';fillPresetTypes();document.getElementById('workspacePresetSelect').value=invoiceItem.dataset.openInvoicePreset;setWorkspaceSource('preset',true);showDocPage('create');return;}
+ const returnItem=e.target.closest('[data-open-return-preset]');
+ if(returnItem){document.getElementById('workspacePresetFamily').value='returning-ticket';fillPresetTypes();document.getElementById('workspacePresetSelect').value=returnItem.dataset.openReturnPreset;setWorkspaceSource('preset',true);showDocPage('create');return;}
+ const doItem=e.target.closest('[data-open-do-preset]');
+ if(doItem){document.getElementById('workspacePresetFamily').value='delivery-ticket';fillPresetTypes();document.getElementById('workspacePresetSelect').value=doItem.dataset.openDoPreset;setWorkspaceSource('preset',true);showDocPage('create');return;}
+ const poItem=e.target.closest('[data-open-po-preset]');
+ if(poItem){document.getElementById('workspacePresetFamily').value='purchase-order';fillPresetTypes();document.getElementById('workspacePresetSelect').value=poItem.dataset.openPoPreset;setWorkspaceSource('preset',true);showDocPage('create');return;}
+ const item=e.target.closest('[data-open-preset]');
+ if(item){document.getElementById('workspacePresetFamily').value='quotation';fillPresetTypes();document.getElementById('workspacePresetSelect').value=item.dataset.openPreset;setWorkspaceSource('preset',true);showDocPage('create');return;}
+ const libraryChoice=e.target.closest('[data-library-kind]');
+ if(libraryChoice){
+  const selected=libraryChoice.dataset.libraryKind;
+  document.getElementById('presetLibrary').hidden=selected!=='preset';
+  document.getElementById('customLibrary').hidden=selected!=='custom';
+  document.querySelectorAll('[data-library-kind]').forEach(b=>{const active=b.dataset.libraryKind===selected;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+  return;
+ }
+ const customDoc=e.target.closest('[data-open-custom-doc]');
+ if(customDoc){const type=customDoc.dataset.openCustomDoc;if(profile().templates[type]){newDoc(type);setWorkspaceSource('custom');showDocPage('create');}return}
+ const customTemplate=e.target.closest('[data-open-custom-template]');
+ if(customTemplate){showDocPage('template');return}
+ const sub=e.target.closest('[data-subpage]');
+ if(sub){showDocPage(sub.dataset.subpage);return;}
+
+ const companyFormat=e.target.closest('[data-company-format]');
+ if(companyFormat){
+  const editor=document.getElementById('companyInfo'),kind=companyFormat.dataset.companyFormat;
+  const begin=editor.selectionStart,end=editor.selectionEnd,selected=editor.value.slice(begin,end);
+  let open='',close='';
+  if(kind==='bold'){open='[b]';close='[/b]'}
+  if(kind==='italic'){open='[i]';close='[/i]'}
+  if(kind==='underline'){open='[u]';close='[/u]'}
+  if(kind==='size'){const n=prompt('Font size (6–36 pt)','12');if(n===null)return;open='[size='+Math.max(6,Math.min(36,Number(n)||12))+']';close='[/size]'}
+  if(kind==='font'){const n=prompt('Font: Arial, Georgia, Verdana, Tahoma, Courier New, Times New Roman','Arial');if(n===null)return;if(!['Arial','Georgia','Verdana','Tahoma','Courier New','Times New Roman'].includes(n))return alert('Unsupported font');open='[font='+n+']';close='[/font]'}
+  editor.value=editor.value.slice(0,begin)+open+selected+close+editor.value.slice(end);
+  editor.focus();editor.setSelectionRange(begin+open.length,begin+open.length+selected.length);
+  profile().company.headerText=editor.value;saveSettings();renderPreview();return;
+ }
+ const workspaceTab=e.target.closest('[data-workspace-view]');if(workspaceTab){setWorkspaceView(workspaceTab.dataset.workspaceView);return;}
+ const inline=e.target.closest('[data-inline-format]');
+ if(inline){
+  const [area,i,kind]=inline.dataset.inlineFormat.split(':'),editor=document.querySelector('[data-panel-text="'+area+':'+i+'"]');
+  if(!editor)return;
+  const begin=editor.selectionStart,end=editor.selectionEnd,selected=editor.value.slice(begin,end);
+  let open='',close='';
+  if(kind==='bold'){open='[b]';close='[/b]'}
+  if(kind==='italic'){open='[i]';close='[/i]'}
+  if(kind==='underline'){open='[u]';close='[/u]'}
+  if(kind==='size'){const n=prompt('Font size in points (6–36):','14');if(n===null)return;open='[size='+Math.max(6,Math.min(36,Number(n)||14))+']';close='[/size]'}
+  if(kind==='color'){
+   const n=prompt('HEX text color (e.g. #17365D):','#17365D');
+   if(n===null)return;
+   if(!/^#[0-9a-fA-F]{6}$/.test(n.trim()))return alert('Enter a valid 6-digit HEX color.');
+   open='[color='+n.trim()+']';close='[/color]';
+  }
+  if(kind==='font'){const n=prompt('Font: Arial, Georgia, Verdana, Tahoma, Courier New, Times New Roman','Georgia');if(n===null)return;if(!['Arial','Georgia','Verdana','Tahoma','Courier New','Times New Roman'].includes(n))return alert('Unsupported font.');open='[font='+n+']';close='[/font]'}
+  editor.value=editor.value.slice(0,begin)+open+selected+close+editor.value.slice(end);
+  editor.focus();editor.setSelectionRange(begin+open.length,begin+open.length+selected.length);
+  layoutConfig(area).panels[+i].text=editor.value;saveSettings();renderPreview();return;
+ }
+
+ const add=e.target.closest('[data-layout-add]'),remove=e.target.closest('[data-layout-remove]'),move=e.target.closest('[data-layout-move]');
+ if(add||remove||move){
+  const [area,pi,bi,offset]=(add?.dataset.layoutAdd||remove?.dataset.layoutRemove||move?.dataset.layoutMove).split(':');
+  const l=layoutConfig(area),blocks=l.panels[+pi].blocks;
+  if(add){const type=document.querySelector('[data-layout-type="'+area+':'+pi+'"]').value;blocks.push({type,text:''});}
+  if(remove)blocks.splice(+bi,1);
+  if(move){const to=+bi+Number(offset);if(to>=0&&to<blocks.length)[blocks[+bi],blocks[to]]=[blocks[to],blocks[+bi]];}
+  saveSettings();renderLayoutControls();renderPreview();return;
+ }
+ let tab=e.target.closest('nav.tabs .tab');if(tab){showDocPage(tab.dataset.tab);return;}
+if(e.target.id==='addPlaceholder'){
+ const key=newPlaceholderKey.value.trim(),value=newPlaceholderValue.value;
+ if(!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)||RESERVED_PLACEHOLDERS.has(key))return alert('Choose a valid, non-reserved placeholder name.');
+ if(Object.prototype.hasOwnProperty.call(globals(),key))return alert('Placeholder already exists.');
+ globals()[key]=value;newPlaceholderKey.value='';newPlaceholderValue.value='';saveSettings();renderGlobalPlaceholders();renderPreview();return;
+}
+if(e.target.dataset.placeholderRemove){
+ if(!confirm('Remove placeholder? Its references will remain as text in documents.'))return;
+ delete globals()[e.target.dataset.placeholderRemove];saveSettings();renderGlobalPlaceholders();renderPreview();return;
+}
+if(e.target.id==='addCurrency'){
+ const co=profile().company;normalizeCurrencies(co);
+ const code=newCurrencyCode.value.trim().toUpperCase(),symbol=newCurrencySymbol.value.trim()||code;
+ if(!/^[A-Z]{3}$/.test(code))return alert('Use a valid three-letter currency code.');
+ if(co.currencies.some(x=>x.code===code))return alert('Currency already exists.');
+ co.currencies.push({code,symbol:symbol.slice(0,12)});
+ newCurrencyCode.value='';newCurrencySymbol.value='';saveSettings();renderCurrencies();renderDocCurrency();renderPreview();
+}
+if(e.target.dataset.removeCurrency){
+ const co=profile().company,code=e.target.dataset.removeCurrency;
+ if(co.currencies.length===1)return alert('At least one currency is required.');
+ if(!confirm('Remove '+code+' from new document choices? Existing saved documents will retain it.'))return;
+ co.currencies=co.currencies.filter(x=>x.code!==code);
+ normalizeCurrencies(co);saveSettings();renderCurrencies();renderDocCurrency();renderPreview();
+}
+if(e.target.id==='addItem'){doc.items.push(blankRow());renderCreate();renderPreview()}if(e.target.id==='addTotalLine'){tpl().adjustments.push({label:'Adjustment',operation:'add',mode:'fixed',value:0});saveSettings();renderTemplate();renderPreview()}if(e.target.dataset.totalpreset){let p=e.target.dataset.totalpreset,a=p==='tax'?{label:'Tax',operation:'add',mode:'percent',value:0}:p==='charge'?{label:'Logistics / Charge',operation:'add',mode:'fixed',value:0}:{label:'Discount',operation:'subtract',mode:'percent',value:0};tpl().adjustments.push(a);saveSettings();renderTemplate();renderPreview()}if(e.target.dataset.adjdel!==undefined){tpl().adjustments.splice(+e.target.dataset.adjdel,1);saveSettings();renderTemplate();renderPreview()}if(e.target.id==='addDetailField'){let id=nextExtraKey(tpl());tpl().fields.push([id,'New Field','text','half']);doc.fieldValues[id]='';saveSettings();renderTemplate();renderCreate();renderPreview()}if(e.target.dataset.dfdel!==undefined){let i=+e.target.dataset.dfdel,id=tpl().fields[i][0];tpl().fields.splice(i,1);delete doc.fieldValues[id];saveSettings();renderTemplate();renderCreate();renderPreview()}if(e.target.dataset.dfup!==undefined){let i=+e.target.dataset.dfup;if(i>0){let a=tpl().fields;[a[i-1],a[i]]=[a[i],a[i-1]];saveSettings();renderTemplate();renderCreate();renderPreview()}}if(e.target.dataset.dfdown!==undefined){let i=+e.target.dataset.dfdown,a=tpl().fields;if(i<a.length-1){[a[i],a[i+1]]=[a[i+1],a[i]];saveSettings();renderTemplate();renderCreate();renderPreview()}}if(e.target.dataset.moveup!==undefined){let i=+e.target.dataset.moveup;if(i>0){let a=tpl().columns;[a[i-1],a[i]]=[a[i],a[i-1]];saveSettings();renderTemplate();renderCreate();renderPreview()}}if(e.target.dataset.movedown!==undefined){let i=+e.target.dataset.movedown,a=tpl().columns;if(i<a.length-1){[a[i],a[i+1]]=[a[i+1],a[i]];saveSettings();renderTemplate();renderCreate();renderPreview()}}
+if(e.target.dataset.del!==undefined){doc.items.splice(+e.target.dataset.del,1);if(!doc.items.length)doc.items.push(blankRow());renderCreate();renderPreview()}
+
+
+
+
+if(e.target.id==='deleteProfile'){
+  if(settings.profiles.length===1){alert('At least one business profile is required.');return}
+  const selected=profile();
+  if(!confirm('Delete business profile "'+profileLabel(selected)+'" and its company/template settings? Saved documents will not be deleted.'))return;
+  const i=settings.profiles.findIndex(p=>p.id===selected.id);
+  settings.profiles.splice(i,1);
+  settings.activeProfileId=settings.profiles[Math.max(0,i-1)].id;
+  newDoc(Object.keys(profile().templates)[0]);
+  const frame=document.getElementById('presetWorkspaceFrame');if(frame)frame.removeAttribute('src');
+  refresh();
+ }
+ if(e.target.id==='addCompanyField'){profile().company.fields.push({label:'New Field',value:'',place:'header',layout:'half'});refresh()}
+if(e.target.dataset.cfup!==undefined){let i=+e.target.dataset.cfup,a=profile().company.fields;if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];refresh()}}
+if(e.target.dataset.cfdown!==undefined){let i=+e.target.dataset.cfdown,a=profile().company.fields;if(i<a.length-1){[a[i],a[i+1]]=[a[i+1],a[i]];refresh()}}
+if(e.target.dataset.delcf!==undefined){profile().company.fields.splice(+e.target.dataset.delcf,1);refresh()}
+if(e.target.id==='removeLogo'){profile().company.logo='';refresh()}
+if(e.target.id==='exportSettings')download('docfac-settings.json',{kind:'DocFacSettings',settings});
+if(e.target.id==='resetBtn'&&confirm('Reset DocFac settings?')){settings=migrateSettings(clone(defaults));normalizeProfiles();saveSettings();newDoc('Delivery Order');refresh()}
+});
+document.addEventListener('input',e=>{
+ if(e.target.dataset.presetHeaderField){presetHeaderConfig()[e.target.dataset.presetHeaderField]=e.target.value;saveSettings();return}
+ if(e.target.dataset.presetHeaderSize){presetHeaderConfig()[e.target.dataset.presetHeaderSize+'Size']=Math.min(36,Math.max(6,Number(e.target.value)||10));saveSettings();return}
+ if(e.target.dataset.presetHeaderColor){const value=e.target.value;if(/^#[0-9a-fA-F]{6}$/.test(value)){presetHeaderConfig()[e.target.dataset.presetHeaderColor+'Color']=value;saveSettings()}return}
+ if(e.target.dataset.presetHeaderLogoWidth!==undefined){presetHeaderConfig().logoWidth=Math.min(70,Math.max(10,Number(e.target.value)||35));saveSettings();return}
+ if(e.target.dataset.presetHeaderStyle){
+  const [slot,key]=e.target.dataset.presetHeaderStyle.split(':');
+  presetHeaderConfig()[slot+(key==='font'?'Font':'Align')]=e.target.value;
+  saveSettings();return;
+ }
+if(e.target.dataset.placeholderKey){globals()[e.target.dataset.placeholderKey]=e.target.value;saveSettings();renderPreview();return;}if(e.target.dataset.panelText){const [area,i]=e.target.dataset.panelText.split(':');layoutConfig(area).panels[+i].text=e.target.value;saveSettings();renderPreview();return;}
+ if(e.target.dataset.layoutText){
+  const [area,pi,bi]=e.target.dataset.layoutText.split(':');
+  layoutConfig(area).panels[+pi].blocks[+bi].text=e.target.value;
+  saveSettings();renderPreview();return;
+ }
+ if(e.target.dataset.defaultCurrency){profile().company.defaultCurrency=e.target.dataset.defaultCurrency;saveSettings();renderCurrencies();renderDocCurrency();return}
+if(e.target.id==='docTitle'){doc.title=e.target.value;renderPreview()}if(e.target.dataset.field){doc.fieldValues[e.target.dataset.field]=e.target.value;renderPreview()}if(e.target.dataset.ri!==undefined){let ri=+e.target.dataset.ri;doc.items[ri][e.target.dataset.key]=e.target.value;updateFormulaInputs(ri);renderPreview()}if(e.target.id==='notes'){doc.notes=e.target.value;renderPreview()}if(e.target.id==='companyName'){profile().company.name=e.target.value;saveSettings();updateProfileLabels();renderPreview()}if(e.target.id==='companyFooter'){profile().company.footer=e.target.value;saveSettings();renderPreview()}if(e.target.id==='companyInfo'){profile().company.headerText=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.cflabel!==undefined){profile().company.fields[+e.target.dataset.cflabel].label=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.cfvalue!==undefined){profile().company.fields[+e.target.dataset.cfvalue].value=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.dflabel!==undefined){tpl().fields[+e.target.dataset.dflabel][1]=e.target.value;saveSettings();renderPreview()}if(e.target.id==='paperSize'||e.target.id==='pageMargins'){tpl()[e.target.id]=e.target.value;saveSettings();renderPreview()}if(e.target.id==='dividerPosition'){tpl().dividerPosition=e.target.value;saveSettings();renderPreview()}if(e.target.id==='tplTitle'){tpl().title=e.target.value;doc.title=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjlabel!==undefined){tpl().adjustments[+e.target.dataset.adjlabel].label=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjvalue!==undefined){tpl().adjustments[+e.target.dataset.adjvalue].value=Number(e.target.value||0);saveSettings();renderPreview()}if(['sig1','sig2','sig3'].includes(e.target.id)){let t=tpl();t.sigs=[sig1.value,sig2.value,sig3.value];saveSettings();renderPreview()}if(['sigName1','sigName2','sigName3'].includes(e.target.id)){let t=tpl();t.sigNames=[sigName1.value,sigName2.value,sigName3.value];saveSettings();renderPreview()}});
+document.addEventListener('change',e=>{if(e.target.id==='presetHeaderProfileSelect'){switchProfile(e.target.value,doc.type);return}
+ if(e.target.id==='workspaceTemplateSource'){setWorkspaceSource(e.target.value);return;}
+ if(e.target.id==='workspacePresetFamily'){fillPresetTypes();setWorkspaceSource('preset',true);return;}
+ if(e.target.id==='workspacePresetSelect'){setWorkspaceSource('preset',true);return;}
+ if(e.target.id==='presetConfigureFamily'){presetConfiguratorTypes();document.getElementById('presetConfigStatus').textContent='Selection changed. Click Load Original before editing or saving.';return;}
+ if(e.target.id==='presetConfigureType'){document.getElementById('presetConfigStatus').textContent='Selection changed. Click Load Original before editing or saving.';return;}
+ if(e.target.dataset.layoutCount){
+  const l=layoutConfig(e.target.dataset.layoutCount);l.columns=Number(e.target.value);
+  while(l.panels.length<l.columns)l.panels.push({align:'left',blocks:[]});
+  saveSettings();renderLayoutControls();renderPreview();return;
+ }
+ if(e.target.dataset.panelStyle){
+  const [area,i,key]=e.target.dataset.panelStyle.split(':'),st=panelStyle(layoutConfig(area).panels[+i]);
+  st[key]=key==='size'?Math.max(6,Math.min(36,Number(e.target.value)||10)):key==='logoWidth'?Math.max(10,Math.min(70,Number(e.target.value)||23)):e.target.value;
+  saveSettings();renderPreview();return;
+ }
+ if(e.target.dataset.layoutAlign){
+  const [a,i]=e.target.dataset.layoutAlign.split(':');layoutConfig(a).panels[+i].align=e.target.value;
+  saveSettings();renderPreview();return;
+ }
+ if(e.target.id==='docCurrency'){doc.currency=e.target.value;doc.currencySymbol=profile().company.currencies.find(x=>x.code===doc.currency)?.symbol||doc.currency;renderPreview();return}
+if(e.target.id==='businessProfile'&&activeWorkspacePreset()){syncPresetBusiness();return}
+ if(['businessProfile','companyProfile','tplBusinessProfile'].includes(e.target.id)){switchProfile(e.target.value,doc.type);return}if(e.target.dataset.dftype!==undefined){tpl().fields[+e.target.dataset.dftype][2]=e.target.value;saveSettings();renderCreate();renderPreview()}if(['fontHeader','fontTitle','fontBody','fontItems','fontFooter'].includes(e.target.id)){profile().fonts.header=fontHeader.value;profile().fonts.title=fontTitle.value;profile().fonts.body=fontBody.value;profile().fonts.items=fontItems.value;profile().fonts.footer=fontFooter.value;saveSettings();renderPreview()}if(e.target.id==='docType'||e.target.id==='tplType'){newDoc(e.target.value);window.DocSystemCloud?.changedDocument();refresh()}if(e.target.id==='logoFile'&&e.target.files[0]){let r=new FileReader();r.onload=()=>{profile().company.logo=r.result;refresh()};r.readAsDataURL(e.target.files[0])}if(e.target.dataset.cfplace!==undefined){profile().company.fields[+e.target.dataset.cfplace].place=e.target.value;refresh()}if(e.target.dataset.cflayout!==undefined){profile().company.fields[+e.target.dataset.cflayout].layout=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjop!==undefined){tpl().adjustments[+e.target.dataset.adjop].operation=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjmode!==undefined){tpl().adjustments[+e.target.dataset.adjmode].mode=e.target.value;saveSettings();renderPreview()}if(['subtotalOn','sig1On','sig2On','sig3On'].includes(e.target.id)){let t=tpl();t.subtotal=subtotalOn.checked;t.sigEnabled=[sig1On.checked,sig2On.checked,sig3On.checked];t.sig=t.sigEnabled.some(Boolean);saveSettings();renderPreview()}if(e.target.id==='openFile'&&e.target.files[0]){let r=new FileReader();r.onload=()=>{try{let p=JSON.parse(r.result);if(!p.doc)throw 0;
+  let target=p.profileId&&settings.profiles.find(x=>x.id===p.profileId);
+  if(!target&&p.company)target=settings.profiles.find(x=>profileLabel(x)===p.company.name);
+  if(!target&&p.company){target={id:nextProfileId(),company:clone(p.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates)};settings.profiles.push(target)}
+  if(target)settings.activeProfileId=target.id;
+  if(p.company)profile().company=clone(p.company);
+  if(p.template){normalizeTemplateFields(p.template,p.doc.fieldValues);profile().templates[p.doc.type]=clone(p.template)}
+  doc=p.doc;window.DocSystemCloud?.changedDocument();normalizeProfiles();refresh()
+}catch{alert('Invalid DocFac document file.')}};r.readAsText(e.target.files[0])}
+if(e.target.id==='importSettings'&&e.target.files[0]){let r=new FileReader();r.onload=()=>{try{let p=JSON.parse(r.result);if(!p.settings)throw 0;settings=migrateSettings(p.settings);normalizeProfiles();saveSettings();newDoc(Object.keys(profile().templates)[0]);refresh()}catch{alert('Invalid settings file.')}};r.readAsText(e.target.files[0])}});
+let dragFrom=null;
+document.addEventListener('dragstart',e=>{const row=e.target.closest('.dragcol');if(!row)return;dragFrom=Number(row.dataset.colindex);row.classList.add('dragging');e.dataTransfer.effectAllowed='move'});
+document.addEventListener('dragend',e=>{const row=e.target.closest('.dragcol');if(row)row.classList.remove('dragging');dragFrom=null});
+document.addEventListener('dragover',e=>{if(e.target.closest('.dragcol'))e.preventDefault()});
+document.addEventListener('drop',e=>{const row=e.target.closest('.dragcol');if(!row||dragFrom===null)return;e.preventDefault();const to=Number(row.dataset.colindex);if(to===dragFrom)return;const a=tpl().columns;const [moved]=a.splice(dragFrom,1);a.splice(to,0,moved);saveSettings();renderTemplate();renderCreate();renderPreview()});
+refresh();
+window.DocSystemBridge={
+ getSettings:()=>clone(settings),
+ setSettings:s=>{settings=migrateSettings(clone(s));normalizeProfiles();newDoc(Object.keys(profile().templates)[0]);refresh()},
+ getDocument:()=>({kind:'DocFacDocument',profileId:settings.activeProfileId,profileName:profileLabel(profile()),doc:clone(doc),company:clone(profile().company),template:clone(tpl())}),
+ setDocument:p=>{
+   let target=settings.profiles.find(x=>x.id===p.profileId);
+   if(!target&&p.company)target=settings.profiles.find(x=>profileLabel(x)===p.company.name);
+   if(!target&&p.company){target={id:nextProfileId(),company:clone(p.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates)};settings.profiles.push(target)}
+   if(target)settings.activeProfileId=target.id;
+   if(p.template&&p.doc){normalizeTemplateFields(p.template,p.doc.fieldValues);profile().templates[p.doc.type]=clone(p.template)}
+   doc=clone(p.doc);normalizeProfiles();refresh()
+ }
+};
+
+// Route saved preset records back into the same Workspace.
+const incomingPreset=new URLSearchParams(location.search);
+fillPresetTypes();
+if(incomingPreset.has('preset')||incomingPreset.has('presetDoc')||incomingPreset.has('poDoc')||incomingPreset.has('doDoc')||incomingPreset.has('returnDoc')||incomingPreset.has('invoiceDoc')){
+ const family=incomingPreset.has('invoiceDoc')||incomingPreset.get('family')==='invoice'?'invoice':incomingPreset.has('returnDoc')||incomingPreset.get('family')==='returning-ticket'?'returning-ticket':incomingPreset.has('doDoc')||incomingPreset.get('family')==='delivery-ticket'?'delivery-ticket':incomingPreset.has('poDoc')||incomingPreset.get('family')==='purchase-order'?'purchase-order':'quotation';
+ document.getElementById('workspacePresetFamily').value=family;
+ fillPresetTypes();
+ const selected=incomingPreset.get('preset')||(family==='invoice'||family==='returning-ticket'||family==='delivery-ticket'?'standard':family==='purchase-order'?'purchase-credit':'rental3');
+ const selector=document.getElementById('workspacePresetSelect');
+ if(Array.from(selector.options).some(o=>o.value===selected))selector.value=selected;
+ setWorkspaceSource('preset',true,incomingPreset.get('invoiceDoc')||incomingPreset.get('returnDoc')||incomingPreset.get('doDoc')||incomingPreset.get('poDoc')||incomingPreset.get('presetDoc'));
+ showDocPage('create');
+ history.replaceState(null,'',location.pathname);
+}
+</script>
+<script type="module" src="auth.js"></script>
+</body></html>

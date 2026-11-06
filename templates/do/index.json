@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "family": "delivery-ticket",
+  "name": "Delivery Ticket / DO",
+  "sourceWorkbook": "4. WLR-Energy-Delivery-Ticket-Template (Revision 02-10-26).xlsm",
+  "templates": [
+    {
+      "id": "standard",
+      "title": "Standard Delivery Ticket",
+      "path": "standard.json",
+      "sourceSheet": "Delivery Ticket Template"
+    }
+  ]
+}

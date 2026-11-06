@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 1,
+  "family": "quotation",
+  "id": "rental10",
+  "title": "Rental (Qty 10)",
+  "documentTitle": "QUOTATION",
+  "source": {
+    "editor": "preset-quotation.html",
+    "termsSource": "RENTAL3_TERMS",
+    "engine": "current JavaScript remains authoritative during preparation",
+    "extractedFrom": "live default branch 2026-10-31"
+  },
+  "stateDefaults": {
+    "minDays": 30,
+    "payment": "30 Days",
+    "validity": "30 Days",
+    "facilityAddress": "",
+    "pickupAddress": "",
+    "returnAddress": "",
+    "docTitle": "QUOTATION",
+    "headingLines": "",
+    "reference": "",
+    "currency": "MYR",
+    "client": "",
+    "address": "",
+    "contact": "",
+    "telephone": "",
+    "email": "",
+    "rfq": "",
+    "rfqDate": "",
+    "operator": "",
+    "rig": "",
+    "well": "",
+    "loadout": "",
+    "terms": "",
+    "termsFontSize": 8,
+    "termsPageFit": "flow"
+  },
+  "layout": {
+    "paper": "A4",
+    "orientation": "portrait",
+    "sections": [
+      "companyHeader",
+      "quotationDetails",
+      "clientInformation",
+      "rentalItems",
+      "notes",
+      "consumables",
+      "terms",
+      "signatures"
+    ],
+    "termsKeepTogether": true,
+    "splitTermsAtWholeClauses": true,
+    "signaturesKeepTogether": true,
+    "termsFont": {
+      "defaultPt": 8,
+      "minPt": 6.5,
+      "maxPt": 9,
+      "stepPt": 0.5
+    },
+    "singleOuterScroll": true,
+    "pageFitting": {
+      "default": "flow",
+      "options": [
+        {
+          "value": "flow",
+          "label": "Continue across pages (complete lines)",
+          "strategy": "Keep chosen font size; begin on available page space and split terms at complete-word line boundaries"
+        },
+        {
+          "value": "auto",
+          "label": "Auto Fit (minimum 6.5pt)",
+          "strategy": "Shrink clauses where possible"
+        },
+        {
+          "value": "normal",
+          "label": "Normal size / add page",
+          "strategy": "Use selected size and move whole clauses when needed"
+        }
+      ]
+    }
+  },
+  "fields": [
+    {
+      "key": "docTitle",
+      "label": "Printed Document Heading",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "headingLines",
+      "label": "Additional Heading Lines (optional)",
+      "type": "multiline",
+      "group": "quotation"
+    },
+    {
+      "key": "reference",
+      "label": "Quotation No.",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "date",
+      "label": "Date",
+      "type": "date",
+      "group": "quotation"
+    },
+    {
+      "key": "currency",
+      "label": "Currency",
+      "type": "select",
+      "group": "quotation"
+    },
+    {
+      "key": "client",
+      "label": "Client Company",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "address",
+      "label": "Client Address",
+      "type": "multiline",
+      "group": "quotation"
+    },
+    {
+      "key": "contact",
+      "label": "Contact Person",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "telephone",
+      "label": "Telephone",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "email",
+      "label": "Email",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "rfq",
+      "label": "RFQ No.",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "rfqDate",
+      "label": "RFQ Date",
+      "type": "date",
+      "group": "quotation"
+    },
+    {
+      "key": "operator",
+      "label": "Operator",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "rig",
+      "label": "Rig",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "well",
+      "label": "Well",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "loadout",
+      "label": "Load Out",
+      "type": "text",
+      "group": "quotation"
+    },
+    {
+      "key": "minDays",
+      "label": "Minimum Rental Days",
+      "type": "select-or-number",
+      "group": "terms",
+      "default": 30,
+      "presetOptions": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "allowCustom": true,
+      "min": 1,
+      "max": 999999
+    },
+    {
+      "key": "payment",
+      "label": "Payment Terms",
+      "type": "text",
+      "group": "terms",
+      "default": "30 Days"
+    },
+    {
+      "key": "validity",
+      "label": "Quotation Validity",
+      "type": "text",
+      "group": "terms",
+      "default": "30 Days"
+    },
+    {
+      "key": "facilityAddress",
+      "label": "Clause 3 — Designated Facility Address",
+      "type": "multiline",
+      "group": "terms",
+      "hidden": false
+    },
+    {
+      "key": "pickupAddress",
+      "label": "Clause 4 — Equipment Pick-up Address",
+      "type": "multiline",
+      "group": "terms",
+      "hidden": true
+    },
+    {
+      "key": "returnAddress",
+      "label": "Clause 5 — Equipment Return Address",
+      "type": "multiline",
+      "group": "terms",
+      "hidden": true
+    }
+  ],
+  "items": {
+    "rental": {
+      "initialRows": 10,
+      "columns": [
+        {
+          "key": "no",
+          "label": "No",
+          "type": "text"
+        },
+        {
+          "key": "description",
+          "label": "Description",
+          "type": "multiline",
+          "preserveWhitespace": true
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "text"
+        },
+        {
+          "key": "qty",
+          "label": "Qty",
+          "type": "number"
+        },
+        {
+          "key": "rate",
+          "label": "Daily Rental Rate",
+          "type": "number"
+        },
+        {
+          "key": "lih",
+          "label": "LIH/DBR",
+          "type": "number"
+        }
+      ],
+      "automaticAmount": false,
+      "preserveBlankRows": true,
+      "descriptionMultiline": true
+    },
+    "consumables": {
+      "initialRows": 0,
+      "columns": [
+        {
+          "key": "no",
+          "label": "No",
+          "type": "text"
+        },
+        {
+          "key": "description",
+          "label": "Description",
+          "type": "multiline",
+          "preserveWhitespace": true
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "text"
+        },
+        {
+          "key": "qty",
+          "label": "Qty",
+          "type": "number"
+        },
+        {
+          "key": "rate",
+          "label": "Unit Price",
+          "type": "number"
+        },
+        {
+          "key": "amount",
+          "label": "Total Amount",
+          "type": "calculated",
+          "formula": "qty * rate"
+        }
+      ],
+      "formula": "qty * rate",
+      "descriptionMultiline": true
+    }
+  },
+  "terms": {
+    "fixed": true,
+    "allowEditFixedClauses": false,
+    "clauses": [
+      {
+        "number": 1,
+        "title": "Purchase Order and Ordering Requirements",
+        "bodyTemplate": "A formal Purchase Order (\"PO\") must be issued to Wellora Energy Sdn. Bhd. (1690936-D) prior to any preparation, dispatch, mobilisation, or load-out of the rental equipment.\nAll POs shall be addressed to: Wellora Energy Sdn. Bhd. (1690936-D), Lot 38, Block D, 2nd Floor, Lazenda Centre, Jalan Okk Abdullah, 87000 W.P. Labuan, Malaysia.",
+        "defaultBody": "A formal Purchase Order (\"PO\") must be issued to Wellora Energy Sdn. Bhd. (1690936-D) prior to any preparation, dispatch, mobilisation, or load-out of the rental equipment.\nAll POs shall be addressed to: Wellora Energy Sdn. Bhd. (1690936-D), Lot 38, Block D, 2nd Floor, Lazenda Centre, Jalan Okk Abdullah, 87000 W.P. Labuan, Malaysia.",
+        "keepTogether": true
+      },
+      {
+        "number": 2,
+        "title": "Correspondence",
+        "bodyTemplate": "All correspondence and documentation relating to this quotation shall be addressed to Wellora Energy Sdn. Bhd. (1690936-D).",
+        "defaultBody": "All correspondence and documentation relating to this quotation shall be addressed to Wellora Energy Sdn. Bhd. (1690936-D).",
+        "keepTogether": true
+      },
+      {
+        "number": 3,
+        "title": "Wellora Energy's Designated Facility Address",
+        "bodyTemplate": "{facilityAddress}",
+        "defaultBody": "",
+        "keepTogether": true,
+        "bindings": [
+          "facilityAddress"
+        ]
+      },
+      {
+        "number": 4,
+        "title": "Equipment Availability and Price Adjustment",
+        "bodyTemplate": "All quoted equipment is subject to availability at the time the order is placed. Any subsequent variation in the quantity of equipment required or the rental period may result in a corresponding adjustment to the quoted rates and/or charges.",
+        "defaultBody": "All quoted equipment is subject to availability at the time the order is placed. Any subsequent variation in the quantity of equipment required or the rental period may result in a corresponding adjustment to the quoted rates and/or charges.",
+        "keepTogether": true
+      },
+      {
+        "number": 5,
+        "title": "Mobilisation, Demobilisation, Load Out and Backload",
+        "bodyTemplate": "All expenses incurred in connection with the mobilisation, demobilisation, load out, and backload of equipment between Wellora Energy's designated facility and the Client's nominated location shall be under the Client's expense. Such costs may include, but are not limited to, transportation, trucking, crane and/or forklift services, cargo baskets, pallets, and other related logistics. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%).",
+        "defaultBody": "All expenses incurred in connection with the mobilisation, demobilisation, load out, and backload of equipment between Wellora Energy's designated facility and the Client's nominated location shall be under the Client's expense. Such costs may include, but are not limited to, transportation, trucking, crane and/or forklift services, cargo baskets, pallets, and other related logistics. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%).",
+        "keepTogether": true
+      },
+      {
+        "number": 6,
+        "title": "Rental Commencement and Completion",
+        "bodyTemplate": "The rental period shall begin on the date the equipment leaves Wellora Energy's designated facility and shall remain in effect until the equipment has been returned to the same location and formally accepted by Wellora Energy. The commencement and return dates shall be determined based on the duly completed and signed Wellora Energy's Delivery Ticket (\"DT\") and Return Ticket (\"RT\") by the Client or its authorised representative. Where such documentation is unavailable or has not been duly signed, Wellora Energy's records shall be deemed conclusive for the purpose of determining the rental period.",
+        "defaultBody": "The rental period shall begin on the date the equipment leaves Wellora Energy's designated facility and shall remain in effect until the equipment has been returned to the same location and formally accepted by Wellora Energy. The commencement and return dates shall be determined based on the duly completed and signed Wellora Energy's Delivery Ticket (\"DT\") and Return Ticket (\"RT\") by the Client or its authorised representative. Where such documentation is unavailable or has not been duly signed, Wellora Energy's records shall be deemed conclusive for the purpose of determining the rental period.",
+        "keepTogether": true
+      },
+      {
+        "number": 7,
+        "title": "Acceptance",
+        "bodyTemplate": "The Client shall be deemed to have accepted the equipment in its delivered condition upon the duly signed DT by the Client or its authorised representative.",
+        "defaultBody": "The Client shall be deemed to have accepted the equipment in its delivered condition upon the duly signed DT by the Client or its authorised representative.",
+        "keepTogether": true
+      },
+      {
+        "number": 8,
+        "title": "Post-Rental Inspection",
+        "bodyTemplate": "Upon return of the equipment, Wellora Energy shall conduct a post-rental inspection equivalent to the pre-rental inspection specifications. Any inspection related costs shall be chargeable to the Client at the actual documented cost plus fifteen percent (15%).",
+        "defaultBody": "Upon return of the equipment, Wellora Energy shall conduct a post-rental inspection equivalent to the pre-rental inspection specifications. Any inspection related costs shall be chargeable to the Client at the actual documented cost plus fifteen percent (15%).",
+        "keepTogether": true
+      },
+      {
+        "number": 9,
+        "title": "Repair, Maintenance and Redress",
+        "bodyTemplate": "Equipment returned following the rental period that requires repair, maintenance, refurbishment, redress, or connection repair shall be subject to additional charges. Such charges shall be calculated based on the actual documented cost incurred by Wellora Energy plus fifteen percent (15%).",
+        "defaultBody": "Equipment returned following the rental period that requires repair, maintenance, refurbishment, redress, or connection repair shall be subject to additional charges. Such charges shall be calculated based on the actual documented cost incurred by Wellora Energy plus fifteen percent (15%).",
+        "keepTogether": true
+      },
+      {
+        "number": 10,
+        "title": "Handling and Material Handling Equipment",
+        "bodyTemplate": "Where applicable, all costs relating to equipment handling and the use of Material Handling Equipment (\"MHE\") in connection with inspection, repair, maintenance, redress, or other post-rental activities shall be borne by the Client. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%).",
+        "defaultBody": "Where applicable, all costs relating to equipment handling and the use of Material Handling Equipment (\"MHE\") in connection with inspection, repair, maintenance, redress, or other post-rental activities shall be borne by the Client. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%).",
+        "keepTogether": true
+      },
+      {
+        "number": 11,
+        "title": "Loss or Damage to Equipment",
+        "bodyTemplate": "The Client shall remain responsible for the equipment throughout the rental period and shall be liable for any loss or damage to the equipment. Any repair, refurbishment, replacement, transportation, handling, or other costs arising from such loss or damage shall be charged to the Client based on the actual documented cost plus fifteen percent (15%), unless stated in the quotation otherwise.",
+        "defaultBody": "The Client shall remain responsible for the equipment throughout the rental period and shall be liable for any loss or damage to the equipment. Any repair, refurbishment, replacement, transportation, handling, or other costs arising from such loss or damage shall be charged to the Client based on the actual documented cost plus fifteen percent (15%), unless stated in the quotation otherwise.",
+        "keepTogether": true
+      },
+      {
+        "number": 12,
+        "title": "Consumables",
+        "bodyTemplate": "(a) New single-legged slings supplied, if requested by the Client, shall be treated as direct sale items and charged at cost plus fifteen percent (15%).\n(b) Thread protectors lost or damaged shall be replaced at the Client's cost, charged at cost plus fifteen percent (15%).\n(c) Plastic pallets, where required, shall be treated as direct sale items and charged at cost plus fifteen percent (15%).",
+        "defaultBody": "(a) New single-legged slings supplied, if requested by the Client, shall be treated as direct sale items and charged at cost plus fifteen percent (15%).\n(b) Thread protectors lost or damaged shall be replaced at the Client's cost, charged at cost plus fifteen percent (15%).\n(c) Plastic pallets, where required, shall be treated as direct sale items and charged at cost plus fifteen percent (15%).",
+        "keepTogether": true
+      },
+      {
+        "number": 13,
+        "title": "Taxes, Duties and Other Statutory Charges",
+        "bodyTemplate": "All quoted rates and prices are exclusive of any applicable taxes, levies, duties, withholding taxes, bank charges, or other statutory charges. Any such charges shall be borne by the Client. Where importation or exportation of equipment is required, all associated costs, including customs duties, taxes, port charges, clearance fees, and related expenses, shall be reimbursed by the Client at the actual documented cost plus fifteen percent (15%) handling fee. Where applicable, Sales and Service (\"SST\") shall be imposed at the prevailing statutory rate, currently six percent (6%).",
+        "defaultBody": "All quoted rates and prices are exclusive of any applicable taxes, levies, duties, withholding taxes, bank charges, or other statutory charges. Any such charges shall be borne by the Client. Where importation or exportation of equipment is required, all associated costs, including customs duties, taxes, port charges, clearance fees, and related expenses, shall be reimbursed by the Client at the actual documented cost plus fifteen percent (15%) handling fee. Where applicable, Sales and Service (\"SST\") shall be imposed at the prevailing statutory rate, currently six percent (6%).",
+        "keepTogether": true,
+        "variantOverride": "Rental 10 tax wording preserved from current editor"
+      },
+      {
+        "number": 14,
+        "title": "Cancellation and Minimum Rental Commitment",
+        "bodyTemplate": "Should the Client cancel the order after issuance of the PO, the Client shall be liable for a minimum rental charge equivalent to {minDaysWords} days together with reimbursement of all costs and expenses already incurred by Wellora Energy in connection with the order. Such costs may include, but are not limited to, inspection, repair, mobilisation, freight, trucking, lifting services, and other logistics or preparation costs.",
+        "defaultBody": "Should the Client cancel the order after issuance of the PO, the Client shall be liable for a minimum rental charge equivalent to thirty (30) days together with reimbursement of all costs and expenses already incurred by Wellora Energy in connection with the order. Such costs may include, but are not limited to, inspection, repair, mobilisation, freight, trucking, lifting services, and other logistics or preparation costs.",
+        "keepTogether": true,
+        "bindings": [
+          "minDays"
+        ]
+      },
+      {
+        "number": 15,
+        "title": "Minimum Rental Period",
+        "bodyTemplate": "A minimum rental period of {minDaysWords} days shall apply to all equipment rented under this quotation. The Client shall be liable for the rental charges for the full minimum rental period of {minDaysWords} days regardless of the actual period of equipment usage or early return.",
+        "defaultBody": "A minimum rental period of thirty (30) days shall apply to all equipment rented under this quotation. The Client shall be liable for the rental charges for the full minimum rental period of thirty (30) days regardless of the actual period of equipment usage or early return.",
+        "keepTogether": true,
+        "bindings": [
+          "minDays"
+        ]
+      },
+      {
+        "number": 16,
+        "title": "Payment Terms",
+        "bodyTemplate": "Payment for rental equipment shall be made within {paymentDaysWords} days from the date of the invoice. Invoice shall be billed monthly.",
+        "defaultBody": "Payment for rental equipment shall be made within thirty (30) days from the date of the invoice. Invoice shall be billed monthly.",
+        "keepTogether": true,
+        "bindings": [
+          "payment"
+        ]
+      },
+      {
+        "number": 17,
+        "title": "Late Payment",
+        "bodyTemplate": "A late payment charge of ten percent (10%) per annum shall apply to any outstanding amount remaining unpaid after the expiry of the agreed {paymentDaysWords} days payment period.",
+        "defaultBody": "A late payment charge of ten percent (10%) per annum shall apply to any outstanding amount remaining unpaid after the expiry of the agreed thirty (30) days payment period.",
+        "keepTogether": true,
+        "bindings": [
+          "payment"
+        ]
+      },
+      {
+        "number": 18,
+        "title": "Quotation Validity",
+        "bodyTemplate": "This quotation shall remain valid for {validityDaysWords} days from the quotation date stated herein, unless otherwise agreed in writing.",
+        "defaultBody": "This quotation shall remain valid for thirty (30) days from the quotation date stated herein, unless otherwise agreed in writing.",
+        "keepTogether": true,
+        "bindings": [
+          "validity"
+        ]
+      }
+    ],
+    "wordBindings": {
+      "minDaysWords": "daysPhrase(minDays)",
+      "paymentDaysWords": "daysPhrase(parseInt(payment,10) || 30)",
+      "validityDaysWords": "daysPhrase(parseInt(validity,10) || 30)"
+    },
+    "dynamicNumberWordSupport": "1 through 999999",
+    "notes": "defaultBody is the exact effective clause wording produced by the current Quotation editor; bodyTemplate preserves dynamic placeholders"
+  },
+  "signatures": {
+    "rows": [
+      "Prepared By",
+      "Reviewed By",
+      "Approved By"
+    ],
+    "fields": [
+      "name",
+      "position",
+      "date"
+    ]
+  },
+  "migration": {
+    "status": "extracted; not yet wired to live editor",
+    "preserveExistingFirebasePresetData": true,
+    "legacyPresetId": "rental10"
+  }
+}

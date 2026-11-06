@@ -1,0 +1,24 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Delivery Ticket photos are stored as JPEG binary files, never Base64.
+    // Document access remains governed by the Firestore documents collection.
+    match /{ticketFolder}/{ownerUid}/{documentId}/{photoName} {
+      // Same photo policy for DO and Returning Ticket, with separate folders.
+      function supportedTicketFolder() {
+        return ticketFolder == 'delivery-tickets' || ticketFolder == 'return-tickets';
+      }
+      // Authenticated DocSystem users may view a shared ticket's photos.
+      allow read: if request.auth != null && supportedTicketFolder();
+      // Each user uploads only into their own folder, up to 700 KiB.
+      allow create: if supportedTicketFolder()
+        && request.auth != null
+        && request.auth.uid == ownerUid
+        && request.resource.size <= 700 * 1024
+        && request.resource.contentType == 'image/jpeg';
+      // Unique filenames avoid overwriting existing documents.
+      allow update: if false;
+      allow delete: if supportedTicketFolder() && request.auth != null && request.auth.uid == ownerUid;
+    }
+  }
+}

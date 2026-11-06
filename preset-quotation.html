@@ -1,0 +1,843 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DocSystem — Preset Quotations</title>
+<style>body{margin:0;font:14px Arial,sans-serif;background:#f1f5f9;color:#162439}*{box-sizing:border-box}header{background:#183b67;color:white;padding:18px 3%}a{color:inherit}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:white;padding:14px 3%;border-bottom:1px solid #ddd}button,select,input,textarea{font:inherit;padding:9px;border:1px solid #cbd5e1;border-radius:6px;background:white}button{cursor:pointer}.active,.primary{background:#183b67;color:white}.wrap{max-width:1400px;margin:20px auto;padding:0 16px}.card{background:#fff;border:1px solid #dae2ea;border-radius:10px;padding:18px;margin:14px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}label{display:flex;flex-direction:column;gap:5px}label input,label textarea,label select{width:100%}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}td,th{padding:7px;border:1px solid #b6c1cf;text-align:left}td input{width:100%;min-width:80px;border:0}.muted{color:#596779}.paper{background:#fff;width:210mm;min-height:297mm;max-width:100%;margin:0 auto 18px;padding:13mm;box-shadow:0 6px 24px #0002}.paper h2{text-align:center}.paper .terms{white-space:pre-wrap}.preview-only{display:none}body.preview .preview-only{display:block}body.preview .form-only{display:none}.meta{display:grid;grid-template-columns:1fr 1fr;gap:12px}.signatures{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}.signature{border-top:1px solid #777;padding-top:8px}.notice{padding:10px;background:#fff8df} @media(max-width:650px){.paper{padding:18px;font-size:11px}.meta{grid-template-columns:1fr}}@media print{header,.bar,.form-only,.notice{display:none!important}body.preview .preview-only,.preview-only{display:block!important}.wrap{margin:0;padding:0}.paper{box-shadow:none;width:100%;min-height:0;padding:8mm 12mm}@page{size:A4;margin:0}}</style><style id="excelA4Preset">
+/* Dedicated, workbook-derived page layout; independent of DocSystem custom page settings */
+:root{--sheet-w:210mm;--sheet-h:297mm}
+body.preview .preview-only{display:block}
+.paper{width:var(--sheet-w);max-width:none;min-height:var(--sheet-h);height:auto;padding:10mm 10mm 12mm;font-family:Arial,Helvetica,sans-serif;font-size:8.8pt;line-height:1.24;color:#111}
+.paper .excel-title{text-align:right;font-weight:700;font-size:18pt;letter-spacing:.7pt;margin:0 0 8mm}
+.paper .excel-company{display:grid;grid-template-columns:60% 40%;gap:4mm;align-items:start;min-height:33mm;margin-bottom:4mm}
+.paper .excel-company .excel-company-name{font-weight:700;font-size:13pt;margin-bottom:1mm}
+.paper .excel-company .excel-company-details{font-size:8pt;white-space:pre-line;line-height:1.3}
+.paper .excel-ref{text-align:right;margin-top:9mm}
+.paper .excel-ref .ref-line{display:grid;grid-template-columns:31mm 1fr;gap:3mm;text-align:left;margin-bottom:1mm}
+.paper .excel-ref .ref-line span:first-child{text-align:right;font-weight:600}
+.paper .excel-client-title{margin-top:7mm;text-align:center;font-weight:700;font-size:10pt;border-top:1px solid #555;border-bottom:1px solid #555;padding:1.3mm 0}
+.paper .excel-client{display:grid;grid-template-columns:52% 48%;gap:5mm;margin:3mm 0 6mm}
+.paper .excel-client .item{display:grid;grid-template-columns:26mm 1fr;gap:1mm;min-height:5mm}
+.paper .excel-client .item b{text-align:right;font-weight:600}
+.paper .excel-table{width:100%;border-collapse:collapse;table-layout:fixed;margin:3mm 0 2mm;font-size:8pt}
+.paper .excel-table th{border:1px solid #555;background:#f1f1f1;padding:1.5mm 1mm;text-align:center;font-weight:700;vertical-align:middle}
+.paper .excel-table td{border:1px solid #888;padding:1.5mm 1mm;vertical-align:top;overflow-wrap:anywhere}
+.paper .excel-table td:nth-child(1),.paper .excel-table td:nth-child(n+3){text-align:center}
+.paper .excel-table .col-num{width:6%}.paper .excel-table .col-desc{width:46%}.paper .excel-table .col-unit{width:9%}.paper .excel-table .col-qty{width:7%}.paper .excel-table .col-rate{width:18%}.paper .excel-table .col-lih{width:14%}
+.paper .excel-notes{font-size:7.5pt;line-height:1.2;margin:1mm 0 3mm}
+.paper .excel-terms-header{text-align:center;font-size:9pt;font-weight:700;border-top:1px solid #333;border-bottom:1px solid #333;padding:1.3mm 0;margin:4mm 0 2mm}
+.paper .excel-terms{font-size:7.15pt;line-height:1.18}
+.paper .excel-term{display:grid;grid-template-columns:7mm 1fr;gap:1.5mm;margin:0 0 2mm;break-inside:avoid}
+.paper .excel-term .term-num{font-weight:700;text-align:center}
+.paper .excel-term .term-text{white-space:pre-wrap}
+.paper .excel-sig{display:grid;grid-template-columns:repeat(3,1fr);gap:7mm;margin-top:11mm;font-size:8pt}
+.paper .excel-sig>div{border-top:1px solid #444;padding-top:2mm}
+.paper .excel-rfq{font-size:8pt;margin:3mm 0}
+@media(max-width:850px){.preview-only{overflow-x:auto}.paper{transform-origin:top left}}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ html,body{width:210mm!important;margin:0!important;padding:0!important}
+ .paper{width:210mm!important;max-width:none!important;min-height:297mm!important;box-shadow:none!important;padding:10mm 10mm 12mm!important;margin:0!important;break-after:page;page-break-after:always}
+ .paper:last-child{break-after:auto;page-break-after:auto}
+ .bar,header,.form-only,.notice{display:none!important}
+}
+</style><style id="excelPrintIdentity">
+/* Excel worksheet visual language: black bands, white labels, grey cell groups. */
+.paper .excel-title{color:#d1a000;text-align:right;font-size:13pt;font-weight:700;letter-spacing:.5px;margin:0 0 5mm}
+.paper .excel-company{min-height:28mm;margin-bottom:2mm}
+.paper .excel-company-name{color:#003c70;font-size:11pt!important}
+.paper .excel-company-details{font-size:7.2pt!important}
+.paper .excel-ref .ref-line{grid-template-columns:27mm 1fr;gap:1mm;font-size:7.2pt}
+.paper .excel-ref .ref-line span:last-child{background:#d0d0d0;min-height:4.3mm;padding:1mm}
+.paper .excel-client-title,.paper .excel-terms-header,.paper .excel-table thead th{background:#080808!important;color:white!important;border:0!important;font-weight:bold;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.paper .excel-client-title{padding:1.1mm 0;margin:2mm 0 0;font-size:8pt}
+.paper .excel-client{gap:2mm;margin:0 0 5mm}
+.paper .excel-client>div{background:#d0d0d0;min-height:15mm;padding:1.7mm 2mm}
+.paper .excel-client .item{grid-template-columns:25mm 1fr;gap:1mm;min-height:3.8mm;font-size:7.2pt}
+.paper .excel-client .item b{font-size:7.2pt}
+.paper .excel-table{font-size:7pt;margin:2mm 0 1.5mm}
+.paper .excel-table th{background:#080808!important;color:#fff!important;font-size:6.6pt;padding:1.15mm .8mm}
+.paper .excel-table td{background:#d0d0d0!important;border-color:#aaa!important;height:6mm;padding:1mm .8mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.paper .excel-table tbody tr:nth-child(even) td{background:#dadada!important}
+.paper .excel-terms-header{font-size:8pt;margin:2.5mm 0 1.5mm;padding:1mm 0}
+.paper .excel-terms{font-size:6.6pt;line-height:1.16}
+.paper .excel-term{margin-bottom:1mm;gap:1mm;grid-template-columns:6mm}
+.paper .excel-sig{gap:0;margin-top:5mm;border-top:3mm solid #080808;grid-template-columns:repeat(3,1fr)}
+.paper .excel-sig>div{background:#d0d0d0;min-height:19mm;border-right:1.5mm solid #080808;border-top:0;padding:2mm;font-size:7pt}
+.paper .excel-sig>div:last-child{border-right:0}
+.paper .excel-rfq{font-size:7pt;margin:2mm 0}
+.paper{padding:9mm 10mm 10mm;line-height:1.14}
+@media print{.paper{padding:9mm 10mm 10mm!important}.paper .excel-client-title,.paper .excel-terms-header,.paper .excel-table thead th{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
+</style><style id="excelSheetScreenshotLayout">
+.paper .excel-company{display:grid;grid-template-columns:53% 47%;min-height:46mm;gap:0;align-items:stretch;margin:0 0 5mm}
+.paper .excel-identity{display:block;padding-top:1mm}
+.paper .excel-brandmark{width:20mm;height:17mm;display:grid;place-items:center;font:bold 36pt Georgia,serif;line-height:1;color:#080808;margin:0 0 1mm}
+.paper .excel-company-name{font:bold 11pt Arial,sans-serif!important;color:#081527!important;margin:0 0 1mm}
+.paper .excel-company-details{font:6.9pt/1.3 Arial,sans-serif!important;color:#111}
+.paper .excel-right{display:flex;flex-direction:column;align-items:stretch;justify-content:space-between}
+.paper .excel-title{text-align:right!important;font:bold 16pt Arial,sans-serif!important;color:#d6a900!important;margin:0!important;letter-spacing:0}
+.paper .excel-ref{margin:0 0 2mm!important}
+.paper .excel-ref .ref-line{grid-template-columns:31mm 1fr!important;min-height:4.1mm;margin:0!important;font-size:7pt}
+.paper .excel-ref .ref-line span:first-child{text-align:right!important}
+.paper .excel-ref .ref-line span:last-child{background:#d0d0d0;white-space:nowrap;overflow:hidden}
+.paper .excel-client-title{background:#050505!important;color:#fff!important;letter-spacing:.15pt}
+.paper .excel-client{border:1px solid #222;border-top:0;gap:0!important;margin:0 0 8mm!important}
+.paper .excel-client>div{background:#d0d0d0!important;border-right:1px solid #999;padding:1.5mm 2mm;min-height:28mm!important}
+.paper .excel-client>div:last-child{border-right:0}
+.paper .excel-client .item{grid-template-columns:29mm 1fr;min-height:4mm}
+.paper .excel-table{margin-top:0!important;table-layout:fixed}
+.paper .excel-table th{font-size:7pt!important;white-space:normal}
+.paper .excel-table td{height:9mm!important}
+.paper .excel-notes{font-weight:700}
+.paper .excel-terms-header{background:#000!important;color:white!important}
+@media print{.paper .excel-company{min-height:46mm!important}.paper .excel-table td{height:9mm!important}}
+</style><style id="excelFieldBehavior">
+/* Excel grey cells signal editable areas in the web form, while generated text remains read-only. */
+.form-only input[data-field],.form-only textarea[data-field],.form-only select[data-field],
+.form-only input[data-table],.form-only input[data-sign],.form-only #terms {
+ background:#d4d4d4!important;color:#111;border:1px solid #a8a8a8!important;
+}
+.form-only input:focus,.form-only textarea:focus,.form-only select:focus{outline:2px solid #317cb4;outline-offset:0}
+.paper .excel-client .item span{white-space:pre-wrap;overflow-wrap:anywhere}
+.paper .excel-ref .ref-line span:last-child{white-space:normal!important;overflow-wrap:anywhere!important;overflow:visible!important}
+</style><style id="clientAddressMultiline">.form-only .client-address-input{min-height:130px;resize:vertical;white-space:pre-wrap;tab-size:4}.paper .excel-client .item span{white-space:pre-wrap!important;overflow-wrap:break-word!important}.paper .excel-client .item:has(span.client-address-value){align-items:start}.paper .excel-client .client-address-value{display:block;line-height:1.4}</style><style id="signatureExcelFinal">
+/* Web forms distinguish editable fields by controls, not grey Excel cell fills. */
+.form-only input[data-field],.form-only textarea[data-field],.form-only select[data-field],.form-only input[data-table],.form-only input[data-sign-row],.form-only #terms{background:#fff!important}
+.paper .excel-ref .ref-line span:last-child,.paper .excel-client>div,.paper .excel-table td,.paper .excel-table tbody tr:nth-child(even) td{background:#fff!important}
+.form-only .sign-form{border:1px solid #d8e0e8;border-radius:8px;display:flex;flex-direction:column;gap:8px;padding:12px;min-width:0}.form-only .sign-form legend{font-weight:bold;padding:0 5px}
+.paper .excel-sign-table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:5mm;font:8pt Arial,sans-serif}
+.paper .excel-sign-table thead th,.paper .excel-sign-table tbody th{background:#000!important;color:#fff!important;text-align:center;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.paper .excel-sign-table thead th{padding:1.2mm 1mm;border:1px solid #000}
+.paper .excel-sign-table tbody th{border:1px solid #000;padding:2mm 1mm;vertical-align:middle}
+.paper .excel-sign-table tbody td{border:1px solid #aaa;background:#fff!important;height:12mm;padding:1.2mm 1mm;vertical-align:middle;overflow-wrap:anywhere}
+.paper .excel-sign-table .sign-blank{background:#fff!important}
+@media print{.paper .excel-sign-table{break-inside:avoid;page-break-inside:avoid}}
+</style><style id="clientInformationSpacingRefinement">
+/* Compact labels, generous values, and an independently taller address row. */
+.paper .excel-client{grid-template-columns:58% 42%!important;align-items:stretch}
+.paper .excel-client>div{padding:1.5mm 1.7mm!important;min-width:0;min-height:31mm!important}
+.paper .excel-client .item{display:grid;grid-template-columns:23mm minmax(0,1fr)!important;column-gap:1.5mm;align-items:start;min-height:4mm;line-height:1.35}
+.paper .excel-client>div:last-child .item{grid-template-columns:18mm minmax(0,1fr)!important}
+.paper .excel-client .item b{font-weight:600;text-align:right;white-space:nowrap}
+.paper .excel-client .item span{min-width:0;white-space:pre-wrap!important;overflow-wrap:break-word}
+.paper .excel-client .item:has(.client-address-value){min-height:13mm;align-items:start}
+.paper .excel-client .client-address-value{white-space:pre-wrap!important;line-height:1.4;min-height:11mm}
+.paper .excel-ref .ref-line{grid-template-columns:24mm minmax(0,1fr)!important;gap:1mm!important}
+.paper .excel-ref .ref-line span:first-child{white-space:nowrap}
+@media print{.paper .excel-client{grid-template-columns:58% 42%!important}}
+</style><style id="labelValueDividers">
+/* Subtle column rules distinguish fixed labels from entered values. */
+.paper .excel-client .item{column-gap:0!important}
+.paper .excel-client .item b{border-right:1px solid #9da7b2;padding-right:1.6mm;margin-right:0;min-height:100%;display:flex;align-items:flex-start;justify-content:flex-end}
+.paper .excel-client .item span{padding-left:1.8mm;min-width:0}
+.paper .excel-ref .ref-line{gap:0!important}
+.paper .excel-ref .ref-line span:first-child{border-right:1px solid #9da7b2;padding-right:1.5mm}
+.paper .excel-ref .ref-line span:last-child{padding-left:1.8mm}
+@media print{.paper .excel-client .item b,.paper .excel-ref .ref-line span:first-child{border-right:1px solid #9da7b2!important}}
+</style><style id="fullClientColumnSeparators">
+/* Two uninterrupted vertical rules, with address reserved its own generous space. */
+.paper .excel-client{display:grid!important;grid-template-columns:58% 42%!important;align-items:stretch}
+.paper .excel-client>div{display:flex!important;flex-direction:column!important;padding:0!important;min-width:0;min-height:39mm!important;position:relative}
+.paper .excel-client>div:first-child{--label-col:24mm}
+.paper .excel-client>div:last-child{--label-col:19mm}
+.paper .excel-client>div::before{content:"";position:absolute;top:0;bottom:0;left:var(--label-col);border-left:1px solid #999;pointer-events:none;z-index:1}
+.paper .excel-client .item,.paper .excel-client>div:last-child .item{display:grid!important;grid-template-columns:var(--label-col) minmax(0,1fr)!important;gap:0!important;min-height:4.3mm!important;line-height:1.35;align-items:start}
+.paper .excel-client .item b{border:0!important;margin:0!important;padding:1mm 1.5mm .3mm .5mm!important;min-height:0!important;display:block!important;text-align:right;white-space:nowrap}
+.paper .excel-client .item span{padding:1mm 1.7mm .3mm!important;white-space:pre-wrap!important;overflow-wrap:break-word}
+.paper .excel-client .address-row{flex:1!important;min-height:19mm!important}
+.paper .excel-client .address-row .client-address-value{min-height:18mm!important;white-space:pre-wrap!important}
+.paper .excel-client>div:last-child .item{min-height:6.5mm!important}
+@media print{.paper .excel-client>div::before{border-left:1px solid #999!important}}
+</style><style id="headerNoVerticalDivider">
+/* Excel reference header uses aligned labels and values without separator rules. */
+.paper .excel-ref .ref-line span:first-child{border-right:0!important;padding-right:1.5mm!important}
+.paper .excel-ref .ref-line span:last-child{border-left:0!important}
+@media print{.paper .excel-ref .ref-line span:first-child{border-right:0!important}}
+</style><style id="excelRightAlignedDocumentDetails">
+/* Keep quotation metadata compact and aligned against the right page margin. */
+.paper .excel-right{align-items:flex-end!important}
+.paper .excel-ref{width:58mm!important;max-width:100%!important;margin-left:auto!important;margin-right:0!important}
+.paper .excel-ref .ref-line{grid-template-columns:21mm minmax(0,1fr)!important;gap:1mm!important;width:100%!important}
+.paper .excel-ref .ref-line span:first-child{text-align:right!important}
+.paper .excel-title{align-self:flex-end!important;text-align:right!important}
+@media print{.paper .excel-ref{margin-left:auto!important;margin-right:0!important}}
+</style><style id="profileLogoStyling">.paper .excel-business-logo{display:block;max-width:35mm;max-height:24mm;width:auto;height:auto;object-fit:contain;margin-bottom:1mm}</style><style id="excelLabelValueBaselineAlignment">
+/* A shared text baseline for each label/value pair, including long multiline values. */
+.paper .excel-ref .ref-line{
+ display:grid!important;
+ align-items:baseline!important;
+ grid-template-columns:21mm minmax(0,1fr)!important;
+ min-height:4.3mm!important;
+ line-height:1.4!important;
+}
+.paper .excel-ref .ref-line span{
+ align-self:baseline!important;
+ line-height:1.4!important;
+ padding-top:0!important;
+ padding-bottom:0!important;
+}
+.paper .excel-client .item,
+.paper .excel-client>div:last-child .item{
+ align-items:baseline!important;
+ line-height:1.4!important;
+}
+.paper .excel-client .item b,
+.paper .excel-client .item span{
+ align-self:baseline!important;
+ line-height:1.4!important;
+ padding-top:.65mm!important;
+ padding-bottom:.35mm!important;
+}
+.paper .excel-client .address-row{align-items:start!important}
+.paper .excel-client .address-row b,
+.paper .excel-client .address-row span{align-self:start!important}
+@media print{
+ .paper .excel-ref .ref-line{align-items:baseline!important}
+ .paper .excel-client .item{align-items:baseline!important}
+}
+</style><style id="rental3TermsPresetStyles">.preset-terms-list{margin-top:12px;padding:12px;background:#fff;border:1px solid #d8e0e8;border-radius:8px;font-size:13px;line-height:1.45}.preset-terms-list .excel-term{margin:0 0 10px;display:grid;grid-template-columns:22px 1fr;gap:6px}.preset-terms-list .term-text{white-space:pre-wrap}.paper .excel-terms .excel-term .term-text{white-space:pre-wrap}.form-only #facilityAddress{min-height:85px;background:#fff;resize:vertical}</style><style id="termsFullWidthFix">
+/* Force Excel terms to use the full printable page width. */
+.paper .excel-terms{display:block!important;width:100%!important;max-width:none!important;min-width:0!important}
+.paper .excel-terms .excel-term{display:grid!important;grid-template-columns:7mm minmax(0,1fr)!important;gap:1.5mm!important;width:100%!important;max-width:none!important;align-items:start!important;margin:0 0 1.6mm!important;break-inside:avoid}
+.paper .excel-terms .excel-term .term-num{display:block!important;width:auto!important;min-width:0!important;text-align:center!important;white-space:nowrap}
+.paper .excel-terms .excel-term .term-text{display:block!important;width:auto!important;min-width:0!important;max-width:none!important;text-align:justify!important;text-justify:inter-word!important;white-space:pre-wrap!important;overflow-wrap:break-word!important;word-break:normal!important;line-height:1.25!important}
+@media print{.paper .excel-terms,.paper .excel-terms .excel-term{width:100%!important}.paper .excel-terms .term-text{text-align:justify!important}}
+</style><style id="termsTableBorders">
+/* Excel-style enclosing box with one continuous rule between clause numbers and text. */
+.paper .excel-terms{
+ position:relative;
+ border:1px solid #555!important;
+ padding:1.5mm 1.8mm 1.5mm 0!important;
+ box-sizing:border-box!important;
+}
+.paper .excel-terms::before{
+ content:"";
+ position:absolute;
+ top:0;
+ bottom:0;
+ left:8mm;
+ border-left:1px solid #999;
+ pointer-events:none;
+}
+.paper .excel-terms .excel-term{
+ display:grid!important;
+ grid-template-columns:8mm minmax(0,1fr)!important;
+ gap:1.5mm!important;
+ margin:0 0 1.5mm!important;
+ width:100%!important;
+}
+.paper .excel-terms .excel-term .term-num{padding:0 1mm!important;text-align:center!important}
+.paper .excel-terms .excel-term .term-text{padding-right:0!important;text-align:justify!important}
+@media print{
+ .paper .excel-terms{border:1px solid #555!important}
+ .paper .excel-terms::before{border-left:1px solid #999!important}
+}
+</style><style id="unifiedTermsSection">
+/* Treat the heading and numbered clauses as one uninterrupted A4 section. */
+.paper .excel-terms-section{
+  display:block;
+  width:100%;
+  margin:2.5mm 0 2mm;
+  padding:0;
+  border:1px solid #444;
+  box-sizing:border-box;
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+.paper .excel-terms-section .excel-terms-header{
+  display:block;
+  width:100%;
+  margin:0!important;
+  padding:1mm 0!important;
+  border:0!important;
+  background:#000!important;
+  color:#fff!important;
+  text-align:center;
+  box-sizing:border-box;
+}
+.paper .excel-terms-section .excel-terms{
+  margin:0!important;
+  border:0!important;
+  padding:1.5mm 1.8mm 1.5mm 0!important;
+  box-sizing:border-box;
+}
+.paper .excel-terms-section .excel-terms::before{
+  left:8mm;
+}
+@media print{
+ .paper .excel-terms-section{border:1px solid #444!important;break-inside:avoid;page-break-inside:avoid}
+ .paper .excel-terms-section .excel-terms-header{margin:0!important;border:0!important}
+ .paper .excel-terms-section .excel-terms{border:0!important;margin:0!important}
+}
+</style><style id="hideIrrelevantPresetFields">
+/* The form's label {display:flex} must not override the hidden attribute. */
+.form-only [hidden], .form-only label[hidden], .form-only #specialTkrLocations[hidden] {display:none!important}
+</style><style id="profilePresetIntegration">.preset-business-choice{display:flex;flex-direction:row;align-items:center;gap:6px;font-size:12px;white-space:nowrap}.preset-business-choice select{max-width:220px}.paper .excel-company-details{white-space:pre-wrap!important;overflow-wrap:anywhere}@media(max-width:680px){.preset-business-choice{width:100%}}</style><style id="embeddedWorkspacePresentation">
+body.embedded-preset{background:#f1f5f9}
+body.embedded-preset>header{display:none!important}
+body.embedded-preset .bar{display:none!important}
+body.embedded-preset .bar>a,body.embedded-preset .bar>#preset{display:none!important}
+body.embedded-preset .wrap{margin:10px auto 0;padding:0 1px;max-width:100%}
+body.embedded-preset .form-only{width:100%}
+body.embedded-preset .form-only .card{max-width:none}
+body.embedded-preset .preview-only>.notice{display:none!important}
+@media print{body.embedded-preset .bar{display:none!important}}
+</style><style id="presetExplicitHeaderSlots">
+.paper .preset-header-slot{white-space:break-spaces;overflow-wrap:anywhere;line-height:1.25}
+/* Inline [size=...] overrides the slot default; profile-origin size tags are removed in JS. */
+.paper .preset-header-slot .excel-business-logo{max-width:none;max-height:none;object-fit:contain}
+.paper .excel-company-name .preset-header-slot{font-weight:inherit}
+</style><style id="presetWebsiteLinkStyle">.paper .doc-website-link,.paper .doc-website-link:link,.paper .doc-website-link:visited{color:inherit!important;text-decoration:none!important;font:inherit}.paper .doc-website-link:hover{text-decoration:none!important}</style><style id="presetDocumentHeadingAndColor">
+/* Sheet typography remains intact; these are the explicitly configured header fields. */
+.paper .excel-title{color:var(--preset-title-color,#d6a900)!important;font-size:var(--preset-title-size,16pt)!important;font-family:var(--preset-title-font,Arial),sans-serif!important;text-align:var(--preset-title-align,right)!important;font-weight:700;line-height:1.2;width:100%;align-self:stretch!important;white-space:break-spaces;overflow-wrap:anywhere}
+.paper .excel-heading-block{width:100%;text-align:right}
+.paper .excel-heading-extra{font-size:var(--preset-extra-size,9pt)!important;color:var(--preset-extra-color,#111)!important;text-align:var(--preset-extra-align,right)!important;font-family:var(--preset-extra-font,Arial),sans-serif!important;white-space:break-spaces;overflow-wrap:anywhere;line-height:1.3}
+.paper .excel-heading-block .excel-title{margin-bottom:0!important}
+.paper .excel-company .preset-header-slot{color:inherit}
+</style><style id="presetEmbeddedLiveSplit">
+/* The preset iframe itself owns its form and rendered A4 page. */
+@media screen and (min-width:1100px) {
+ body.embedded-preset .wrap {
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  align-items:start;gap:18px;max-width:none!important;margin:0!important;padding:0 4px!important;
+ }
+ body.embedded-preset .wrap>.form-only {
+  display:block!important;width:100%!important;min-width:0!important;
+ }
+ body.embedded-preset .wrap>.preview-only {
+  display:block!important;min-width:0!important;width:100%!important;
+  position:sticky;top:0;max-height:calc(100vh - 130px);
+  overflow:auto;overscroll-behavior:contain;
+ }
+ body.embedded-preset .wrap>.preview-only #paper {width:max-content;max-width:100%;margin:auto}
+ body.embedded-preset .wrap>.preview-only .paper {max-width:none!important}
+ body.embedded-preset .wrap>.form-only .grid {grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+}
+@media print {
+ body.embedded-preset .wrap {display:block!important}
+ body.embedded-preset .preview-only {display:block!important;position:static!important;max-height:none!important;overflow:visible!important}
+ body.embedded-preset #paper {zoom:1!important;width:auto!important}
+}
+</style><style id="normalizedPresetWorkspace20261031">
+@media screen {
+ body.embedded-preset .wrap {
+  width:100%!important;max-width:none!important;
+ }
+ body.embedded-preset .wrap>.form-only {display:block!important;min-width:0!important;}
+ body.embedded-preset .wrap>.preview-only {display:block!important;min-width:0!important;}
+ /* Show both areas even when the legacy preview flag is set by Print/PDF. */
+ body.embedded-preset.preview .wrap>.form-only {display:block!important;}
+ @media(max-width:1099px) {
+  body.embedded-preset .wrap {display:block!important;padding:0 4px!important;}
+  body.embedded-preset .wrap>.form-only,
+  body.embedded-preset .wrap>.preview-only {
+   display:block!important;width:100%!important;max-width:none!important;
+   position:static!important;max-height:none!important;overflow:auto!important;
+  }
+ }
+}
+</style><style id="measuredA4TermsAndTables">
+.paper{box-sizing:border-box!important;width:210mm!important;min-height:297mm!important;padding:9mm 10mm 12mm!important}
+.paper .excel-terms{line-height:1.18!important}
+.paper .excel-terms .excel-term{break-inside:avoid!important;page-break-inside:avoid!important;margin-bottom:var(--term-gap,1.3mm)!important}
+.paper .excel-terms .excel-term .term-text{white-space:break-spaces!important;line-height:1.2!important}
+.paper .excel-table tbody tr{break-inside:avoid!important;page-break-inside:avoid!important}
+.paper .excel-table tbody tr{height:11mm!important}
+.paper .excel-table td{height:11mm!important;vertical-align:top!important;white-space:pre-wrap!important;padding:1.4mm 1mm!important}
+.paper .excel-table td:nth-child(2){white-space:break-spaces!important;overflow-wrap:anywhere}
+/* Height is a minimum for empty rows; table cells can grow for multiline content. */
+.form-only textarea[data-table][data-key="description"]{width:100%;min-width:150px;min-height:58px;resize:vertical;white-space:pre-wrap;tab-size:4}
+.paper .excel-sign-table{break-inside:avoid!important;page-break-inside:avoid!important}
+.paper .excel-terms-section{break-inside:avoid!important;page-break-inside:avoid!important}
+.preset-terms-fitting{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0;padding:10px;background:#f5f8fc;border:1px solid #d9e3ef;border-radius:8px}
+.preset-terms-fitting label{flex:1 1 145px;font-size:12px}
+/* No nested preview scrolling: the outer DocSystem page handles vertical navigation. */
+@media screen and (min-width:1100px){
+ body.embedded-preset .wrap>.preview-only{position:static!important;top:auto!important;max-height:none!important;overflow-y:visible!important;overflow-x:visible!important;overscroll-behavior:auto!important;scrollbar-gutter:auto!important}
+}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ body .wrap,body.embedded-preset .wrap{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+ #paper{zoom:1!important;width:210mm!important}
+ .paper{width:210mm!important;height:297mm!important;min-height:297mm!important;max-height:297mm!important;margin:0!important;padding:9mm 10mm 12mm!important;break-after:page!important;page-break-after:always!important;box-shadow:none!important}
+ .paper:last-child{break-after:auto!important;page-break-after:auto!important}
+ .form-only,header,.bar,.notice{display:none!important}
+}
+@media screen {
+ html:has(body.embedded-preset),body.embedded-preset{overflow-y:hidden!important;height:auto!important;min-height:0!important}
+ body.embedded-preset .preview-only{position:static!important;max-height:none!important;overflow:visible!important}
+}
+</style><style id="presetTermSettingsGrouping">
+.preset-term-settings{margin:12px 0 14px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.preset-term-settings label{min-width:0}
+.preset-term-settings input,.preset-term-settings select{width:100%}
+</style><style id="customRentalDaysInput20261031">
+.form-only #customMinimumRentalDays{margin-top:7px;width:100%}
+.form-only #customMinimumRentalDays[hidden]{display:none!important}
+</style><style id="sharedPresetHeaderRhythm20261101">
+/* Common preset letterhead rhythm: identity at left, heading above metadata at right. */
+@media screen,print {
+ .paper .excel-company{min-height:48mm!important;align-items:stretch!important}
+ .paper .excel-right{min-height:48mm!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;align-items:flex-end!important}
+ .paper .excel-heading-block{width:100%!important;flex:0 0 auto!important}
+ .paper .excel-ref{margin-top:11mm!important;margin-bottom:2mm!important;flex:0 0 auto!important}
+}
+</style><style id="mobileA4Fit20261102">
+/* Shared mobile A4 preview: fit available width without changing print geometry. */
+@media screen and (max-width:1099px){
+ .paper{max-width:none!important;transform:none!important}
+ .preview-only,.preview-container,.preview-column{max-width:100%;min-width:0;overflow-x:hidden!important}
+}
+</style></head><body><header><h2>DocSystem / Ready-Made Quotations</h2><small>Excel-inspired quotation forms · saved separately from custom templates</small></header>
+<div class="bar"><a href="./">← DocSystem</a><select id="preset"></select><label class="preset-business-choice">Business Profile <select id="businessProfileSelect" aria-label="Business Profile"><option value="">Loading…</option></select></label><button id="working" class="active" onclick="view(false)">Working Form</button><button id="previewButton" onclick="view(true)">Preview</button><button onclick="save()">Save Online</button><button onclick="load()">Open Saved</button><button onclick="printDoc()">Print / PDF</button><span id="status" class="muted"></span></div>
+<main class="wrap"><div class="form-only"><div class="card"><h3>Quotation Details</h3><div class="grid" id="fields"></div></div><div class="card"><h3>Rental Equipment</h3><div class="table-wrap" id="rental"></div></div><div class="card" id="consWrap"><h3>Consumables</h3><div class="table-wrap" id="consumables"></div></div><div class="card"><h3>Terms and Conditions</h3><div class="grid preset-term-settings" id="presetTermSettings"></div><div class="preset-terms-fitting"><label>Terms font size<select id="termsFontSize"><option value="6.5">6.5 pt</option><option value="7">7 pt</option><option value="7.5">7.5 pt</option><option value="8">8 pt</option><option value="8.5">8.5 pt</option><option value="9">9 pt</option></select></label><label>Page fitting<select id="termsPageFit"><option value="flow">Continue across pages (complete lines) — Default</option><option value="auto">Auto Fit (minimum 6.5pt)</option><option value="normal">Normal size / add page</option></select></label></div><div id="rental3TermsControls" hidden><p class="muted">Original clauses remain protected. Use Show/Hide and enter any clause-specific values directly beneath the relevant statement; the wording updates automatically.</p><div id="rental3TermsReadOnly" class="preset-terms-list"></div></div><div id="otherPresetTerms"><p class="muted">Enter the applicable quotation terms. These are saved with the document.</p><textarea id="terms" rows="12" style="width:100%"></textarea></div></div><div class="card"><h3>Signatures</h3><div class="grid" id="signatures"></div></div></div><div class="preview-only"><div class="notice">Preview of the dedicated preset document.</div><div id="paper"></div></div></main>
+<script type="module">
+import {paginatePresetDocument} from "./preset-pagination.js?v=20261101-single-controller1";
+import {sharedPresetSlot,expandPresetText} from "./preset-shared.js?v=20261101-common2";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,collection,doc,getDoc,setDoc,serverTimestamp,query,where,getDocs,limit} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {savePresetCopy,readPresetCopy} from "./preset-user-templates.js?v=20261101-copy-1";
+if(new URLSearchParams(location.search).get('embedded')==='1'){
+ document.body.classList.add('embedded-preset');
+ // Embedded preset is an editor only. The parent Workspace owns every toolbar control.
+ const internalToolbar=document.querySelector('body > .bar');
+ if(internalToolbar){internalToolbar.hidden=true;internalToolbar.setAttribute('aria-hidden','true');internalToolbar.style.setProperty('display','none','important');}
+ const ownHeader=document.querySelector('body > header');
+ if(ownHeader){ownHeader.hidden=true;ownHeader.style.setProperty('display','none','important');}
+ let lastReportedHeight=0;
+ const notifyParent=()=>{
+  if(window.parent===window)return;
+  const wrap=document.querySelector('.wrap');
+  const height=Math.ceil((wrap?.getBoundingClientRect().bottom||document.body.scrollHeight)+24);
+  if(Math.abs(height-lastReportedHeight)<3)return;
+  lastReportedHeight=height;
+  window.parent.postMessage({type:'docsystem-preset-height',height},location.origin);
+ };
+ window.addEventListener('load',notifyParent);
+ window.addEventListener('resize',notifyParent);
+ if(typeof ResizeObserver!=='undefined'){
+  const observer=new ResizeObserver(notifyParent);
+  const wrap=document.querySelector('.wrap');
+  if(wrap)observer.observe(wrap);
+  const form=wrap?.querySelector('.form-only');
+  if(form)observer.observe(form);
+  const preview=wrap?.querySelector('.preview-only');
+  if(preview)observer.observe(preview);
+ }
+
+}
+const app=initializeApp({apiKey:"AIzaSyDPIAoqy9mbWU-4M4kPK9mfSjtVSSA2gI8",authDomain:"docsystem-c29ec.firebaseapp.com",projectId:"docsystem-c29ec",storageBucket:"docsystem-c29ec.firebasestorage.app",messagingSenderId:"25451628479",appId:"1:25451628479:web:ec00096fc84d744c48c30a"});const auth=getAuth(app),db=getFirestore(app);let user=null,id=null,actualRole='user',businessProfile=null,businessProfiles=[],savedCompanySnapshot=null,initialCurrencySet=false,savedHeaderSnapshot=null,globalPlaceholderValues={};
+onAuthStateChanged(auth,async u=>{user=u;if(!u){$('status').textContent='Sign in to DocSystem first';return}try{const profile=await getDoc(doc(db,'users',u.uid));actualRole=profile.data()?.role==='staff'?'user':(profile.data()?.role||'user')}catch(e){console.warn('Role lookup',e)}await refreshBusinessProfiles();$('status').textContent='Signed in';if(new URLSearchParams(location.search).has('copyId'))await openSavedPresetCopy()});
+async function refreshBusinessProfiles(){
+ if(!user)return;
+ try{
+  const snap=await getDoc(doc(db,'appSettings','main')),settings=snap.data()?.settings||{};
+  businessProfiles=Array.isArray(settings.profiles)?settings.profiles.filter(p=>p&&p.company):[];
+  globalPlaceholderValues=settings.globalPlaceholders&&typeof settings.globalPlaceholders==='object'?settings.globalPlaceholders:{};
+  if(!savedCompanySnapshot){
+   businessProfile=businessProfiles.find(p=>p.id===businessProfile?.id)||businessProfiles.find(p=>p.id===settings.activeProfileId)||businessProfiles[0]||null;
+   if(!id&&businessProfile){state.currency=preferredCurrency(businessProfile.company,initialCurrencySet?state.currency:null);initialCurrencySet=true;}
+  }
+  renderBusinessSelector();
+  if(!savedCompanySnapshot)drawFieldsOnly();
+  render();
+  announcePresetReady();
+ }catch(e){console.warn('Business Profile lookup failed',e);$('status').textContent='Cannot load Business Profiles'}
+}
+function availableCurrencies(company){
+ const list=(Array.isArray(company?.currencies)?company.currencies:[]).filter(x=>x&&/^[A-Z]{3}$/.test(String(x.code||''))).map(x=>({code:x.code,symbol:x.symbol||x.code}));
+ return list.length?list:[{code:'MYR',symbol:'RM'}];
+}
+function preferredCurrency(company,current){
+ const list=availableCurrencies(company).map(x=>x.code);
+ return list.includes(current)?current:list.includes(company?.defaultCurrency)?company.defaultCurrency:list[0];
+}
+function profileSnapshot(profile){
+ const co=profile?.company||{};
+ const raw=typeof co.headerText==='string'?co.headerText:(co.fields||[]).filter(x=>x&&x.place!=='footer'&&x.value).map(x=>(x.label?x.label+': ':'')+x.value).join('\n');
+ return {id:profile?.id||null,name:co.name||'',logo:co.logo||'',info:raw,currencies:availableCurrencies(co),defaultCurrency:co.defaultCurrency||'MYR',placeholders:structuredClone(globalPlaceholderValues)};
+}
+function shownCompany(){return savedCompanySnapshot||profileSnapshot(businessProfile)}
+function activePresetHeader(){return savedHeaderSnapshot||businessProfile?.presetHeader||{}}
+function websiteLinkMarkup(value){
+ const label=String(value??'').trim();
+ if(!label)return '';
+ const candidate=/^https?:\/\//i.test(label)?label:'https://'+label;
+ try{
+  const u=new URL(candidate);
+  if(!['http:','https:'].includes(u.protocol)||!u.hostname.includes('.')||/\s/.test(label))return esc(label);
+  return '<a class="doc-website-link" href="'+esc(u.href)+'" target="_blank" rel="noopener noreferrer">'+esc(label)+'</a>';
+ }catch(e){return esc(label)}
+}
+function renderPresetHeaderSlot(slot,company){
+ const current={...company,documentTitle:state.docTitle||'QUOTATION',documentNumber:state.reference||'',documentDate:state.date||''};
+ return sharedPresetSlot(slot,current,activePresetHeader(),globalPlaceholderValues);
+}
+function validatedHeaderColor(value,fallback){
+ return /^#[0-9a-fA-F]{6}$/.test(String(value||''))?value:fallback;
+}
+function renderCompanyInfo(info){
+ let value=esc(info||'');
+ value=value.replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<strong>$1</strong>');
+ value=value.replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<em>$1</em>');
+ value=value.replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>');
+ value=value.replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,(_,n,t)=>'<span style="font-size:'+Math.max(6,Math.min(36,Number(n)))+'pt">'+t+'</span>');
+ value=value.replace(/\[font=(Arial|Georgia|Verdana|Tahoma|Courier New|Times New Roman)\]([\s\S]*?)\[\/font\]/gi,(_,n,t)=>'<span style="font-family:'+n+'">'+t+'</span>');
+ value=value.replace(/\[color=(#[0-9a-fA-F]{6})\]([\s\S]*?)\[\/color\]/gi,(_,n,t)=>'<span style="color:'+n+'">'+t+'</span>');
+ return value;
+}
+function informWorkspace(type,extra={}){
+ if(!document.body.classList.contains('embedded-preset')||window.parent===window)return;
+ window.parent.postMessage({type:'docsystem-preset-'+type,...extra},location.origin);
+}
+function announcePresetReady(){
+ informWorkspace('ready',{
+  profiles:businessProfiles.map(p=>({id:p.id,name:p.company.name||'Business'})),
+  selected:savedCompanySnapshot?.id||businessProfile?.id||'',
+  locked:!!id,
+  status:$('status').textContent||'Preset ready'
+ });
+}
+function choosePresetBusiness(profileId){
+ if(id){announcePresetReady();return}
+ const selected=businessProfiles.find(p=>p.id===profileId);
+ if(!selected){announcePresetReady();return}
+ businessProfile=selected;state.currency=preferredCurrency(selected.company,null);initialCurrencySet=true;
+ renderBusinessSelector();drawFieldsOnly();render();announcePresetReady();
+}
+
+let presetCopyApplied=false,activeCopyDefaults=null;
+async function saveAsNewPresetTemplate(name){
+ if(new URLSearchParams(location.search).get('configure')!=='1')return;
+ if(!user||!state?.preset)return alert('Sign in and open a quotation preset first');
+ if(!name||!name.trim())return;
+ try{
+  const saved=await savePresetCopy({user,family:'quotation',basePresetId:state.preset,name,state,profileId:savedCompanySnapshot?.id||businessProfile?.id||''});
+  $('status').textContent='Template saved: '+saved.name;
+  informWorkspace('template-saved',{name:saved.name,id:saved.id});
+ }catch(error){alert('Could not save template copy: '+error.message)}
+}
+async function openSavedPresetCopy(){
+ const copyId=new URLSearchParams(location.search).get('copyId');
+ if(!copyId||presetCopyApplied||id||!user)return;
+ try{
+  const copy=await readPresetCopy({user,id:copyId,family:'quotation'});
+  presetCopyApplied=true;
+  fresh(copy.basePresetId);
+  savedCompanySnapshot=null;savedHeaderSnapshot=null;
+  businessProfile=businessProfiles.find(p=>p.id===copy.profileId)||businessProfile;
+  state=copy.defaults;
+  activeCopyDefaults=structuredClone(copy.defaults);
+  state.preset=copy.basePresetId;
+  state.reference='';
+  state.date=new Date().toISOString().slice(0,10);
+  draw();
+  $('status').textContent='Template copy ready: '+copy.name+' · New document';
+  announcePresetReady();
+ }catch(error){presetCopyApplied=true;$('status').textContent='Template copy could not open: '+error.message}
+}
+window.addEventListener('message',event=>{
+ if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='docsystem-preset-command')return;
+ const cmd=event.data.action;
+ if(cmd==='view'){window.view(!!event.data.preview);return}
+ if(cmd==='save'){window.save();return}
+ if(cmd==='save-template'){saveAsNewPresetTemplate(event.data.name);return}
+ if(cmd==='print'){window.printDoc();return}
+ if(cmd==='new'){if(activeCopyDefaults){id=null;savedCompanySnapshot=null;savedHeaderSnapshot=null;state=structuredClone(activeCopyDefaults);state.reference='';state.date=new Date().toISOString().slice(0,10);draw()}else fresh(state.preset);$('status').textContent='New quotation';announcePresetReady();informWorkspace('view',{preview:false});return}
+ if(cmd==='business'){choosePresetBusiness(event.data.profileId);return}
+});
+function renderBusinessSelector(){
+ const target=$('businessProfileSelect');if(!target)return;
+ let options=businessProfiles.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.company.name||'Business')+'</option>').join('');
+ if(savedCompanySnapshot&&!businessProfiles.some(p=>p.id===savedCompanySnapshot.id))options+='<option value="'+esc(savedCompanySnapshot.id||'archived')+'">'+esc(savedCompanySnapshot.name||'Saved Business')+' (saved)</option>';
+ target.innerHTML=options||'<option value="">No Business Profile</option>';
+ target.value=savedCompanySnapshot?.id||businessProfile?.id||'';
+ target.disabled=!!id;
+}
+function currencyOptions(){
+ const company=shownCompany(),list=company.currencies.slice();
+ if(state.currency&&!list.some(x=>x.code===state.currency))list.push({code:state.currency,symbol:state.currency});
+ return list;
+}
+const termSettingFields=['minDays','payment','validity'];
+function drawFieldsOnly(){
+ $('fields').innerHTML=fields.filter(f=>!termSettingFields.includes(f[0])).map(f=>field(...f)).join('');
+ $('presetTermSettings').innerHTML='';
+}
+const presets=[{id:"rental3",name:"Rental (Qty 3)",rental:3,cons:0},{id:"rental10",name:"Rental (Qty 10)",rental:10,cons:0},{id:"rentcon53",name:"Rental + Consumables (Qty 5+3)",rental:5,cons:3},{id:"rentcon105",name:"Rental + Consumables (Qty 10+5)",rental:10,cons:5},{id:"specialtkr",name:"Rental — Special TKR",rental:3,cons:0}];
+const fields=[["docTitle","Printed Document Heading","text"],["headingLines","Additional Heading Lines (optional)","textarea"],["reference","Quotation No.","text"],["date","Date","date"],["currency","Currency","select"],["client","Client Company","text"],["address","Client Address","textarea"],["contact","Contact Person","text"],["telephone","Telephone","text"],["email","Email","text"],["rfq","RFQ No.","text"],["rfqDate","RFQ Date","date"],["operator","Operator","text"],["rig","Rig","text"],["well","Well","text"],["loadout","Load Out","text"],["minDays","Minimum Rental Days","number"],["payment","Payment Terms","text"],["validity","Validity","text"]];
+let state={};const $=id=>document.getElementById(id),esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),fmt=n=>Number(n||0).toLocaleString("en-MY",{minimumFractionDigits:2,maximumFractionDigits:2});
+const preset=()=>presets.find(p=>p.id===state.preset)||presets[0];
+const RENTAL3_TERMS = [
+["Purchase Order and Ordering Requirements", 'A formal Purchase Order ("PO") must be issued to Wellora Energy Sdn. Bhd. (1690936-D) prior to any preparation, dispatch, mobilisation, or load-out of the rental equipment.\nAll POs shall be addressed to: Wellora Energy Sdn. Bhd. (1690936-D), Lot 38, Block D, 2nd Floor, Lazenda Centre, Jalan Okk Abdullah, 87000 W.P. Labuan, Malaysia.'],
+["Correspondence","All correspondence and documentation relating to this quotation shall be addressed to Wellora Energy Sdn. Bhd. (1690936-D)."],
+["Wellora Energy's Designated Facility Address",""],
+["Equipment Availability and Price Adjustment","All quoted equipment is subject to availability at the time the order is placed. Any subsequent variation in the quantity of equipment required or the rental period may result in a corresponding adjustment to the quoted rates and/or charges."],
+["Mobilisation, Demobilisation, Load Out and Backload","All expenses incurred in connection with the mobilisation, demobilisation, load out, and backload of equipment between Wellora Energy's designated facility and the Client's nominated location shall be under the Client's expense. Such costs may include, but are not limited to, transportation, trucking, crane and/or forklift services, cargo baskets, pallets, and other related logistics. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%)."],
+["Rental Commencement and Completion",'The rental period shall begin on the date the equipment leaves Wellora Energy\'s designated facility and shall remain in effect until the equipment has been returned to the same location and formally accepted by Wellora Energy. The commencement and return dates shall be determined based on the duly completed and signed Wellora Energy\'s Delivery Ticket ("DT") and Return Ticket ("RT") by the Client or its authorised representative. Where such documentation is unavailable or has not been duly signed, Wellora Energy\'s records shall be deemed conclusive for the purpose of determining the rental period.'],
+["Acceptance","The Client shall be deemed to have accepted the equipment in its delivered condition upon the duly signed DT by the Client or its authorised representative."],
+["Post-Rental Inspection","Upon return of the equipment, Wellora Energy shall conduct a post-rental inspection equivalent to the pre-rental inspection specifications. Any inspection related costs shall be chargeable to the Client at the actual documented cost plus fifteen percent (15%)."],
+["Repair, Maintenance and Redress","Equipment returned following the rental period that requires repair, maintenance, refurbishment, redress, or connection repair shall be subject to additional charges. Such charges shall be calculated based on the actual documented cost incurred by Wellora Energy plus fifteen percent (15%)."],
+["Handling and Material Handling Equipment",'Where applicable, all costs relating to equipment handling and the use of Material Handling Equipment ("MHE") in connection with inspection, repair, maintenance, redress, or other post-rental activities shall be borne by the Client. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%).'],
+["Loss or Damage to Equipment","The Client shall remain responsible for the equipment throughout the rental period and shall be liable for any loss or damage to the equipment. Any repair, refurbishment, replacement, transportation, handling, or other costs arising from such loss or damage shall be charged to the Client based on the actual documented cost plus fifteen percent (15%), unless stated in the quotation otherwise."],
+["Consumables","(a) New single-legged slings supplied, if requested by the Client, shall be treated as direct sale items and charged at cost plus fifteen percent (15%).\n(b) Thread protectors lost or damaged shall be replaced at the Client's cost, charged at cost plus fifteen percent (15%).\n(c) Plastic pallets, where required, shall be treated as direct sale items and charged at cost plus fifteen percent (15%)."],
+["Taxes, Duties and Other Statutory Charges",'All quoted rates and prices are exclusive of any applicable taxes, levies, duties, withholding taxes, bank charges, or other statutory charges. Any such charges shall be borne by the Client. Where importation or exportation of equipment is required, all associated costs, including customs duties, taxes, port charges, clearance fees, and related expenses, shall be reimbursed by the Client at the actual documented cost plus fifteen percent (15%) handling fee. Where applicable, Sales and Service Tax ("SST") shall be imposed at the prevailing statutory rate, currently six percent (6%).'],
+["Cancellation and Minimum Rental Commitment",""],
+["Minimum Rental Period",""],
+["Payment Terms",""],
+["Late Payment",""],
+["Quotation Validity",""]
+];
+const dayWords={30:"thirty (30)",60:"sixty (60)",90:"ninety (90)",120:"one hundred and twenty (120)",150:"one hundred and fifty (150)",180:"one hundred and eighty (180)"};
+function numberToEnglish(n){
+ const ones=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+ const tens=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+ if(n<20)return ones[n];
+ if(n<100)return tens[Math.floor(n/10)]+(n%10?'-'+ones[n%10]:'');
+ if(n<1000)return ones[Math.floor(n/100)]+' hundred'+(n%100?' and '+numberToEnglish(n%100):'');
+ if(n<1000000){
+  const rest=n%1000;
+  return numberToEnglish(Math.floor(n/1000))+' thousand'+(rest?(rest<100?' and ':' ')+numberToEnglish(rest):'');
+ }
+ return String(n);
+}
+function daysPhrase(v){
+ const n=Math.max(1,Math.floor(Number(v)||30));
+ return dayWords[n] || numberToEnglish(n)+' ('+n+')';
+}
+function usesStandardRentalTerms(){return ['rental3','rental10','rentcon53','rentcon105','specialtkr'].includes(state.preset)}
+function isSpecialTkr(){return state.preset==='specialtkr'}
+function rental3Terms(){
+ const d=daysPhrase(state.minDays), paymentDays=Math.max(1,Math.floor(parseInt(state.payment,10)||30)), pay=daysPhrase(paymentDays),valid=daysPhrase(parseInt(state.validity,10)||30);
+ return RENTAL3_TERMS.map(([title,body],i)=>{
+  if(i===2)body=String(state.facilityAddress||'');
+  if(i===12&&state.preset==='rental10')body=body.replace('Sales and Service Tax ("SST")','Sales and Service ("SST")');
+  if(i===13)body='Should the Client cancel the order after issuance of the PO, the Client shall be liable for a minimum rental charge equivalent to '+d+' days together with reimbursement of all costs and expenses already incurred by Wellora Energy in connection with the order. Such costs may include, but are not limited to, inspection, repair, mobilisation, freight, trucking, lifting services, and other logistics or preparation costs.';
+  if(i===14)body='A minimum rental period of '+d+' days shall apply to all equipment rented under this quotation. The Client shall be liable for the rental charges for the full minimum rental period of '+d+' days regardless of the actual period of equipment usage or early return.';
+  if(i===15)body='Payment for rental equipment shall be made within '+pay+' days from the date of the invoice. Invoice shall be billed monthly.';
+  if(i===16)body='A late payment charge of ten percent (10%) per annum shall apply to any outstanding amount remaining unpaid after the expiry of the agreed '+pay+' days payment period.';
+  if(i===17)body='This quotation shall remain valid for '+valid+' days from the quotation date stated herein, unless otherwise agreed in writing.';
+  // The full duration already appears in the clause body; keep the heading concise.
+  return {title,body,num:i+1};
+ });
+}
+function rental3TermsHtml(){
+ return rental3Terms().map(x=>'<div class="excel-term"><span class="term-num">'+x.num+'</span><div class="term-text"><strong>'+esc(x.title)+':</strong> '+esc(x.body)+'</div></div>').join('');
+}
+
+
+const SPECIAL_TKR_TERMS=[
+["Purchase Order and Ordering Requirements",'A formal Purchase Order ("PO") must be issued to Wellora Energy Sdn. Bhd. (1690936-D) prior to any preparation, dispatch, mobilisation, or load-out of the rental equipment. All POs shall be addressed to: Wellora Energy Sdn. Bhd. (1690936-D), Lot 38, Block D, 2nd Floor, Lazenda Centre, Jalan Okk Abdullah, 87000 W.P. Labuan, Malaysia.'],
+["Correspondence","All correspondence and documentation relating to this quotation shall be addressed to Wellora Energy Sdn. Bhd. (1690936-D)."],
+["Equipment Availability and Price Adjustment","All quoted equipment is subject to availability at the time the order is placed. Any subsequent variation in the quantity of equipment required or the rental period may result in a corresponding adjustment to the quoted rates and/or charges."],
+["Equipment Pick-up Address",""],
+["Equipment Return Address",""],
+["Mobilisation, Demobilisation, Load Out and Backload","Client shall arrange and bear the cost of transportation to collect the rental equipment from the Equipment Pick-up Address and return the equipment to the Equipment Return Address."],
+["Rental Commencement and Completion",'The rental period shall begin on the date the equipment leaves the Pick-up Address and shall remain in effect until the equipment has been returned to the Return Address. The commencement and return dates shall be determined based on the duly completed and signed Wellora Energy\'s Delivery Ticket ("DT") and Return Ticket ("RT") by the Client or its authorised representative. Where such documentation is unavailable or has not been duly signed, Wellora Energy\'s records shall be deemed conclusive for the purpose of determining the rental period. Where the rental period is less than forty-five (45) days, a minimum rental period of thirty (30) days shall apply to each rental equipment, whereas rental period exceeding forty-five (45) days shall entitle the Client to a credit equivalent to fifteen (15) days of rental fees for the respective equipment.'],
+["Acceptance","The Client shall be deemed to have accepted the equipment in its delivered condition upon the duly signed DT by the Client or its authorised representative."],
+["Handling and Material Handling Equipment",'Where applicable, all costs relating to equipment handling and the use of Material Handling Equipment ("MHE") in connection with inspection, repair, maintenance, redress, or other post-rental activities shall be borne by the Client. If such services are required to be provided by Wellora Energy, these expenses shall be charged on a reimbursable basis at the actual documented cost plus fifteen percent (15%).'],
+["Post-Rental Inspection","Upon return of the equipment, Wellora Energy shall conduct a post-rental inspection equivalent to the pre-rental inspection specifications. Any inspection related costs shall be chargeable to the Client at the actual documented cost plus fifteen percent (15%)."],
+["Repair, Maintenance and Redress","Equipment returned following the rental period that requires repair, maintenance, refurbishment, redress, or connection repair shall be subject to additional charges. Such charges shall be calculated based on the actual documented cost incurred by Wellora Energy plus fifteen percent (15%)."],
+["Loss or Damage to Equipment","The Client shall remain responsible for the equipment throughout the rental period and shall be liable for any loss or damage to the equipment. Any repair, refurbishment, replacement, transportation, handling, or other costs arising from such loss or damage shall be charged to the Client based on the actual documented cost plus fifteen percent (15%), unless stated in the quotation otherwise."],
+["Consumables","(a) New single-legged slings supplied, if requested by the Client, shall be treated as direct sale items and charged at cost plus fifteen percent (15%).\n(b) Thread protectors lost or damaged shall be replaced at the Client's cost, charged at cost plus fifteen percent (15%).\n(c) Plastic pallets, where required, shall be treated as direct sale items and charged at cost plus fifteen percent (15%)."],
+["Taxes, Duties and Other Statutory Charges",'All quoted rates and prices are exclusive of any applicable taxes, levies, duties, withholding taxes, bank charges, or other statutory charges. Any such charges shall be borne by the Client. Where importation or exportation of equipment is required, all associated costs, including customs duties, taxes, port charges, clearance fees, and related expenses, shall be borne by the Client. Where applicable, Sales and Service Tax ("SST") shall be imposed at the prevailing statutory rate, currently six percent (6%).'],
+["Cancellation and Minimum Rental Commitment",""],
+["Minimum Rental Period",""],
+["Payment Terms",""],
+["Late Payment",""],
+["Quotation Validity",""]
+];
+function specialTkrTerms(){
+ const d=daysPhrase(state.minDays),pay=daysPhrase(parseInt(state.payment,10)||30),valid=daysPhrase(parseInt(state.validity,10)||30);
+ return SPECIAL_TKR_TERMS.map(([title,initial],i)=>{
+  let body=initial;
+  if(i===3)body=state.pickupAddress||'';
+  if(i===4)body=state.returnAddress||'';
+  if(i===14)body='Should the Client cancel the order after issuance of the PO, the Client shall be liable for a minimum rental charge equivalent to '+d+' days together with reimbursement of all costs and expenses already incurred by Wellora Energy in connection with the order. Such costs may include, but are not limited to, inspection, repair, mobilisation, freight, trucking, lifting services, and other logistics or preparation costs.';
+  if(i===15){body='A minimum rental period of '+d+' days shall apply to all equipment rented under this quotation. The Client shall be liable for the rental charges for the full minimum rental period of '+d+' days regardless of the actual period of equipment usage or early return.';}
+  if(i===16)body='Payment for rental equipment shall be made within '+pay+' days from the date of the invoice. Invoice shall be billed monthly.';
+  if(i===17)body='A late payment charge of ten percent (10%) per annum shall apply to any outstanding amount remaining unpaid after the expiry of the agreed '+pay+' days payment period.';
+  if(i===18)body='This quotation shall remain valid for '+valid+' days from the quotation date stated herein, unless otherwise agreed in writing.';
+  return {num:i+1,title,body};
+ });
+}
+function renderClauses(clauses){return clauses.map(x=>'<div class="excel-term"><span class="term-num">'+x.num+'</span><div class="term-text"><strong>'+esc(x.title)+':</strong> '+esc(x.body)+'</div></div>').join('')}
+const editingPresetTemplate=new URLSearchParams(location.search).get('configure')==='1';
+function activePresetClauses(){
+ const omitted=Array.isArray(state.omittedTerms)?state.omittedTerms:[];
+ const replacements=state.clauseReplacements||{};
+ const originals=isSpecialTkr()?specialTkrTerms():rental3Terms();
+ const minDays=daysPhrase(state.minDays),paymentDays=daysPhrase(parseInt(state.payment,10)||30),validityDays=daysPhrase(parseInt(state.validity,10)||30);
+ const tokens={minDays,paymentDays,validityDays,facilityAddress:state.facilityAddress||'',pickupAddress:state.pickupAddress||'',returnAddress:state.returnAddress||''};
+ const resolve=body=>String(body||'').replace(/\{(minDays|paymentDays|validityDays|facilityAddress|pickupAddress|returnAddress)\}/g,(match,key)=>tokens[key]);
+ const visible=originals.filter(x=>!omitted.includes(Number(x.num))).map(x=>({...x,body:resolve(replacements[x.num]||x.body)}));
+ const extra=Array.isArray(state.extraTerms)?state.extraTerms.filter(x=>x&&x.enabled!==false&&(x.title||x.body)):[];
+ return [...visible,...extra.map(x=>({title:x.title||'Additional Statement',body:resolve(x.body||'')}))].map((x,i)=>({...x,num:i+1}));
+}
+function activePresetClausesHtml(){return renderClauses(activePresetClauses())}
+function quoteTermsEditorMarkup(){
+ const originals=isSpecialTkr()?specialTkrTerms():rental3Terms();
+ const hidden=Array.isArray(state.omittedTerms)?state.omittedTerms:[];
+ const replacements=state.clauseReplacements||{};
+ const extras=Array.isArray(state.extraTerms)?state.extraTerms:[];
+ const clauseInput=t=>{
+  const special=isSpecialTkr();
+  const n=Number(t.num);
+  const fieldFor=key=>field(...fields.find(f=>f[0]===key));
+  let controls='';
+  if(!special&&n===3)controls='<label>Designated Facility Address<textarea id="facilityAddress" rows="3" placeholder="Enter designated facility address">'+esc(state.facilityAddress||'')+'</textarea></label>';
+  if(special&&n===4)controls='<label>Equipment Pick-up Address<textarea id="pickupAddress" rows="3">'+esc(state.pickupAddress||'')+'</textarea></label>';
+  if(special&&n===5)controls='<label>Equipment Return Address<textarea id="returnAddress" rows="3">'+esc(state.returnAddress||'')+'</textarea></label>';
+  if(n===(special?16:15))controls+=fieldFor('minDays');
+  if(n===(special?17:16))controls+=fieldFor('payment');
+  if(n===(special?19:18))controls+=fieldFor('validity');
+  return controls?'<div class="quote-clause-inputs" style="padding-top:9px;margin-top:9px;border-top:1px solid #e2e8f0;display:grid;gap:8px">'+controls+'</div>':'';
+ };
+ const core=originals.map(t=>'<div style="border:1px solid #e1e8ef;border-radius:6px;padding:10px;margin:8px 0">'+
+ '<label style="display:flex;flex-direction:row;align-items:center;gap:8px"><input type="checkbox" data-quote-term="'+t.num+'" style="width:auto;flex:none" '+(!hidden.includes(Number(t.num))?'checked':'')+'><strong>Show · '+t.num+'. '+esc(t.title)+'</strong></label>'+
+ '<div style="font-size:12px;white-space:pre-wrap;line-height:1.4;margin:6px 0">'+esc(t.body||'')+'</div>'+
+ clauseInput(t)+(editingPresetTemplate?'<label>Replacement wording (optional)<textarea data-quote-replace="'+t.num+'" rows="2" placeholder="Leave empty to retain calculated original wording">'+esc(replacements[t.num]||'')+'</textarea></label>':'')+'</div>').join('');
+ const added=extras.map((t,i)=>'<div style="border:1px solid #e1e8ef;border-radius:6px;padding:10px;margin:8px 0">'+
+ '<label style="display:flex;flex-direction:row;align-items:center;gap:8px"><input type="checkbox" data-quote-extra-show="'+i+'" style="width:auto" '+(t.enabled===false?'':'checked')+'>Show additional statement '+(i+1)+'</label>'+
+ '<label>Heading<input data-quote-extra-title="'+i+'" value="'+esc(t.title||'')+'"></label>'+
+ '<label>Statement<textarea data-quote-extra-body="'+i+'" rows="3">'+esc(t.body||'')+'</textarea></label>'+
+ '<button type="button" class="small" data-quote-extra-remove="'+i+'">Remove added statement</button></div>').join('');
+ return '<p class="muted">Original clauses are protected and cannot be removed. Toggle Show/Hide for this document, then add your own statements below. These selections are saved with the document. Formula-driven wording stays linked.'+(editingPresetTemplate?' To use dynamic values in custom wording: {minDays}, {paymentDays}, {validityDays}.':'')+'</p>'+
+ core+'<h4>Additional statements</h4>'+added+'<button type="button" class="small" id="quoteAddStatement">+ Add Statement</button>';
+}
+function fresh(name){savedCompanySnapshot=null;savedHeaderSnapshot=null;initialCurrencySet=false;const p=presets.find(p=>p.id===name)||presets[0];id=null;state={preset:p.id,docTitle:"QUOTATION",headingLines:"",reference:"",date:new Date().toISOString().slice(0,10),currency:preferredCurrency(businessProfile?.company,null),client:"",address:"",contact:"",telephone:"",email:"",rfq:"",rfqDate:"",operator:"",rig:"",well:"",loadout:"",minDays:30,payment:"30 Days",validity:"30 Days",facilityAddress:"",pickupAddress:"",returnAddress:"",rental:Array.from({length:p.rental},()=>({no:"",description:"",unit:"",qty:"",rate:"",lih:""})),consumables:Array.from({length:p.cons},()=>({no:"",description:"",unit:"",qty:"",rate:""})),terms:"",omittedTerms:[],clauseReplacements:{},extraTerms:[],termsFontSize:8,termsPageFit:"flow",signatures:["","",""]};draw()}
+function headingFormatControls(k){
+ if(!['docTitle','headingLines'].includes(k))return '';
+ return '<div class="panel-inline-tools" aria-label="Format '+(k==='docTitle'?'document heading':'additional lines')+'">'+
+  [['bold','B'],['italic','I'],['underline','U'],['size','Size'],['font','Font'],['color','Color']].map(([kind,label])=>
+  '<button type="button" class="small" data-heading-format="'+k+':'+kind+'">'+label+'</button>').join('')+'</div>';
+}
+function field(k,name,type){return '<label>'+name+headingFormatControls(k)+(k==='minDays'?'<select id="minimumRentalMode" aria-label="Minimum Rental Days">'+[30,60,90,120,150,180].map(n=>'<option value="'+n+'" '+(Number(state.minDays)===n?'selected':'')+'>'+n+' days</option>').join('')+'<option value="custom" '+(![30,60,90,120,150,180].includes(Number(state.minDays))?'selected':'')+'>Custom Days</option></select><input id="customMinimumRentalDays" data-field="minDays" type="number" min="1" max="999999" step="1" inputmode="numeric" aria-label="Custom minimum rental days" placeholder="Enter number of days" value="'+esc(state.minDays||30)+'" '+([30,60,90,120,150,180].includes(Number(state.minDays))?'hidden':'')+'>':(type==="textarea"?'<textarea rows="'+(k==='headingLines'?3:6)+'" data-field="'+k+'" class="'+(k==='headingLines'?'heading-lines-input':'client-address-input')+'" placeholder="'+(k==='headingLines'?'Optional line 1&#10;Optional line 2':'Address line 1&#10;Address line 2&#10;Address line 3')+'">'+esc(state[k])+'</textarea>':type==="select"?'<select data-field="'+k+'">'+currencyOptions().map(x=>'<option value="'+esc(x.code)+'" '+(x.code===state.currency?'selected':'')+'>'+esc(x.code==='MYR'?'Ringgit Malaysia (MYR)':x.code==='USD'?'United States Dollar (USD)':x.code+' ('+x.symbol+')')+'</option>').join('')+'</select>':'<input data-field="'+k+'" type="'+type+'" value="'+esc(state[k])+'">'))+'</label>'}
+function grid(table){const arr=state[table],cols=table==="rental"?["description","unit","qty","rate","lih"]:["description","unit","qty","rate"];return '<table><thead><tr><th>#</th>'+cols.map(x=>'<th>'+({description:"Description",unit:"Unit",qty:"Qty",rate:"Rate",lih:"LIH/DBR"}[x])+'</th>').join('')+'</tr></thead><tbody>'+arr.map((r,i)=>'<tr><td><input aria-label="Item number" data-table="'+table+'" data-row="'+i+'" data-key="no" value="'+esc(r.no||'')+'"></td>'+cols.map(k=>'<td>'+(k==='description'?'<textarea rows="2" data-table="'+table+'" data-row="'+i+'" data-key="'+k+'">'+esc(r[k]||'')+'</textarea>':'<input data-table="'+table+'" data-row="'+i+'" data-key="'+k+'" value="'+esc(r[k])+'">')+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function draw(){$('preset').value=state.preset;renderBusinessSelector();drawFieldsOnly();$('rental').innerHTML=grid("rental");$('consumables').innerHTML=grid("consumables");$('consWrap').hidden=!state.consumables.length;$('terms').value=state.terms;$('termsFontSize').value=String(state.termsFontSize||8);$('termsPageFit').value=['flow','normal','auto'].includes(state.termsPageFit)?state.termsPageFit:'flow';$('rental3TermsControls').hidden=!usesStandardRentalTerms();$('otherPresetTerms').hidden=usesStandardRentalTerms();$('rental3TermsReadOnly').innerHTML=usesStandardRentalTerms()?quoteTermsEditorMarkup():'';$('signatures').innerHTML=['Prepared By','Reviewed By','Approved By'].map((n,i)=>'<fieldset class="sign-form"><legend>'+n+'</legend>'+['Name','Position','Date'].map((label,j)=>'<label>'+label+'<input data-sign-row="'+i+'" data-sign-key="'+['name','position','date'][j]+'" type="'+(j===2?'date':'text')+'" value="'+esc((typeof state.signatures[i]==='object'?state.signatures[i][['name','position','date'][j]]:(j===0?state.signatures[i]:''))||'')+'"></label>').join('')+'</fieldset>').join('');render()}
+function resultTable(arr,table){if(!arr.length)return '';const rental=table==='rental';return '<h3>'+(rental?'Rental Equipment':'Consumables')+'</h3><table><thead><tr><th>No.</th><th>Description</th><th>Unit</th><th>Qty</th><th>'+(rental?'Daily Rental Rate':'Unit Price')+' ('+esc(state.currency)+')</th><th>'+(rental?'LIH/DBR':'Amount')+'</th></tr></thead><tbody>'+arr.map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(quotationPresetValue(r.description))+'</td><td>'+esc(quotationPresetValue(r.unit))+'</td><td>'+esc(quotationPresetValue(r.qty))+'</td><td>'+esc(quotationPresetValue(r.rate))+'</td><td>'+(rental?esc(quotationPresetValue(r.lih)):fmt(Number(r.qty)*Number(r.rate)))+'</td></tr>').join('')+'</tbody></table>'}
+function formatExcelDate(v){if(!v)return '';const d=new Date(v+'T12:00:00');if(Number.isNaN(d.getTime()))return v;return new Intl.DateTimeFormat('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(d).replace(/^(\w+), (\d+) (\w+) (\d+)$/, '$1, $2 $3, $4')}
+function quotationPresetValue(value){
+ const co=shownCompany();
+ return expandPresetText(value,{...co,documentTitle:state.docTitle||'QUOTATION',documentNumber:state.reference||'',documentDate:state.date||''},globalPlaceholderValues);
+}
+function render(){
+ // Pagination must be measured at true A4 size, never at the previous preview zoom.
+ const pageContainer=$('paper');
+ pageContainer.style.zoom='1';
+ const row=(label,value)=>'<div class="item'+(label==='Address'?' address-row':'')+'"><b>'+esc(label)+':</b><span'+(label==='Address'?' class="client-address-value"':'')+'>'+esc(quotationPresetValue(value||''))+'</span></div>';
+ const qrows=(key,title,arr)=>{
+  const filled=r=>Object.values(r).some(v=>String(v??'').trim()!=='');
+  if(!arr.length)return '';
+  const rental=key==='rental',columns=rental?['No','Description','Unit','Qty','Daily Rental Rate ('+state.currency+'/Day/Unit)','LIH/DBR ('+state.currency+'/Unit)']:['No','Description','Unit','Qty','Amount ('+state.currency+'/Unit)','Total Amount ('+state.currency+')'];
+  return (rental?'':'<h4 style="text-align:center;margin:4mm 0 1mm">Consumables</h4>')+'<table class="excel-table"><colgroup><col class="col-num"><col class="col-desc"><col class="col-unit"><col class="col-qty"><col class="col-rate"><col class="col-lih"></colgroup><thead><tr>'+columns.map(t=>'<th>'+esc(t)+'</th>').join('')+'</tr></thead><tbody>'+arr.map((r,i)=>'<tr><td>'+esc(r.no||'')+'</td><td>'+esc(r.description||'')+'</td><td>'+esc(r.unit||'')+'</td><td>'+esc(r.qty||'')+'</td><td>'+esc(r.rate||'')+'</td><td>'+(rental?esc(r.lih||''):(filled(r)?fmt((Number(r.qty)||0)*(Number(r.rate)||0)):'') )+'</td></tr>').join('')+'</tbody></table>';
+ };
+ const intro=state.rfqDate?'With reference to your Request for Quotation (RFQ), dated '+esc(formatExcelDate(state.rfqDate))+', we are pleased to quote you the following item(s), subject to our terms and conditions:':'';
+ const terms=usesStandardRentalTerms()?activePresetClausesHtml():String(state.terms||'').split(/\n(?=\d+[.)]\s)/).map((x,i)=>'<div class="excel-term"><span class="term-num">'+(i+1)+'.</span><div class="term-text">'+esc(x.replace(/^\d+[.)]\s*/,''))+'</div></div>').join('');
+ const company=shownCompany();
+ const headerSettings=activePresetHeader();
+ const titleSize=Math.max(8,Math.min(36,Number(headerSettings.titleSize)||16));
+ const extraSize=Math.max(6,Math.min(24,Number(headerSettings.extraSize)||9));
+ const titleColor=validatedHeaderColor(headerSettings.titleColor,'#d6a900');
+ const extraColor=validatedHeaderColor(headerSettings.extraColor,'#111111');
+ const heading=String(state.docTitle??'QUOTATION').replace(/\r\n?/g,'\n');
+ const titleFont=['Arial','Georgia','Verdana','Tahoma','Times New Roman','Courier New'].includes(headerSettings.titleFont)?headerSettings.titleFont:'Arial';
+ const extraFont=['Arial','Georgia','Verdana','Tahoma','Times New Roman','Courier New'].includes(headerSettings.extraFont)?headerSettings.extraFont:'Arial';
+ const titleAlign=['left','center','right'].includes(headerSettings.titleAlign)?headerSettings.titleAlign:'right';
+ const extraAlign=['left','center','right'].includes(headerSettings.extraAlign)?headerSettings.extraAlign:'right';
+ const headingExtra=String(state.headingLines??'').replace(/\r\n?/g,'\n');
+ const resolveHeading=(template,value,key)=>{
+  const source=String(template??'{'+key+'}');
+  const marker='\u0001DOCSYSTEM_HEADING\u0001';
+  return renderCompanyInfo(source.replace(new RegExp('\\{'+key+'\\}','gi'),marker)).replaceAll(marker,renderCompanyInfo(value));
+ };
+ const headingHtml=resolveHeading(headerSettings.titleText,heading,'documentTitle');
+ const extraHtml=resolveHeading(headerSettings.extraText,headingExtra,'headingLines');
+ $('paper').innerHTML='<article class="paper"><div class="excel-company"><div class="excel-identity">'+renderPresetHeaderSlot('logo',company)+'<div class="excel-company-name">'+renderPresetHeaderSlot('name',company)+'</div><div class="excel-company-details">'+renderPresetHeaderSlot('details',company)+'</div></div><div class="excel-right"><div class="excel-heading-block"><div class="excel-title" style="--preset-title-color:'+titleColor+';--preset-title-size:'+titleSize+'pt;--preset-title-font:'+titleFont+';--preset-title-align:'+titleAlign+'">'+headingHtml+'</div>'+(extraHtml.trim()||headingExtra.length?'<div class="excel-heading-extra" style="--preset-extra-color:'+extraColor+';--preset-extra-size:'+extraSize+'pt;--preset-extra-font:'+extraFont+';--preset-extra-align:'+extraAlign+'">'+extraHtml+'</div>':'')+'</div><div class="excel-ref"><div class="ref-line"><span>Date:</span><span>'+esc(formatExcelDate(state.date))+'</span></div><div class="ref-line"><span>Reference No:</span><span>'+esc(state.reference||'')+'</span></div><div class="ref-line"><span>Currency:</span><span>'+esc(state.currency||'')+'</span></div></div></div></div><div class="excel-client-title">Client Information</div><div class="excel-client"><div>'+row('Company',state.client)+row('Address',state.address)+row('Contact Person',state.contact)+row('Tel',state.telephone)+row('Email',state.email)+'</div><div>'+row('RFQ No',state.rfq)+row('Date',formatExcelDate(state.rfqDate))+row('Operator',state.operator)+row('Rig',state.rig)+row('Well',state.well)+row('Load Out',state.loadout)+'</div></div>'+(intro?'<p class="excel-rfq">'+intro+'</p>':'')+qrows('rental','Rental',state.rental)+'<div class="excel-notes">*LIH = Lost In Hole<br>*DBR = Damage Beyond Repair</div>'+qrows('consumables','Consumables',state.consumables)+(state.consumables.length?'<p style="text-align:right;font-weight:700">Consumables Total: '+esc(state.currency)+' '+fmt(state.consumables.reduce((sum,r)=>sum+(Number(r.qty)||0)*(Number(r.rate)||0),0))+'</p>':'')+'<section class="excel-terms-section"><div class="excel-terms-header">Terms and Conditions</div><div class="excel-terms" style="font-size:'+Math.max(6.5,Math.min(9,Number(state.termsFontSize)||8))+'pt">'+terms+'</div></section><p style="font-size:8pt">Please do not hesitate to contact us if you have any questions.</p><table class="excel-sign-table"><colgroup><col style="width:14%"><col style="width:34%"><col style="width:23%"><col style="width:12%"><col style="width:17%"></colgroup><thead><tr><th></th><th>Name</th><th>Position</th><th>Date</th><th>Signature</th></tr></thead><tbody>'+['Prepared By','Reviewed By','Approved By'].map((s,i)=>{const v=state.signatures[i],d=typeof v==='object'?v:{name:v||'',position:'',date:''};return '<tr><th scope="row">'+s+'</th><td>'+esc(d.name||'')+'</td><td>'+esc(d.position||'')+'</td><td>'+esc(d.date?formatExcelDate(d.date):'')+'</td><td class="sign-blank"></td></tr>'}).join('')+'</tbody></table></article>';
+ paginatePresetDocument($('paper'),{size:state.termsFontSize,fit:state.termsPageFit});
+ fitEmbeddedPresetPreview();
+}
+
+// Fit the visible preview to its column without changing the A4 print dimensions.
+function mobileA4AvailableWidth(holder){
+ const viewport=document.documentElement.clientWidth||window.innerWidth;
+ const frameWidth=window.frameElement?.getBoundingClientRect().width||viewport;
+ const container=holder?.getBoundingClientRect().width||viewport;
+ const left=holder?.getBoundingClientRect().left||0;
+ return Math.max(1,Math.min(container,frameWidth,viewport-left)-24);
+}
+function fitEmbeddedPresetPreview(){
+ if(!document.body.classList.contains('embedded-preset'))return;
+ const holder=document.querySelector('.wrap>.preview-only');
+ const paper=document.getElementById('paper');
+ if(!holder||!paper)return;
+ if(window.matchMedia('print').matches)return;
+ const available=mobileA4AvailableWidth(holder);
+ const a4Width=210*96/25.4;
+ const factor=Math.min(1,Math.max(.1,available/a4Width));
+ const next=String(Math.round(factor*1000)/1000);
+ if(paper.style.zoom!==next)paper.style.zoom=next;
+}
+window.addEventListener('resize',fitEmbeddedPresetPreview);
+if(typeof ResizeObserver!=='undefined'){
+ const previewColumn=document.querySelector('.wrap>.preview-only');
+ if(previewColumn)new ResizeObserver(fitEmbeddedPresetPreview).observe(previewColumn);
+}
+requestAnimationFrame(fitEmbeddedPresetPreview);
+
+window.view=async on=>{if(on&&!savedCompanySnapshot)await refreshBusinessProfiles();document.body.classList.toggle('preview',on);$('working').classList.toggle('active',!on);$('previewButton').classList.toggle('active',on);if(on)render();informWorkspace('view',{preview:!!on})};
+window.printDoc=()=>{document.body.classList.add('preview');$('working').classList.remove('active');$('previewButton').classList.add('active');render();informWorkspace('view',{preview:true});window.print()};
+window.save=async()=>{if(!user)return alert('Sign in from DocSystem first');if(!state.reference.trim())return alert('Enter a quotation number.');try{const ref=id?doc(db,'documents',id):doc(collection(db,'documents'));const prior=await getDoc(ref);const companySnapshot=savedCompanySnapshot||profileSnapshot(businessProfile);if(!companySnapshot.id)return alert('Select a Business Profile first.');const presetHeaderSnapshot=savedHeaderSnapshot||structuredClone(businessProfile?.presetHeader||{});const record={companySnapshot,presetHeaderSnapshot,templateSource:'preset',templateId:state.preset,templateVersion:1,documentType:'Quotation',number:state.reference,date:state.date,presetData:state,profileId:companySnapshot.id,updatedAt:serverTimestamp(),updatedBy:user.uid,...(!prior.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:actualRole}:{})};await setDoc(ref,record,{merge:true});id=ref.id;savedCompanySnapshot=companySnapshot;savedHeaderSnapshot=presetHeaderSnapshot;renderBusinessSelector();$('status').textContent='Saved '+state.reference;announcePresetReady()}catch(e){alert('Save failed: '+e.message)}};
+window.load=async()=>{if(!user)return alert('Sign in first');const number=prompt('Quotation number to open:');if(!number)return;try{const snaps=await getDocs(query(collection(db,'documents'),where('number','==',number),limit(30)));const found=snaps.docs.find(x=>x.data().templateSource==='preset');if(!found)return alert('Preset quotation not found');id=found.id;state=found.data().presetData;savedCompanySnapshot=found.data().companySnapshot||null;savedHeaderSnapshot=found.data().presetHeaderSnapshot||{};businessProfile=businessProfiles.find(p=>p.id===found.data().profileId)||businessProfile;draw();$('status').textContent='Opened '+number;announcePresetReady()}catch(e){alert('Open failed: '+e.message)}};
+if(document.body.classList.contains('embedded-preset')){
+ const statusNode=$('status');
+ new MutationObserver(()=>informWorkspace('status',{status:statusNode.textContent||'Ready'})).observe(statusNode,{childList:true,subtree:true,characterData:true});
+}
+$('preset').innerHTML=presets.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('');$('businessProfileSelect').onchange=e=>{if(id){renderBusinessSelector();return}const selected=businessProfiles.find(p=>p.id===e.target.value);if(!selected)return;businessProfile=selected;state.currency=preferredCurrency(selected.company,null);initialCurrencySet=true;drawFieldsOnly();render();announcePresetReady();};
+$('preset').onchange=e=>{if(confirm('Switch template and clear unsaved changes?'))fresh(e.target.value);else e.target.value=state.preset};document.addEventListener('click',e=>{
+ const button=e.target.closest('[data-heading-format]');
+ if(!button)return;
+ const [key,kind]=button.dataset.headingFormat.split(':');
+ const field=document.querySelector('[data-field="'+key+'"]');
+ if(!field)return;
+ const start=field.selectionStart,end=field.selectionEnd,selected=field.value.slice(start,end);
+ let before='',after='';
+ if(kind==='bold'){before='[b]';after='[/b]'}
+ if(kind==='italic'){before='[i]';after='[/i]'}
+ if(kind==='underline'){before='[u]';after='[/u]'}
+ if(kind==='size'){const n=prompt('Selected text size in pt (6–36)','12');if(n===null)return;before='[size='+Math.max(6,Math.min(36,Number(n)||12))+']';after='[/size]'}
+ if(kind==='font'){const n=prompt('Font: Arial, Georgia, Verdana, Tahoma, Courier New, Times New Roman','Arial');if(n===null)return;if(!['Arial','Georgia','Verdana','Tahoma','Courier New','Times New Roman'].includes(n))return alert('Unsupported font');before='[font='+n+']';after='[/font]'}
+ if(kind==='color'){const n=prompt('HEX color (e.g. #17365D)','#17365D');if(n===null)return;if(!/^#[0-9a-fA-F]{6}$/.test(n.trim()))return alert('Use a 6-digit HEX color');before='[color='+n.trim()+']';after='[/color]'}
+ field.value=field.value.slice(0,start)+before+selected+after+field.value.slice(end);
+ state[key]=field.value;field.focus();field.setSelectionRange(start+before.length,start+before.length+selected.length);render();
+});
+document.addEventListener('click',e=>{
+ if(e.target.id==='quoteAddStatement'){state.extraTerms??=[];state.extraTerms.push({title:'',body:'',enabled:true});$('rental3TermsReadOnly').innerHTML=quoteTermsEditorMarkup();render();return}
+ if(e.target.dataset.quoteExtraRemove!==undefined){state.extraTerms.splice(Number(e.target.dataset.quoteExtraRemove),1);$('rental3TermsReadOnly').innerHTML=quoteTermsEditorMarkup();render();return}
+});
+document.addEventListener('input',e=>{if(e.target.dataset.quoteTerm!==undefined){
+ const n=Number(e.target.dataset.quoteTerm);
+ state.omittedTerms=Array.isArray(state.omittedTerms)?state.omittedTerms:[];
+ state.omittedTerms=state.omittedTerms.filter(x=>Number(x)!==n);
+ if(!e.target.checked)state.omittedTerms.push(n);
+ render();return;
+}
+if(e.target.dataset.quoteReplace!==undefined){state.clauseReplacements??={};state.clauseReplacements[e.target.dataset.quoteReplace]=e.target.value;render();return}
+if(e.target.dataset.quoteExtraTitle!==undefined){state.extraTerms[Number(e.target.dataset.quoteExtraTitle)].title=e.target.value;render();return}
+if(e.target.dataset.quoteExtraBody!==undefined){state.extraTerms[Number(e.target.dataset.quoteExtraBody)].body=e.target.value;render();return}
+if(e.target.dataset.quoteExtraShow!==undefined){state.extraTerms[Number(e.target.dataset.quoteExtraShow)].enabled=e.target.checked;render();return}
+if(e.target.id==='minimumRentalMode'){
+ const custom=e.target.value==='custom',input=$('customMinimumRentalDays');
+ input.hidden=!custom;
+ if(custom){input.value=String(state.minDays||30);input.focus();return}
+ state.minDays=Number(e.target.value);
+ input.value=String(state.minDays);
+ if(usesStandardRentalTerms())$('rental3TermsReadOnly').innerHTML=quoteTermsEditorMarkup();
+ render();return;
+}
+if(e.target.id==='customMinimumRentalDays'){
+ const n=Number(e.target.value);
+ if(!Number.isInteger(n)||n<1||n>999999)return;
+ state.minDays=n;
+ if(usesStandardRentalTerms())$('rental3TermsReadOnly').innerHTML=quoteTermsEditorMarkup();
+ render();return;
+}
+if(e.target.id==='termsFontSize'){state.termsFontSize=Number(e.target.value)||8;render();return}if(e.target.id==='termsPageFit'){state.termsPageFit=e.target.value;render();return}const d=e.target.dataset;if(d.field)state[d.field]=e.target.value;else if(d.table)state[d.table][+d.row][d.key]=e.target.value;else if(d.signRow!==undefined){const i=+d.signRow;if(typeof state.signatures[i]!=='object')state.signatures[i]={name:state.signatures[i]||'',position:'',date:''};state.signatures[i][d.signKey]=e.target.value;}else if(e.target.id==='terms')state.terms=e.target.value;else if(e.target.id==='facilityAddress')state.facilityAddress=e.target.value;else if(e.target.id==='pickupAddress')state.pickupAddress=e.target.value;else if(e.target.id==='returnAddress')state.returnAddress=e.target.value;if(usesStandardRentalTerms())$('rental3TermsReadOnly').innerHTML=quoteTermsEditorMarkup();render()});fresh(new URLSearchParams(location.search).get('preset')||'rental3');const openId=new URLSearchParams(location.search).get('docId');if(openId){onAuthStateChanged(auth,async u=>{if(!u)return;try{const snap=await getDoc(doc(db,'documents',openId));if(snap.exists()&&snap.data().templateSource==='preset'){state=snap.data().presetData;id=openId;savedCompanySnapshot=snap.data().companySnapshot||null;savedHeaderSnapshot=snap.data().presetHeaderSnapshot||{};businessProfile=businessProfiles.find(p=>p.id===snap.data().profileId)||businessProfile;draw();$('status').textContent='Opened '+snap.data().number;announcePresetReady()}}catch(e){$('status').textContent='Could not open document: '+e.message}})}
+</script></body></html>

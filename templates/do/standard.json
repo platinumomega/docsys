@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "family": "delivery-ticket",
+  "id": "standard",
+  "title": "Delivery Ticket",
+  "sourceWorkbook": "4. WLR-Energy-Delivery-Ticket-Template (Revision 02-10-26).xlsm",
+  "sourceSheet": "Delivery Ticket Template",
+  "fields": [
+    {
+      "key": "date",
+      "label": "Date",
+      "type": "date",
+      "cell": "J12"
+    },
+    {
+      "key": "reference",
+      "label": "Reference No.",
+      "type": "text",
+      "cell": "J13"
+    },
+    {
+      "key": "poDate",
+      "label": "Purchase Order Date",
+      "type": "date",
+      "cell": "J16"
+    },
+    {
+      "key": "poNumber",
+      "label": "Purchase Order No.",
+      "type": "text",
+      "cell": "J17"
+    }
+  ],
+  "sections": [
+    {
+      "id": "collection",
+      "title": "Collection Address & Contact Person",
+      "fields": [
+        {
+          "key": "company",
+          "label": "Company",
+          "type": "text",
+          "default": "{companyName}"
+        },
+        {
+          "key": "address",
+          "label": "Address",
+          "type": "multiline"
+        },
+        {
+          "key": "contact",
+          "label": "Contact Person",
+          "type": "text"
+        },
+        {
+          "key": "tel",
+          "label": "Tel",
+          "type": "text"
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "type": "email"
+        }
+      ]
+    },
+    {
+      "id": "deliverTo",
+      "title": "Deliver To",
+      "fields": [
+        {
+          "key": "company",
+          "label": "Company",
+          "type": "text"
+        },
+        {
+          "key": "address",
+          "label": "Address",
+          "type": "multiline"
+        },
+        {
+          "key": "contact",
+          "label": "Contact Person",
+          "type": "text"
+        },
+        {
+          "key": "tel",
+          "label": "Tel",
+          "type": "text"
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "type": "email"
+        }
+      ]
+    }
+  ],
+  "items": {
+    "firstRow": 33,
+    "lastRow": 42,
+    "initialRows": 10,
+    "columns": [
+      {
+        "key": "no",
+        "label": "No",
+        "type": "text"
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "type": "multiline"
+      },
+      {
+        "key": "serialNumber",
+        "label": "Serial Number",
+        "type": "text"
+      },
+      {
+        "key": "unit",
+        "label": "Unit",
+        "type": "text"
+      },
+      {
+        "key": "qty",
+        "label": "Qty",
+        "type": "number"
+      }
+    ],
+    "total": {
+      "label": "Total Qty",
+      "formula": "SUM(K33:K42)",
+      "field": "qty"
+    }
+  },
+  "signatures": {
+    "roles": [
+      "Prepared By",
+      "Transported By",
+      "Received By"
+    ],
+    "columns": [
+      "Name & Position",
+      "Contact Number",
+      "Company Name",
+      "Date",
+      "Signature & Company Stamp"
+    ],
+    "preparedByCompanyDefault": "{companyName}"
+  },
+  "photos": {
+    "count": 10,
+    "columns": 2,
+    "firstRow": 57,
+    "lastRow": 62
+  },
+  "print": {
+    "paper": "A4",
+    "orientation": "portrait",
+    "sourceExcelPageCount": 2
+  },
+  "hasTerms": false,
+  "hasCurrency": false
+}

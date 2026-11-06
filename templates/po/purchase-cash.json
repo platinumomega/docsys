@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "family": "purchase-order",
+  "id": "purchase-cash",
+  "title": "Purchase — Cash",
+  "documentTitle": "PURCHASE ORDER",
+  "source": {
+    "file": "3. WLR-Purchase-Order-Template (Revision 04-09-26)(1).xlsm",
+    "sheet": "PO Template (Pur - Cash)",
+    "revision": "04-09-26",
+    "sourceWordingPreserved": true
+  },
+  "companyProfile": "selected",
+  "layout": {
+    "paper": "A4",
+    "orientation": "portrait",
+    "sections": [
+      "companyHeader",
+      "vendorQuotation",
+      "reference",
+      "items",
+      "totals",
+      "amountInWords",
+      "terms",
+      "signatures"
+    ],
+    "termsKeepTogether": true,
+    "splitTermsByClause": true,
+    "signatureKeepTogether": true
+  },
+  "fields": [
+    {
+      "key": "poDate",
+      "label": "PO Date",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "poNumber",
+      "label": "Reference No.",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "vendorName",
+      "label": "Vendor Company",
+      "type": "text"
+    },
+    {
+      "key": "vendorAddress",
+      "label": "Vendor Address",
+      "type": "multiline"
+    },
+    {
+      "key": "vendorContact",
+      "label": "Contact Person",
+      "type": "text"
+    },
+    {
+      "key": "vendorPhone",
+      "label": "Tel",
+      "type": "text"
+    },
+    {
+      "key": "vendorEmail",
+      "label": "Email",
+      "type": "email"
+    },
+    {
+      "key": "vendorQuotationNo",
+      "label": "Vendor Quotation No.",
+      "type": "text"
+    },
+    {
+      "key": "vendorQuotationDate",
+      "label": "Vendor Quotation Date",
+      "type": "date"
+    },
+    {
+      "key": "currency",
+      "label": "Currency",
+      "type": "select",
+      "options": [
+        "MYR",
+        "USD"
+      ],
+      "default": "MYR"
+    },
+    {
+      "key": "sstRate",
+      "label": "SST (%)",
+      "type": "number",
+      "default": 0
+    },
+    {
+      "key": "fulfillmentMode",
+      "label": "Delivery / Pick-up",
+      "type": "select",
+      "options": [
+        "delivery",
+        "pickup"
+      ],
+      "default": "delivery"
+    },
+    {
+      "key": "fulfillmentAddress",
+      "label": "Delivery / Pick-up Address",
+      "type": "multiline"
+    },
+    {
+      "key": "fulfillmentDate",
+      "label": "Delivery / Collection Date",
+      "type": "date"
+    },
+    {
+      "key": "welloraContactName",
+      "label": "Wellora Contact Name",
+      "type": "text"
+    },
+    {
+      "key": "welloraContactPhone",
+      "label": "Wellora Contact Number",
+      "type": "text"
+    },
+    {
+      "key": "welloraContactEmail",
+      "label": "Wellora Contact Email",
+      "type": "email"
+    }
+  ],
+  "items": {
+    "initialRows": 8,
+    "allowAddRows": true,
+    "columns": [
+      {
+        "key": "number",
+        "label": "No",
+        "type": "text"
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "type": "multiline",
+        "preserveWhitespace": true
+      },
+      {
+        "key": "unit",
+        "label": "Unit",
+        "type": "text"
+      },
+      {
+        "key": "quantity",
+        "label": "Qty",
+        "type": "number"
+      },
+      {
+        "key": "unitPrice",
+        "label": "Unit Price",
+        "type": "money"
+      },
+      {
+        "key": "lineTotal",
+        "label": "Total Amount",
+        "type": "calculated",
+        "formula": "quantity * unitPrice"
+      }
+    ],
+    "formula": "quantity * unitPrice",
+    "lineBreaks": true,
+    "consecutiveSpaces": true
+  },
+  "totals": {
+    "subtotal": "sum(items.lineTotal)",
+    "sst": "subtotal * sstRate / 100",
+    "grandTotal": "subtotal + sst",
+    "amountInWords": true,
+    "currencies": [
+      "MYR",
+      "USD"
+    ]
+  },
+  "terms": [
+    {
+      "number": 1,
+      "id": "invoice-documents",
+      "title": "Supporting Documents",
+      "sourceText": "Vendor must submit Invoice accompanied by associated Wellora Energy Sdn. Bhd. (1690936-D) Purchase Order (PO) as a reference and any related supporting documents - Material/Mill Certificate, Certificate of Conformance (COC), Inspection Report, Delivery Order (DO), etc."
+    },
+    {
+      "number": 2,
+      "id": "fulfillment-address",
+      "title": "Delivery / Pick-up Address",
+      "sourceText": "Delivery Address:",
+      "binding": "fulfillmentAddress"
+    },
+    {
+      "number": 3,
+      "id": "fulfillment-date",
+      "title": "Date of Delivery / Collection",
+      "sourceText": "Date of Receipt at Delivery Address:",
+      "binding": "fulfillmentDate"
+    },
+    {
+      "number": 4,
+      "id": "fulfillment-instructions",
+      "title": "Fulfillment Instructions",
+      "sourceText": "Vendor must ensure to deliver all item(s) under this order to the Delivery Address by the Date of Receipt.",
+      "dependsOn": "fulfillmentMode"
+    },
+    {
+      "number": 5,
+      "id": "payment",
+      "title": "Payment Terms",
+      "clauses": [
+        {
+          "label": "a)",
+          "sourceText": "Cash term"
+        },
+        {
+          "label": "b)",
+          "sourceText": "Vendor must submit Invoice of all amounts claimed to be due and owing under this order within thirty (30) days, from the date of this PO."
+        },
+        {
+          "label": "c)",
+          "sourceText": "Payment shall be withheld if the goods supplied or services performed are found to be unsatisfactory or not in accordance with the required standards."
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "id": "wellora-contact",
+      "title": "Wellora Energy's Contact Person",
+      "bindings": [
+        "welloraContactName",
+        "welloraContactPhone",
+        "welloraContactEmail"
+      ],
+      "contactLines": [
+        {
+          "label": "a) Contact Name:",
+          "binding": "welloraContactName"
+        },
+        {
+          "label": "b) Contact Number:",
+          "binding": "welloraContactPhone"
+        },
+        {
+          "label": "c) Contact Email:",
+          "binding": "welloraContactEmail"
+        }
+      ]
+    }
+  ],
+  "signatures": [
+    "Prepared By",
+    "Reviewed By",
+    "Approved By"
+  ],
+  "notes": {
+    "implementation": "JSON data only. Do not use Quotation preset editor or modify quotation presets. Workbook VBA custom functions lastSaved and NumbertoWords must be implemented in JavaScript for PO rendering.",
+    "wording": "Clause wording was copied from workbook cells; formula-based clauses 3 and 4 are expressed as fulfillment bindings."
+  },
+  "signatureLayout": {
+    "style": "quotation-signature-table",
+    "columns": [
+      "Role",
+      "Name",
+      "Position",
+      "Date",
+      "Signature"
+    ],
+    "signatureColumn": "blank-for-manual-signature"
+  }
+}

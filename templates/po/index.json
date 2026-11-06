@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "family": "purchase-order",
+  "name": "Purchase Order Presets",
+  "separateFrom": "quotation",
+  "sourceWorkbook": "3. WLR-Purchase-Order-Template (Revision 04-09-26)(1).xlsm",
+  "templates": [
+    {
+      "id": "purchase-credit",
+      "title": "Purchase — Credit",
+      "path": "purchase-credit.json",
+      "sourceSheet": "PO Template (Pur - Credit)"
+    },
+    {
+      "id": "purchase-cash",
+      "title": "Purchase — Cash",
+      "path": "purchase-cash.json",
+      "sourceSheet": "PO Template (Pur - Cash)"
+    },
+    {
+      "id": "purchase-progress-claim",
+      "title": "Purchase — Progress Claim",
+      "path": "purchase-progress-claim.json",
+      "sourceSheet": "PO Template (Pur - Pro Claim)"
+    },
+    {
+      "id": "rental",
+      "title": "Rental",
+      "path": "rental.json",
+      "sourceSheet": "PO Template (Rental)"
+    },
+    {
+      "id": "inspection-repair",
+      "title": "Inspection / Repair",
+      "path": "inspection-repair.json",
+      "sourceSheet": "PO Template (Inspection_Repair)"
+    },
+    {
+      "id": "logistics",
+      "title": "Logistics",
+      "path": "logistics.json",
+      "sourceSheet": "PO Template (Logistics)"
+    }
+  ],
+  "developmentStatus": "json-definition-ready; PO workspace and preview integration pending"
+}

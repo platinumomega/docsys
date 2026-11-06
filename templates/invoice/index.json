@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "family": "invoice",
+  "name": "Invoice Presets",
+  "sourceWorkbook": "6. WLR-Energy-Invoice-Template (Revision 01-09-26).xlsm",
+  "templates": [
+    {
+      "id": "standard",
+      "title": "Standard Invoice",
+      "path": "standard.json",
+      "sourceSheet": "Invoice Template"
+    }
+  ]
+}

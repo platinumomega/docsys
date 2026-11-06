@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "family": "quotation",
+  "name": "Quotation Presets",
+  "sourceEditor": "preset-quotation.html",
+  "templates": [
+    {
+      "id": "rental3",
+      "title": "Rental (Qty 3)",
+      "path": "rental3.json",
+      "rentalRows": 3,
+      "consumablesRows": 0,
+      "termClauses": 18
+    },
+    {
+      "id": "rental10",
+      "title": "Rental (Qty 10)",
+      "path": "rental10.json",
+      "rentalRows": 10,
+      "consumablesRows": 0,
+      "termClauses": 18
+    },
+    {
+      "id": "rentcon53",
+      "title": "Rental + Consumables (Qty 5+3)",
+      "path": "rentcon53.json",
+      "rentalRows": 5,
+      "consumablesRows": 3,
+      "termClauses": 18
+    },
+    {
+      "id": "rentcon105",
+      "title": "Rental + Consumables (Qty 10+5)",
+      "path": "rentcon105.json",
+      "rentalRows": 10,
+      "consumablesRows": 5,
+      "termClauses": 18
+    },
+    {
+      "id": "specialtkr",
+      "title": "Rental — Special TKR",
+      "path": "specialtkr.json",
+      "rentalRows": 3,
+      "consumablesRows": 0,
+      "termClauses": 19
+    }
+  ],
+  "integrationStatus": "JSON prepared; live quotation editor unchanged"
+}

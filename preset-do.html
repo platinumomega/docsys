@@ -1,0 +1,256 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DocSystem — Delivery Ticket</title>
+<style>
+*{box-sizing:border-box}body{font:13px Arial,sans-serif;color:#14263c;margin:0;background:#eef2f6}input,textarea,select,button{font:inherit}input,textarea,select{width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:6px;background:#fff}textarea{min-height:76px;resize:vertical}button{cursor:pointer;border:1px solid #cbd5e1;background:#fff;border-radius:6px;padding:8px 12px}.primary{background:#183b67;color:#fff}.bar{padding:10px 18px;background:white;display:flex;gap:9px;align-items:center;flex-wrap:wrap}.bar small{margin-left:auto}header{background:#122034;color:white;padding:12px 18px}header h2{margin:0}.workspace{max-width:1800px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin:auto;padding:0 8px;align-items:start}.card{border:1px solid #dce3ea;background:white;border-radius:10px;padding:15px;margin:12px 0}.card h3{margin:0 0 12px;font-size:14px}label{display:flex;flex-direction:column;gap:4px;min-width:0}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fields .wide{grid-column:1/-1}.section-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.section-fields .address{grid-column:1/-1}.section-fields .address textarea{min-height:95px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%}th,td{border:1px solid #aebcc9;padding:6px;text-align:left}th{background:#eaf0f6;font-size:11px}.items input,.items textarea{min-width:64px;border:0;background:transparent;padding:5px}.items textarea{min-width:130px;min-height:45px}.items .remove{padding:4px 8px;color:#a22}.sign-editor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.sign-editor fieldset{border:1px solid #d8e0e8;border-radius:8px;margin:0;min-width:0;padding:10px;display:flex;flex-direction:column;gap:8px}.sign-editor legend{font-weight:bold}.photo-editor{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.photo-card{border:1px solid #d8e0e8;border-radius:8px;padding:9px;min-width:0}.photo-card img{max-width:100%;height:110px;object-fit:contain;display:block;margin:6px auto}.muted{color:#65758a;font-size:12px}.preview-column{min-width:0}.preview-header{display:flex;justify-content:space-between;padding:13px 4px 6px}.paper{width:210mm;min-height:297mm;padding:12mm 13mm 13mm;background:white;color:black;box-shadow:0 4px 15px #0002;margin:0 auto 16px;font:8pt Arial,sans-serif}.dt-head{display:grid;grid-template-columns:58% 42%;min-height:48mm;gap:3mm}.dt-ident{min-width:0}.dt-ident .preset-header-slot{line-height:1.3}.dt-ident img{display:block;max-height:24mm;object-fit:contain;margin-bottom:1mm}.dt-ident .preset-header-slot:nth-child(2){font-weight:bold}.dt-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;padding-right:3mm}.dt-title{color:#d6a900;font-size:16pt;font-weight:700;line-height:1.2;text-align:right;white-space:pre-wrap;overflow-wrap:anywhere}.dt-meta{margin-top:9mm;font-size:7.5pt;width:57mm}.dt-meta-line{display:grid;grid-template-columns:25mm minmax(0,1fr);gap:1.5mm;line-height:1.5}.dt-meta-line b{text-align:right}.dt-section{margin:3mm 0 4mm;border:1px solid #444;break-inside:avoid}.dt-section-title,.dt-table-title{background:#000;color:white;text-align:center;font-weight:bold;padding:1.1mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}.dt-info{display:grid;grid-template-columns:58% 42%;min-height:27mm}.dt-info>div{position:relative;min-width:0;display:flex;flex-direction:column}.dt-info>div:first-child{border-right:1px solid #444;--label-width:20mm}.dt-info>div:last-child{--label-width:24mm}.dt-info>div:before{content:"";position:absolute;left:var(--label-width);top:0;bottom:0;border-left:1px solid #999}.dt-row{display:grid;grid-template-columns:var(--label-width) minmax(0,1fr);min-height:4mm;line-height:1.3}.dt-row b{text-align:right;padding:1mm 1.2mm}.dt-row span{padding:1mm 1.5mm;white-space:pre-wrap;overflow-wrap:anywhere}.dt-row.address{flex:1;min-height:15mm}.dt-items{table-layout:fixed;font-size:8pt}.dt-items th{background:#000;color:white;text-align:center;border:1px solid #555;-webkit-print-color-adjust:exact;print-color-adjust:exact}.dt-items td{border:1px solid #888;height:8mm;vertical-align:top;white-space:pre-wrap;overflow-wrap:anywhere}.dt-items .quantity{text-align:center}.dt-total{display:flex;justify-content:flex-end;margin:2mm 0 4mm}.dt-total div{width:44mm;border:1px solid #555;display:grid;grid-template-columns:1fr 15mm}.dt-total b,.dt-total span{padding:2mm}.dt-total span{text-align:right;border-left:1px solid #555}.dt-sign{margin:2mm 0 5mm;table-layout:fixed;font-size:7.5pt}.dt-sign th{background:#000;color:white;border:1px solid #111;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}.dt-sign td{border:1px solid #888;padding:1mm;white-space:pre-wrap;vertical-align:top;height:17mm}.dt-sign td.role{background:#000;color:#fff;font-weight:bold;text-align:center;vertical-align:middle;-webkit-print-color-adjust:exact;print-color-adjust:exact}.dt-photos{table-layout:fixed}.dt-photos th{background:#000;color:#fff;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}.dt-photos td{border:1px solid #888;text-align:center;vertical-align:middle;height:50mm;width:50%;padding:2mm}.dt-photos img{display:block;max-width:100%;width:auto;height:auto;max-height:46mm;object-fit:contain;margin:auto}.dt-photos .blank-photo{font-size:8pt;color:#888}body.embedded header,body.embedded .bar{display:none}body.embedded{background:transparent}body.embedded .workspace{padding:0 2px 10px}
+@media(max-width:1100px){html,body{max-width:100%;overflow-x:hidden}.workspace{width:100%;max-width:100%;min-width:0;grid-template-columns:minmax(0,1fr)}.workspace>.editor,.workspace>.preview-column,.workspace>.preview-container,.workspace .card,.workspace .fields,.workspace .section-fields,.workspace .sign-editor,.workspace .photo-editor{min-width:0;max-width:100%}.workspace input,.workspace textarea,.workspace select{min-width:0;max-width:100%}.preview-column,.preview-container,#paper{width:100%;max-width:100%;min-width:0;overflow-x:hidden}.paper{max-width:100%}}@media(max-width:690px){.fields,.section-fields,.sign-editor,.photo-editor{grid-template-columns:1fr}.paper{zoom:.72;max-width:none}}
+@media print{@page{size:A4 portrait;margin:0}html,body{width:210mm!important;background:white!important}.editor,header,.bar,.preview-header{display:none!important}.workspace{display:block!important;width:210mm!important;margin:0!important;padding:0!important}.preview-column{width:210mm!important}.paper{zoom:1!important;width:210mm!important;min-height:297mm!important;max-height:297mm!important;padding:12mm 13mm 13mm!important;box-shadow:none!important;margin:0!important;break-after:page;page-break-after:always}.paper:last-child{break-after:auto!important}}
+</style><style id="doStoragePhotoHint20261101">.photo-card input[type=file]{margin-top:8px}.photo-card img{border-radius:4px}.photo-card{overflow-wrap:anywhere}</style><link rel="stylesheet" href="./preset-ticket-layout.css?v=20261101-ticket-shared-a4-1"><style id="mobileA4Fit20261102">
+/* Shared mobile A4 preview: fit available width without changing print geometry. */
+@media screen and (max-width:1099px){
+ .paper{max-width:none!important;transform:none!important}
+ .preview-only,.preview-container,.preview-column{max-width:100%;min-width:0;overflow-x:hidden!important}
+}
+</style></head><body><header><h2>Delivery Ticket Preset</h2></header><div class="bar"><button id="newBtn">New</button><button id="saveBtn" class="primary">Save Online</button><button id="printBtn">Print / PDF</button><small id="status">Loading…</small></div><div class="workspace"><div class="editor">
+<section class="card"><h3>Delivery Ticket Details</h3><div class="fields" id="documentFields"></div></section>
+<section class="card"><h3>Collection Address &amp; Contact Person</h3><div class="section-fields" id="collectionFields"></div></section>
+<section class="card"><h3>Deliver To</h3><div class="section-fields" id="deliverToFields"></div></section>
+<section class="card"><h3>Delivery Items</h3><div class="table-wrap"><table class="items" id="itemEditor"></table></div><p class="muted">Total Qty: <strong id="qtyTotal">0</strong></p><button id="addRow">+ Add Item</button> <button id="removeRow">Remove Last</button></section>
+<section class="card"><h3>Signatures</h3><div id="signatureFields" class="sign-editor"></div></section>
+<section class="card"><h3>Photos</h3><p class="muted">10 photo spaces in two columns. Images are resized and compressed to a maximum of 700 KB each, then uploaded to Firebase Storage on Save Online. Firestore stores only the file paths.</p><div id="photoFields" class="photo-editor"></div></section>
+</div><div class="preview-column"><div class="preview-header"><strong>Live A4 Preview</strong><small id="pageCount"></small></div><div id="paper"></div></div></div>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
+import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,collection,query,where,limit,getDocs,serverTimestamp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
+import {getStorage,ref as storageRef,uploadBytes,getDownloadURL,deleteObject} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js';
+import {savePresetCopy,readPresetCopy} from './preset-user-templates.js?v=20261101-copy-1';
+import {paginatePresetDocument} from './preset-pagination.js?v=20261101-single-controller1';
+import {sharedPresetSlot,expandPresetText,richPresetText} from './preset-shared.js?v=20261101-common2';
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const app=initializeApp({apiKey:"AIzaSyDPIAoqy9mbWU-4M4kPK9mfSjtVSSA2gI8",authDomain:"docsystem-c29ec.firebaseapp.com",projectId:"docsystem-c29ec",storageBucket:"docsystem-c29ec.firebasestorage.app",messagingSenderId:"25451628479",appId:"1:25451628479:web:ec00096fc84d744c48c30a"});
+const auth=getAuth(app),db=getFirestore(app),storage=getStorage(app),params=new URLSearchParams(location.search);
+if(params.get('embedded')==='1')document.body.classList.add('embedded');
+let user=null,role='user',profiles=[],profile=null,globals={},template=null,state=null,docId=params.get('docId')||null,savedCompany=null,savedHeader=null,busy=false,loaded=false,saving=false;
+const pendingPhotos=new Map(),photoPreviews=new Map(),resolvedPhotos=new Map();
+const MAX_PHOTO_BYTES=700*1024;
+const posted=(type,data={})=>{if(window.parent!==window)window.parent.postMessage({type:'docsystem-preset-'+type,...data},location.origin)};
+function notify(message){$('status').textContent=message;posted('status',{status:message})}
+function business(){const c=profile?.company||{};return savedCompany||{id:profile?.id||'',name:c.name||'',logo:c.logo||'',info:(typeof c.headerText==='string'&&c.headerText.trim())?c.headerText:(c.fields||[]).filter(x=>x?.value&&x.place!=='footer').map(x=>(x.label?x.label+': ':'')+x.value).join('\n'),placeholders:globals}}
+function header(){return savedHeader||profile?.presetHeader||{}}
+function text(v){return expandPresetText(v,{...business(),documentTitle:'DELIVERY TICKET',documentNumber:state?.fields?.reference,documentDate:state?.fields?.date},globals)}
+function empty(){return {fields:{date:new Date().toISOString().slice(0,10),reference:'',poDate:'',poNumber:''},collection:{company:'{companyName}',address:'',contact:'',tel:'',email:''},deliverTo:{company:'',address:'',contact:'',tel:'',email:''},items:Array.from({length:10},(_,i)=>({no:String(i+1),description:'',serialNumber:'',unit:'',qty:''})),signatures:Object.fromEntries(['Prepared By','Transported By','Received By'].map(x=>[x,{name:'',position:'',contactNumber:'',companyName:x==='Prepared By'?'{companyName}':'',date:''}])),photos:Array(10).fill('')}}
+function field(label,key,value,type='text',group='fields'){
+ const isArea=type==='multiline';
+ return '<label class="'+(isArea?'address':'')+'">'+esc(label)+(isArea?'<textarea data-group="'+group+'" data-key="'+key+'" rows="4" placeholder="Address line 1&#10;Address line 2&#10;Address line 3">'+esc(value||'')+'</textarea>':'<input type="'+(type==='date'?'date':type==='email'?'email':type==='tel'?'tel':'text')+'" data-group="'+group+'" data-key="'+key+'" value="'+esc(value||'')+'">')+'</label>';
+}
+function photoSrc(idx){
+ const item=state?.photos?.[idx]||'';
+ if(photoPreviews.has(idx))return photoPreviews.get(idx);
+ if(!item)return '';
+ if(item.startsWith('data:image/')||item.startsWith('blob:')||item.startsWith('https://'))return item;
+ if(item.startsWith('delivery-tickets/')){
+  if(resolvedPhotos.has(item))return resolvedPhotos.get(item);
+  // Keep Storage paths in Firestore, resolve temporary download URLs for display.
+  if(!photoRequests.has(item)){
+   const request=getDownloadURL(storageRef(storage,item)).then(url=>{
+    resolvedPhotos.set(item,url);
+    if(state?.photos?.includes(item)){draw()}
+   }).catch(error=>{console.warn('Cannot display photo:',error);notify('Photo preview unavailable: check Storage access')}).finally(()=>photoRequests.delete(item));
+   photoRequests.set(item,request);
+  }
+ }
+ return '';
+}
+const photoRequests=new Map();
+function clearPhotoSession(){
+ pendingPhotos.clear();
+ for(const url of photoPreviews.values())URL.revokeObjectURL(url);
+ photoPreviews.clear();resolvedPhotos.clear();photoRequests.clear();
+}
+async function compressPhoto(file){
+ const bitmap=await createImageBitmap(file);
+ try{
+  let longest=Math.min(Math.max(bitmap.width,bitmap.height),1800);
+  const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+  if(!ctx)throw Error('Canvas unavailable');
+  for(;longest>=400;longest=Math.floor(longest*.82)){
+   const ratio=Math.min(1,longest/Math.max(bitmap.width,bitmap.height));
+   canvas.width=Math.max(1,Math.round(bitmap.width*ratio));
+   canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
+   ctx.clearRect(0,0,canvas.width,canvas.height);
+   ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+   ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+   for(const quality of [.83,.75,.67,.59,.5,.43]){
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));
+    if(!blob)throw Error('JPEG compression unsupported');
+    if(blob.size<=MAX_PHOTO_BYTES)return blob;
+   }
+  }
+  throw Error('Unable to compress photo below 700 KB');
+ }finally{bitmap.close()}
+}
+function draw(){
+ if(!state)return;
+ $('documentFields').innerHTML=template.fields.map(f=>field(f.label,f.key,state.fields[f.key],f.type,'fields')).join('');
+ for(const section of template.sections)$(section.id==='collection'?'collectionFields':'deliverToFields').innerHTML=section.fields.map(f=>field(f.label,f.key,state[section.id][f.key],f.type,section.id)).join('');
+ drawItems();
+ $('signatureFields').innerHTML=template.signatures.roles.map(role=>{const d=state.signatures[role]||{};return '<fieldset><legend>'+esc(role)+'</legend>'+[['Name','name'],['Position','position'],['Contact Number','contactNumber'],['Company Name','companyName'],['Date','date']].map(([title,key])=>field(title,key,d[key],key==='date'?'date':'text','sign:'+role)).join('')+'</fieldset>'}).join('');
+ $('photoFields').innerHTML=state.photos.map((stored,i)=>{const src=photoSrc(i);return '<div class="photo-card"><strong>Photo '+(i+1)+'</strong>'+(src?'<img alt="Photo '+(i+1)+'" src="'+esc(src)+'">':'')+'<input type="file" accept="image/*" data-photo="'+i+'">'+(stored?'<button data-clear-photo="'+i+'">Remove photo</button>':'')+'</div>'}).join('');
+ render();
+}
+function drawItems(){
+ const cols=template.items.columns;
+ $('itemEditor').innerHTML='<thead><tr>'+cols.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'<th></th></tr></thead><tbody>'+state.items.map((row,i)=>'<tr>'+cols.map(c=>'<td>'+(c.type==='multiline'?'<textarea data-row="'+i+'" data-col="'+c.key+'">'+esc(row[c.key])+'</textarea>':'<input type="'+(c.type==='number'?'number':'text')+'" step="any" data-row="'+i+'" data-col="'+c.key+'" value="'+esc(row[c.key])+'">')+'</td>').join('')+'<td><button class="remove" data-remove-row="'+i+'">×</button></td></tr>').join('')+'</tbody>';
+ $('qtyTotal').textContent=qtyTotal();
+}
+function qtyTotal(){return state.items.reduce((n,row)=>n+(Number(row.qty)||0),0).toLocaleString('en-MY',{maximumFractionDigits:3})}
+function formatDate(v){if(!v)return '';const d=new Date(v+'T12:00:00');return Number.isNaN(d.getTime())?v:d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function render(){
+ if(!state||!template||busy)return;busy=true;
+ try{
+ const co=business(),head={...co,documentTitle:'DELIVERY TICKET',documentNumber:state.fields.reference,documentDate:state.fields.date};
+ const h=header(),meta=[['Date',formatDate(state.fields.date)],['Reference No',state.fields.reference],['Purchase Order Date',formatDate(state.fields.poDate)],['Purchase Order No',state.fields.poNumber]];
+ const color=/^#[0-9a-fA-F]{6}$/.test(h.titleColor||'')?h.titleColor:'#d6a900';
+ const size=Math.max(8,Math.min(36,Number(h.titleSize)||16));
+ const font=['Arial','Georgia','Verdana','Tahoma','Times New Roman','Courier New'].includes(h.titleFont)?h.titleFont:'Arial';
+  const titleAlign=['left','center','right'].includes(h.titleAlign)?h.titleAlign:'right';
+  const titleText=String(h.titleText??'{documentTitle}').replace(/\{documentTitle\}/gi,"DELIVERY TICKET");
+  const renderedTitle=richPresetText(text(titleText));
+ const title='<div class="dt-title" style="font-family:'+font+';font-size:'+size+'pt;color:'+color+';text-align:'+titleAlign+';white-space:pre-wrap">'+renderedTitle+'</div>';
+ const headerHtml='<div class="dt-head"><div class="dt-ident">'+sharedPresetSlot('logo',head,h,globals)+sharedPresetSlot('name',head,h,globals)+sharedPresetSlot('details',head,h,globals)+'</div><div class="dt-right">'+title+'<div class="dt-meta">'+meta.map(([k,v])=>'<div class="dt-meta-line"><b>'+esc(k)+':</b><span>'+esc(v||'')+'</span></div>').join('')+'</div></div></div>';
+ const information=section=>{
+  const f=state[section.id];
+  const row=(label,value,cl='')=>'<div class="dt-row '+cl+'"><b>'+esc(label)+':</b><span>'+esc(text(value||''))+'</span></div>';
+  return '<section class="dt-section"><div class="dt-section-title">'+esc(section.title)+'</div><div class="dt-info"><div>'+row('Company',f.company)+row('Address',f.address,'address')+'</div><div>'+row('Contact Person',f.contact)+row('Tel',f.tel)+row('Email',f.email)+'</div></div></section>'
+ };
+ const cols=template.items.columns;
+ const items='<table class="dt-items excel-table"><colgroup><col style="width:7%"><col style="width:41%"><col style="width:24%"><col style="width:12%"><col style="width:16%"></colgroup><thead><tr>'+cols.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'</tr></thead><tbody>'+state.items.map(r=>'<tr>'+cols.map(c=>'<td class="'+(c.key==='qty'?'quantity':'')+'">'+esc(text(r[c.key]||''))+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+ const total='<table class="dt-total"><colgroup><col style="width:7%"><col style="width:41%"><col style="width:24%"><col style="width:12%"><col style="width:16%"></colgroup><tbody><tr><td colspan="3" class="dt-total-spacer"></td><th scope="row">Total Qty</th><td class="dt-total-value">'+esc(qtyTotal())+'</td></tr></tbody></table>';
+ const sign='<table class="dt-sign"><colgroup><col style="width:14%"><col style="width:24%"><col style="width:15%"><col style="width:17%"><col style="width:10%"><col style="width:20%"></colgroup><thead><tr><th></th>'+template.signatures.columns.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+template.signatures.roles.map(role=>{const d=state.signatures[role]||{};return '<tr><td class="role">'+esc(role)+'</td><td class="dt-name-position"><div class="dt-sign-name"><b>Name:</b><span>'+esc(text(d.name))+'</span></div><div class="dt-sign-position"><b>Position:</b><span>'+esc(text(d.position))+'</span></div></td><td>'+esc(text(d.contactNumber))+'</td><td class="dt-sign-company">'+esc(text(d.companyName))+'</td><td>'+esc(formatDate(d.date))+'</td><td></td></tr>'}).join('')+'</tbody></table>';
+ const hasPhotos=state.photos.some(Boolean)||pendingPhotos.size>0;
+ const photos=hasPhotos?'<table class="dt-photos excel-table" data-preset-new-page="photos"><thead><tr><th colspan="2">Photos</th></tr></thead><tbody>'+Array.from({length:5},(_,i)=>'<tr>'+[0,1].map(col=>{const idx=i*2+col,src=photoSrc(idx);return '<td>'+(src?'<img src="'+esc(src)+'" alt="Photo '+(idx+1)+'">':'<span class="blank-photo">Photo '+(idx+1)+'</span>')+'</td>'}).join('')+'</tr>').join('')+'</tbody></table>':'';
+ $('paper').innerHTML='<article class="paper">'+headerHtml+template.sections.map(information).join('')+items+total+sign+photos+'</article>';
+ const pages=paginatePresetDocument($('paper'),{fit:'normal'});
+ $('pageCount').textContent=pages+' page(s)';
+ fitPreview();posted('height',{height:document.documentElement.scrollHeight+8});
+ }finally{busy=false}
+}
+function mobileA4AvailableWidth(holder){
+ const viewport=document.documentElement.clientWidth||window.innerWidth;
+ const frameWidth=window.frameElement?.getBoundingClientRect().width||viewport;
+ const container=holder?.getBoundingClientRect().width||viewport;
+ const left=holder?.getBoundingClientRect().left||0;
+ return Math.max(1,Math.min(container,frameWidth,viewport-left)-24);
+}
+function fitPreview(){
+ const holder=document.querySelector('.preview-column');
+ const available=mobileA4AvailableWidth(holder);
+ const scale=Math.min(1,available/(210*96/25.4));
+ $('paper').querySelectorAll('.paper').forEach(p=>{p.style.zoom=String(Math.round(scale*1000)/1000)});
+}
+function newDoc(){if(saving)return;clearPhotoSession();docId=null;savedCompany=null;savedHeader=null;state=activeCopyDefaults?structuredClone(activeCopyDefaults):empty();if(activeCopyDefaults){state.fields.reference='';state.fields.date=new Date().toISOString().slice(0,10);state.photos=Array(10).fill('')}draw();notify('New Delivery Ticket');ready()}
+async function save(){
+ if(saving)return;
+ if(!user)return alert('Please sign in first');
+ if(!String(state.fields.reference||'').trim())return alert('Enter Reference No. before saving');
+ if(!business().id)return alert('Choose a Business Profile');
+ saving=true;
+ const uploaded=[];
+ try{
+  if(!docId){const q=await getDocs(query(collection(db,'documents'),where('number','==',state.fields.reference.trim()),limit(100)));if(q.docs.some(d=>d.data().templateFamily==='delivery-ticket'&&d.data().profileId===business().id))return alert('This Delivery Ticket reference already exists for this Business Profile')}
+  const ref=docId?doc(db,'documents',docId):doc(collection(db,'documents'));
+  const before=await getDoc(ref);
+  const oldPhotos=Array.isArray(before.data()?.presetData?.photos)?before.data().presetData.photos:[];
+  const nextPhotos=[...state.photos];
+  for(const [idx,blob] of pendingPhotos){
+   notify('Uploading photo '+(idx+1)+' ('+Math.ceil(blob.size/1024)+' KB)…');
+   const path='delivery-tickets/'+user.uid+'/'+ref.id+'/photo-'+(idx+1)+'-'+Date.now()+'.jpg';
+   const fileRef=storageRef(storage,path);
+   await uploadBytes(fileRef,blob,{contentType:'image/jpeg',customMetadata:{documentId:ref.id,slot:String(idx+1)}});
+   uploaded.push(path);
+   nextPhotos[idx]=path;
+  }
+  const snapshot=business();
+  const payload={templateSource:'preset',templateFamily:'delivery-ticket',templateId:'standard',templateVersion:1,documentType:'Delivery Ticket',number:state.fields.reference.trim(),date:state.fields.date||'',presetData:{...state,photos:nextPhotos},profileId:snapshot.id,companySnapshot:snapshot,presetHeaderSnapshot:savedHeader||structuredClone(profile?.presetHeader||{}),updatedAt:serverTimestamp(),updatedBy:user.uid,...(!before.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})};
+  await setDoc(ref,payload,{merge:true});
+  docId=ref.id;savedCompany=snapshot;state.photos=nextPhotos;
+  pendingPhotos.clear();
+  for(const [idx,path] of nextPhotos.entries()){
+   if(photoPreviews.has(idx)&&path&&path.startsWith('delivery-tickets/')){
+    resolvedPhotos.set(path,photoPreviews.get(idx));photoPreviews.delete(idx);
+   }
+  }
+  // Remove replaced or cleared Storage files only after the new document is saved.
+  for(const path of oldPhotos){
+   if(typeof path==='string'&&path.startsWith('delivery-tickets/')&&!nextPhotos.includes(path)){
+    deleteObject(storageRef(storage,path)).catch(e=>console.warn('Old photo cleanup pending:',e));
+   }
+  }
+  draw();notify('Saved Delivery Ticket '+state.fields.reference);ready();
+ }catch(e){
+  // Do not touch the saved document if an upload or write failed.
+  for(const path of uploaded)deleteObject(storageRef(storage,path)).catch(()=>{});
+  notify('Delivery Ticket save failed');alert('Delivery Ticket save failed: '+e.message);
+ }finally{saving=false}
+}
+async function loadSaved(id){
+ try{const snap=await getDoc(doc(db,'documents',id));if(!snap.exists())throw Error('Not found');const d=snap.data();if(d.templateFamily!=='delivery-ticket')throw Error('Not a Delivery Ticket');clearPhotoSession();docId=id;state=d.presetData;state.photos=Array.isArray(state.photos)?state.photos:Array(10).fill('');savedCompany=d.companySnapshot||null;savedHeader=d.presetHeaderSnapshot||null;profile=profiles.find(x=>x.id===d.profileId)||profile;draw();notify('Opened Delivery Ticket '+d.number);ready()}catch(e){notify('Open failed: '+e.message)}
+}
+function ready(){posted('ready',{profiles:profiles.map(p=>({id:p.id,name:p.company?.name||'Business'})),selected:business().id,locked:!!docId,status:$('status').textContent})}
+function chooseBusiness(id){if(docId){ready();return}const selected=profiles.find(x=>x.id===id);if(selected){profile=selected;draw();ready()}}
+window.printDoc=()=>{render();window.print()};
+
+let presetCopyApplied=false,activeCopyDefaults=null;
+async function saveAsNewPresetTemplate(name){
+ if(new URLSearchParams(location.search).get('configure')!=='1')return;
+ if(!user||!state)return alert('Sign in and open a preset first');
+ if(!name||!name.trim())return;
+ try{
+  const basePresetId='standard';
+  const saved=await savePresetCopy({user,family:'delivery-ticket',basePresetId,name,state,profileId:business().id});
+  notify('Template saved: '+saved.name);
+  posted('template-saved',{name:saved.name,id:saved.id});
+ }catch(error){alert('Could not save template copy: '+error.message)}
+}
+async function openSavedPresetCopy(){
+ const copyId=params.get('copyId');
+ if(presetCopyApplied||!copyId||docId||!user)return;
+ try{
+  const copy=await readPresetCopy({user,id:copyId,family:'delivery-ticket'});
+  presetCopyApplied=true;
+  docId=null;savedCompany=null;savedHeader=null;
+  const selected=profiles.find(p=>p.id===copy.profileId);
+  if(selected)profile=selected;
+  state=copy.defaults;
+  activeCopyDefaults=structuredClone(copy.defaults);
+  if(state.fields){
+   state.fields.reference='';
+  }
+  state.photos=Array(10).fill('');pendingPhotos.clear();
+  draw();notify('Template copy ready: '+copy.name+' · New document');ready();
+ }catch(error){presetCopyApplied=true;notify('Template copy could not open: '+error.message)}
+}
+
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==window.parent||e.data?.type!=='docsystem-preset-command')return;const {action}=e.data;if(action==='save-template'){saveAsNewPresetTemplate(e.data.name);return}if(action==='new')newDoc();else if(action==='save')save();else if(action==='print')window.printDoc();else if(action==='business')chooseBusiness(e.data.profileId);else if(action==='view')render()});
+document.addEventListener('input',e=>{const d=e.target.dataset;if(d.group){const obj=d.group.startsWith('sign:')?(state.signatures[d.group.slice(5)]??={}):state[d.group];if(obj)obj[d.key]=e.target.value;render()}else if(d.row!==undefined){state.items[Number(d.row)][d.col]=e.target.value;$('qtyTotal').textContent=qtyTotal();render()}});
+document.addEventListener('click',e=>{if(e.target.id==='newBtn')newDoc();else if(e.target.id==='saveBtn')save();else if(e.target.id==='printBtn')window.printDoc();else if(e.target.id==='addRow'){state.items.push({no:String(state.items.length+1),description:'',serialNumber:'',unit:'',qty:''});drawItems();render()}else if(e.target.id==='removeRow'){if(state.items.length>1){state.items.pop();drawItems();render()}}else if(e.target.dataset.removeRow!==undefined){state.items.splice(Number(e.target.dataset.removeRow),1);if(!state.items.length)state.items.push({no:'1',description:'',serialNumber:'',unit:'',qty:''});drawItems();render()}else if(e.target.dataset.clearPhoto!==undefined){const idx=Number(e.target.dataset.clearPhoto);pendingPhotos.delete(idx);if(photoPreviews.has(idx)){URL.revokeObjectURL(photoPreviews.get(idx));photoPreviews.delete(idx)}state.photos[idx]='';draw()}});
+document.addEventListener('change',async e=>{
+ if(e.target.dataset.photo===undefined)return;const file=e.target.files?.[0];if(!file)return;
+ if(!file.type.startsWith('image/'))return alert('Please choose an image');
+ const idx=Number(e.target.dataset.photo);
+ try{
+  notify('Compressing photo '+(idx+1)+'…');
+  const blob=await compressPhoto(file);
+  if(photoPreviews.has(idx))URL.revokeObjectURL(photoPreviews.get(idx));
+  const localUrl=URL.createObjectURL(blob);
+  photoPreviews.set(idx,localUrl);pendingPhotos.set(idx,blob);
+  state.photos[idx]='pending:'+idx;
+  draw();notify('Photo '+(idx+1)+' ready ('+Math.ceil(blob.size/1024)+' KB). Save Online to upload.');
+ }catch(err){notify('Photo compression failed');alert('Could not process photo: '+err.message)}
+});
+async function start(){
+ try{const response=await fetch('./templates/do/standard.json',{cache:'no-store'});if(!response.ok)throw Error('Delivery Ticket JSON not found');template=await response.json();state=empty();loaded=true;draw();if(docId)await loadSaved(docId);else{notify('Delivery Ticket ready');ready()}}catch(e){notify('Cannot load Delivery Ticket: '+e.message)}
+}
+onAuthStateChanged(auth,async u=>{user=u;if(!u){notify('Sign in to DocSystem first');return}try{const p=await getDoc(doc(db,'users',u.uid));role=p.data()?.role||'user'}catch{}try{const snap=await getDoc(doc(db,'appSettings','main'));const st=snap.data()?.settings||{};globals=st.globalPlaceholders||{};profiles=Array.isArray(st.profiles)?st.profiles.filter(p=>p?.company):[];profile=profiles.find(p=>p.id===st.activeProfileId)||profiles[0]||null;if(!loaded)await start();else{render();ready()}if(params.get('copyId'))await openSavedPresetCopy()}catch(e){notify('Business Profiles failed: '+e.message)}});
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(()=>{fitPreview();posted('height',{height:document.documentElement.scrollHeight+8})}).observe(document.querySelector('.workspace'));
+</script></body></html>

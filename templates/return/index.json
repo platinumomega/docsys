@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "family": "returning-ticket",
+  "name": "Returning Ticket",
+  "sourceWorkbook": "5. WLR-Energy-Return-Ticket-Template (Revision 02-10-26).xlsm",
+  "templates": [
+    {
+      "id": "standard",
+      "title": "Standard Returning Ticket",
+      "path": "standard.json",
+      "sourceSheet": "Return Ticket Template"
+    }
+  ]
+}

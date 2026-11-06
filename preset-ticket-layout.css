@@ -1,0 +1,97 @@
+/* Shared A4 delivery/return ticket geometry. Keep the normal 10-item signature block on page one where content permits. */
+
+/* deliveryTicketExcelAlignment20261101 */
+
+/* Excel delivery ticket: the contact label must never wrap onto two lines. */
+.paper .dt-info>div:last-child{--label-width:30mm}
+.paper .dt-row b{white-space:nowrap;min-width:0;font-size:7.4pt}
+.paper .dt-row span{min-width:0;overflow-wrap:anywhere}
+/* Total Qty occupies the Unit and Qty columns, flush with the item grid. */
+.paper .dt-total{display:table!important;border-collapse:collapse!important;table-layout:fixed!important;width:100%!important;margin:0 0 2mm!important;font-size:8pt}
+.paper .dt-total tr{break-inside:avoid}
+.paper .dt-total .dt-total-spacer{border:0!important;background:none!important;padding:0!important}
+.paper .dt-total th{border:1px solid #444!important;text-align:center!important;background:#fff!important;color:#111!important;font-weight:bold!important;padding:2mm 0!important}
+.paper .dt-total .dt-total-value{border:1px solid #444!important;text-align:center!important;padding:2mm 1mm!important}
+/* The Excel signature cells reserve distinct spaces for Name and Position. */
+.paper .dt-sign tbody tr{break-inside:avoid;page-break-inside:avoid}
+.paper .dt-sign tbody td{height:20mm!important;vertical-align:middle!important}
+.paper .dt-name-position{padding:0!important;vertical-align:stretch!important}
+.paper .dt-name-position>div{display:grid;grid-template-columns:15mm minmax(0,1fr);align-items:center;min-height:10mm}
+.paper .dt-name-position b{font-weight:normal;text-align:right;padding:1mm 1.2mm;white-space:nowrap}
+.paper .dt-name-position span{min-height:8mm;padding:.7mm 1mm;overflow-wrap:anywhere;white-space:pre-wrap}
+.paper .dt-sign td.dt-sign-company{
+ font-family:Arial,sans-serif!important;
+ font-size:6pt!important;
+ letter-spacing:-.1px;
+ white-space:nowrap!important;
+ text-align:center;
+ vertical-align:middle!important;
+ padding:.5mm!important;
+}
+.paper .dt-sign-name{border-bottom:1px solid #aaa}
+@media print{
+ .paper .dt-total th,.paper .dt-total .dt-total-value{border:1px solid #444!important}
+ .paper .dt-sign-name{border-bottom:1px solid #aaa!important}
+}
+
+
+/* deliveryTicketSignatureSingleLine20261101 */
+
+/* The original Delivery Ticket Excel has a single-line signature header row. */
+.paper .dt-sign{width:100%;table-layout:fixed}
+.paper .dt-sign thead th{
+ white-space:nowrap!important;overflow:visible;
+ word-break:normal!important;overflow-wrap:normal!important;
+ font-size:6.25pt!important;letter-spacing:-.12px;
+ line-height:1.2!important;padding:1.2mm .35mm!important;
+ vertical-align:middle!important;text-align:center!important
+}
+.paper .dt-sign thead tr{height:6mm}
+@media print{
+ .paper .dt-sign thead th{white-space:nowrap!important;font-size:6.25pt!important}
+}
+
+
+/* deliveryTicketMetaSingleLine20261101 */
+
+/* Same one-line date metadata behavior as Quotation and PO.
+   Delivery Ticket has two longer PO labels, so its label column is wider. */
+.paper .dt-head{grid-template-columns:minmax(0,58%) minmax(0,42%);gap:0}
+.paper .dt-right{min-width:0;align-items:stretch;padding-right:1mm}
+.paper .dt-meta{width:100%!important;max-width:100%;font-size:7pt;line-height:1.35;margin:9mm 0 0 auto}
+.paper .dt-meta-line{display:grid!important;grid-template-columns:32mm minmax(0,1fr)!important;column-gap:1.5mm!important;align-items:baseline;min-height:4.2mm}
+.paper .dt-meta-line b{white-space:nowrap!important;text-align:right;font-weight:600}
+.paper .dt-meta-line span{white-space:nowrap!important;overflow:visible!important;word-break:normal!important}
+@media print{.paper .dt-meta-line b,.paper .dt-meta-line span{white-space:nowrap!important}}
+
+
+/* deliveryTicketTenItemsPageOne20261101 */
+
+/* Compact only the physical DO layout. Inputs retain their multiline capacity.
+   With extra item rows, the single preset pagination controller advances
+   the signatures naturally instead of scaling text or deleting content. */
+.paper .dt-section{margin-top:2mm!important;margin-bottom:2mm!important}
+.paper .dt-info{min-height:21mm!important}
+.paper .dt-row{min-height:3.5mm!important;line-height:1.2!important}
+.paper .dt-row b,.paper .dt-row span{padding-top:.7mm!important;padding-bottom:.35mm!important}
+.paper .dt-row.address{min-height:11mm!important}
+.paper .dt-items td{height:7mm!important;padding-top:1mm!important;padding-bottom:.8mm!important}
+.paper .dt-items th{padding-top:1mm!important;padding-bottom:1mm!important}
+.paper .dt-total{margin-bottom:1.5mm!important}
+.paper .dt-total th,.paper .dt-total td{padding-top:1mm!important;padding-bottom:1mm!important}
+.paper .dt-sign{margin-top:1.5mm!important;margin-bottom:3mm!important}
+.paper .dt-sign tbody td{height:18mm!important}
+.paper .dt-name-position>div{min-height:9mm!important}
+.paper .dt-name-position span{min-height:7mm!important}
+@media print{
+ .paper .dt-info{min-height:21mm!important}
+ .paper .dt-row.address{min-height:11mm!important}
+ .paper .dt-items td{height:7mm!important}
+ .paper .dt-sign tbody td{height:18mm!important}
+}
+
+
+/* Return Ticket: the additional Comments section is part of the same page-one flow, not the Photos appendix. */
+.paper .ticket-comments{box-sizing:border-box;border:1px solid #555;margin:1.5mm 0;break-inside:avoid;font:7.5pt Arial,sans-serif}
+.paper .ticket-comments-title{background:#000;color:#fff;text-align:center;font-weight:bold;padding:1mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.paper .ticket-comments-body{min-height:8mm;padding:1mm 2mm;white-space:pre-wrap;overflow-wrap:anywhere}

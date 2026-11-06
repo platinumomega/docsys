@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DocSystem — Purchase Order Presets</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef2f6;color:#14263c;font:13px Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;padding:9px 14px;border:1px solid #cbd5e1;border-radius:7px;background:white}button.primary{background:#193f72;color:white}button.danger{color:#ad2931}header{padding:16px 2%;background:#193f72;color:white}header h2{margin:0 0 6px;font-size:18px}header small{color:#dce8f8}.toolbar{background:white;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:10px 2%;border-bottom:1px solid #dce5ee}.toolbar span{margin-left:auto;color:#536175}.workspace{max-width:1800px;margin:15px auto;padding:0 12px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}.card{background:#fff;border:1px solid #d9e2eb;border-radius:10px;padding:15px;margin:0 0 13px}.card h3{font-size:14px;margin:0 0 12px}label{display:flex;flex-direction:column;gap:5px;min-width:0}input,textarea,select{width:100%;padding:8px;border:1px solid #cbd5e1;border-radius:5px;background:white}textarea{min-height:62px;resize:vertical}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fields label.wide{grid-column:1/-1}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%}th,td{border:1px solid #aebbc8;padding:6px;text-align:left}th{background:#e9eff5;font-size:11px}td input,td textarea{border:0;background:transparent;padding:5px;min-width:65px}td textarea{min-width:145px;min-height:48px}.line-actions{display:flex;gap:8px;margin-top:10px}.preview-container{min-width:0}.preview-header{display:flex;justify-content:space-between;align-items:center;padding:0 4px 9px}.paper{width:210mm;min-height:297mm;padding:12mm 13mm 13mm;background:white;color:#111;margin:0 auto 16px;box-shadow:0 4px 15px #0002;position:relative;font:9pt Arial,sans-serif}.po-head{display:grid;grid-template-columns:minmax(0,60%) minmax(0,40%);gap:4mm;min-height:43mm;margin-bottom:4mm;align-items:stretch}.po-company-ident{min-width:0;align-self:start}.po-company-ident .preset-header-slot{line-height:1.3}.po-company-ident img{display:block;max-height:24mm;object-fit:contain;margin-bottom:1mm}.po-company-ident .preset-header-slot:nth-child(2){font-weight:700;margin-bottom:1mm}.po-right{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;min-width:0;min-height:43mm}.po-title{width:100%;font-size:16pt;font-weight:bold;text-align:right;margin:0}.po-meta{width:58mm;max-width:100%;font-size:7pt;line-height:1.3;margin:0 0 2mm auto}.po-meta-row{display:grid;grid-template-columns:21mm minmax(0,1fr);gap:1mm;align-items:baseline;min-height:4.1mm}.po-meta-label{text-align:right;font-weight:600}.po-meta-value{overflow-wrap:anywhere;white-space:pre-wrap}.po-vendor{margin:5mm 0 4mm;display:grid;grid-template-columns:1fr 1fr;gap:8mm}.po-vendor div{white-space:pre-wrap}.po-section-title{font-size:10pt;font-weight:bold;border-bottom:1px solid #333;margin:4mm 0 2mm}.po-items{font-size:8.5pt;table-layout:fixed}.po-items th{background:#f0f0f0}.po-items td,.po-items th{border:1px solid #555;padding:1.5mm;vertical-align:top;overflow-wrap:anywhere}.po-items .description{white-space:break-spaces}.po-totals{width:76mm;margin:4mm 0 2mm auto;font-size:9pt}.po-totals td{padding:1.3mm 2mm}.po-totals tr:last-child{font-weight:bold}.po-words{font-size:8pt;white-space:pre-wrap}.po-terms{font-size:8pt;line-height:1.35;white-space:normal}.po-terms-header{background:#111;color:white;text-align:center;font-weight:bold;padding:1.5mm;font-size:9pt}.po-term{display:grid;grid-template-columns:7mm 1fr;gap:1mm;margin:1.5mm 0;break-inside:avoid;white-space:pre-wrap}.po-term strong{font-weight:bold}.po-term-num{font-weight:bold}.po-signatures{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:5mm;font:8pt Arial,sans-serif}.po-signatures thead th,.po-signatures tbody th{background:#000!important;color:#fff!important;text-align:center;font-weight:700;print-color-adjust:exact;-webkit-print-color-adjust:exact}.po-signatures thead th{padding:1.2mm 1mm;border:1px solid #000}.po-signatures tbody th{padding:2mm 1mm;border:1px solid #000;vertical-align:middle}.po-signatures tbody td{border:1px solid #aaa;background:#fff!important;height:12mm;padding:1.2mm 1mm;vertical-align:middle;overflow-wrap:anywhere}.po-signatures .sign-blank{background:#fff!important}@media print{.paper .po-signatures{break-inside:avoid;page-break-inside:avoid}}.muted{color:#66758a}.status{font-size:12px;color:#475569}.notice{padding:8px;background:#fffae9;border:1px solid #e7dcae;border-radius:6px;color:#5a4920}.po-terms-section{break-inside:avoid}.line-total{text-align:right;white-space:nowrap}body.embedded header,body.embedded .toolbar,body.embedded .po-template-card{display:none!important}body.embedded .workspace{margin:0 auto;padding:0 2px 10px}body.embedded{background:transparent}body.printing .editor{display:none!important}body.printing .workspace{display:block;margin:0 auto}body.printing .preview-container{width:100%}
+@media(max-width:1100px){html,body{max-width:100%;overflow-x:hidden}.workspace{width:100%;max-width:100%;min-width:0;grid-template-columns:minmax(0,1fr)}.workspace>.editor,.workspace>.preview-column,.workspace>.preview-container,.workspace .card,.workspace .fields,.workspace .section-fields,.workspace .sign-editor,.workspace .photo-editor{min-width:0;max-width:100%}.workspace input,.workspace textarea,.workspace select{min-width:0;max-width:100%}.preview-column,.preview-container,#paper{width:100%;max-width:100%;min-width:0;overflow-x:hidden}.paper{max-width:100%}.fields{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.fields{grid-template-columns:1fr}.paper{zoom:.75;max-width:none}}@media print{@page{size:A4 portrait;margin:0}html,body{width:210mm!important;background:white!important}.editor,header,.toolbar,.preview-header{display:none!important}.workspace{display:block!important;margin:0!important;padding:0!important;width:210mm!important}.preview-container{display:block!important;width:210mm!important}.paper{zoom:1!important;transform:none!important;box-shadow:none!important;margin:0!important;min-height:297mm!important;width:210mm!important;break-after:page;page-break-after:always}.paper:last-child{break-after:auto;page-break-after:auto}}
+</style><style id="sharedPresetHeaderRhythm20261101">
+/* Match Quotation: company identity left; separate document title and metadata right. */
+@media screen,print {
+ .paper .po-head{min-height:48mm!important;align-items:stretch!important}
+ .paper .po-right{min-height:48mm!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;align-items:flex-end!important}
+ .paper .po-title{width:100%!important;flex:0 0 auto!important}
+ .paper .po-meta{margin-top:11mm!important;margin-bottom:2mm!important;flex:0 0 auto!important}
+}
+</style><style id="excelPOFieldsSharedDesign20261101">
+/* Shared design language; PO fields/order follow the original Excel sheets. */
+.po-vendor-form{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:14px;align-items:start}
+.po-vendor-form .fields{display:flex;flex-direction:column;gap:10px;min-width:0}
+.po-vendor-form .fields label{width:100%}
+.po-vendor-form .fields textarea{min-height:95px}
+.po-vendor-section{margin:4mm 0 5mm}
+.po-vendor-title{background:#080808;color:#fff;font-weight:700;text-align:center;padding:1.2mm 0;font-size:8.5pt;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.po-vendor{display:grid;grid-template-columns:minmax(0,57%) minmax(0,43%);gap:0;margin:0!important;border:1px solid #555;min-height:27mm;font-size:8pt}
+.po-vendor>div{padding:1.5mm 2mm;min-width:0}
+.po-vendor-right{border-left:1px solid #777}
+.po-vendor-row{display:grid;grid-template-columns:27mm minmax(0,1fr);gap:1.5mm;line-height:1.3;min-height:4mm;align-items:start}
+.po-vendor-row strong{text-align:right;font-weight:600}
+.po-vendor-row span{white-space:break-spaces;overflow-wrap:anywhere}
+.po-vendor-right .po-vendor-row{grid-template-columns:23mm minmax(0,1fr)}
+.paper .po-title>div{color:inherit}
+@media(max-width:700px){.po-vendor-form{grid-template-columns:1fr}}
+@media print{.po-vendor-title{background:#080808!important;color:#fff!important}}
+</style><style id="presetPOAddressAndClause6Excel20261101">
+/* A multiline address occupies a distinct address area, just as in Quotations. */
+.po-vendor-left .po-address-row{min-height:17mm;align-items:start}
+.po-vendor-left .po-address-row strong,.po-vendor-left .po-address-row span{align-self:start}
+.po-vendor-left .po-address-row span{display:block;min-height:16mm;white-space:pre-wrap;overflow-wrap:anywhere}
+.po-vendor-left .po-vendor-row:not(.po-address-row){min-height:4.2mm}
+.po-vendor-form textarea[data-po-field="vendorAddress"]{min-height:100px;white-space:pre-wrap;resize:vertical}
+/* The source Excel uses three distinct indented contact lines under Clause 6. */
+.paper .po-term.po-contact-clause .term-text{white-space:normal}
+.paper .po-clause6-lines{display:block;margin-top:1.2mm;padding-left:3mm;line-height:1.4}
+.paper .po-clause6-line{display:grid;grid-template-columns:25mm minmax(0,1fr);gap:1.5mm;align-items:start;min-height:3.8mm;white-space:pre-wrap}
+.paper .po-clause6-line span:last-child{overflow-wrap:anywhere}
+</style><style id="poSharedTermsControls20261101">.po-terms-fitting{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0 0 12px}.po-terms-fitting label{min-width:0}.po-terms-fitting select{width:100%}@media(max-width:650px){.po-terms-fitting{grid-template-columns:1fr}}.paper .po-terms{line-height:1.18}.paper .po-term{margin-bottom:var(--term-gap,1.3mm)}</style><style id="poSignatureAndVerticalGridNormalization20261101">
+/* Exactly the three grouped signature cards used by Preset Quotations. */
+.po-signature-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+.po-signature-group{border:1px solid #d8e0e8;border-radius:8px;display:flex;flex-direction:column;gap:8px;padding:12px;min-width:0;margin:0}
+.po-signature-group legend{font-weight:bold;padding:0 5px}
+.po-signature-group label{min-width:0}
+.po-signature-group input{width:100%;min-width:0}
+@media(max-width:690px){.po-signature-groups{grid-template-columns:1fr}}
+/* Visible Excel-like vertical grid separators between labels and values.
+   Applies to the PO vendor/quotation grid, not its underlying field content. */
+.paper .po-vendor{border:1px solid #444;border-collapse:collapse}
+.paper .po-vendor>div{padding:0!important}
+.paper .po-vendor-left{border-right:1px solid #444!important}
+.paper .po-vendor-right{border-left:0!important}
+.paper .po-vendor-row{gap:0!important;min-height:4mm}
+.paper .po-vendor-row strong{display:block;border-right:1px solid #aaa;min-height:100%;padding:1.1mm 1.4mm 0 .7mm;text-align:right}
+.paper .po-vendor-row span{display:block;padding:1.1mm 1.4mm .5mm;min-width:0}
+.paper .po-vendor .po-address-row strong,.paper .po-vendor .po-address-row span{min-height:16mm}
+.paper .po-items{border-collapse:collapse!important}
+.paper .po-items th,.paper .po-items td{border:1px solid #777!important}
+.paper .po-signatures{border-collapse:collapse!important;table-layout:fixed!important}
+.paper .po-signatures tr>th,.paper .po-signatures tr>td{border:1px solid #999!important}
+.paper .po-signatures thead th,.paper .po-signatures tbody th{border-color:#111!important}
+@media print{.paper .po-vendor-row strong{border-right:1px solid #aaa!important}.paper .po-items th,.paper .po-items td,.paper .po-signatures tr>td{border:1px solid #777!important}}
+</style><style id="poExcelContinuousLinesAndTermsBox20261101">
+/* Matches the established Quotation client table: continuous rules across
+   each full-height information column, instead of fragmented row borders. */
+.paper .po-vendor-section{width:100%;margin:2.5mm 0 4mm;box-sizing:border-box}
+.paper .po-vendor-title{
+ background:#000!important;color:#fff!important;
+ text-align:center;font-weight:700;margin:0!important;
+ padding:1.2mm 0!important;border:0!important;
+ -webkit-print-color-adjust:exact;print-color-adjust:exact
+}
+.paper .po-vendor{
+ display:grid!important;grid-template-columns:58% 42%!important;
+ gap:0!important;margin:0!important;padding:0!important;
+ min-height:39mm!important;align-items:stretch!important;
+ border:1px solid #444!important;border-top:0!important;
+ box-sizing:border-box!important
+}
+.paper .po-vendor>div{
+ display:flex!important;flex-direction:column!important;
+ position:relative!important;min-width:0!important;
+ min-height:39mm!important;padding:0!important
+}
+.paper .po-vendor-left{--po-label-width:24mm;border-right:1px solid #444!important}
+.paper .po-vendor-right{--po-label-width:19mm;border-left:0!important}
+.paper .po-vendor>div::before{
+ content:"";position:absolute;left:var(--po-label-width);top:0;bottom:0;
+ border-left:1px solid #999!important;pointer-events:none;z-index:1
+}
+.paper .po-vendor .po-vendor-row{
+ display:grid!important;grid-template-columns:var(--po-label-width) minmax(0,1fr)!important;
+ gap:0!important;margin:0!important;min-height:4.3mm!important;
+ line-height:1.35;align-items:start!important
+}
+.paper .po-vendor .po-vendor-row strong{
+ border:0!important;display:block!important;text-align:right!important;
+ padding:1mm 1.5mm .3mm .5mm!important;white-space:nowrap;
+ min-height:0!important
+}
+.paper .po-vendor .po-vendor-row span{
+ padding:1mm 1.7mm .3mm!important;min-width:0!important;
+ white-space:pre-wrap!important;overflow-wrap:break-word
+}
+.paper .po-vendor-left .po-address-row{flex:1!important;min-height:19mm!important}
+.paper .po-vendor-left .po-address-row span{min-height:18mm!important}
+.paper .po-vendor-right .po-vendor-row{min-height:6.5mm!important}
+/* Quotation's Terms & Conditions uses one box around heading and clauses,
+   with a continuous vertical separator after the number column. */
+.paper .po-terms-section.excel-terms-section{
+ display:block!important;width:100%!important;
+ box-sizing:border-box!important;padding:0!important;
+ margin:2.5mm 0 2mm!important;
+ border:1px solid #444!important;
+ break-inside:avoid;page-break-inside:avoid
+}
+.paper .po-terms-section .po-terms-header{
+ display:block!important;margin:0!important;padding:1mm 0!important;
+ border:0!important;background:#000!important;color:white!important;
+ text-align:center!important;box-sizing:border-box!important;
+ -webkit-print-color-adjust:exact;print-color-adjust:exact
+}
+.paper .po-terms-section .po-terms{
+ display:block!important;position:relative!important;
+ width:100%!important;max-width:none!important;min-width:0!important;
+ margin:0!important;border:0!important;
+ padding:1.5mm 1.8mm 1.5mm 0!important;
+ box-sizing:border-box!important
+}
+.paper .po-terms-section .po-terms::before{
+ content:"";position:absolute;top:0;bottom:0;left:8mm;
+ border-left:1px solid #999!important;pointer-events:none
+}
+.paper .po-terms-section .po-term{
+ display:grid!important;grid-template-columns:8mm minmax(0,1fr)!important;
+ gap:1.5mm!important;width:100%!important;align-items:start!important;
+ margin:0 0 var(--term-gap,1.3mm)!important
+}
+.paper .po-terms-section .po-term .term-num{padding:0 1mm!important;text-align:center!important}
+.paper .po-terms-section .po-term .term-text{
+ min-width:0!important;white-space:pre-wrap!important;overflow-wrap:break-word!important;
+ line-height:1.25!important
+}
+@media print{
+ .paper .po-vendor{border:1px solid #444!important;border-top:0!important}
+ .paper .po-vendor>div::before{border-left:1px solid #999!important}
+ .paper .po-terms-section.excel-terms-section{border:1px solid #444!important}
+ .paper .po-terms-section .po-terms::before{border-left:1px solid #999!important}
+}
+</style><style id="poClause6PermanentFields20261101">.paper .po-clause6-note{white-space:pre-wrap;overflow-wrap:anywhere;margin:1.4mm 0 0 0;padding:1mm 0;border-top:1px solid #ddd}.paper .po-contact-clause .po-clause6-lines{white-space:normal}.po-signature-groups label,.po-terms-fitting label{min-width:0}</style><style id="poClause6EditFields20261101">
+.po-terms-contact-editor{border:1px solid #d8e0e8;border-radius:8px;padding:12px;margin:10px 0 12px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.po-contact-edit-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.po-contact-edit-fields label{min-width:0}
+.po-contact-edit-fields input{min-width:0;width:100%}
+.po-contact-notes{margin-top:3px}
+.po-contact-notes textarea{width:100%}
+@media(max-width:700px){.po-contact-edit-fields{grid-template-columns:1fr}}
+</style><style id="mobileA4Fit20261102">
+/* Shared mobile A4 preview: fit available width without changing print geometry. */
+@media screen and (max-width:1099px){
+ .paper{max-width:none!important;transform:none!important}
+ .preview-only,.preview-container,.preview-column{max-width:100%;min-width:0;overflow-x:hidden!important}
+}
+</style></head><body>
+<header><h2>Purchase Order Templates</h2><small>Wellora Energy · Dedicated PO editor</small></header>
+<div class="toolbar"><button id="newBtn">New PO</button><button id="saveBtn" class="primary">Save Online</button><button id="printBtn">Print / PDF</button><span class="status" id="status">Loading…</span></div>
+<div class="workspace"><div class="editor">
+<section class="card po-template-card"><h3>PO Template</h3><label>PO Type<select id="poTemplate"></select></label><p class="muted">Purchase Order templates are kept separate from Quotations.</p></section>
+<section class="card"><h3>Purchase Order Details</h3><div class="fields" id="poReferenceFields"></div></section>
+<section class="card"><h3>Vendor &amp; Quotation Information</h3><div class="po-vendor-form"><div class="fields" id="poVendorFields"></div><div class="fields" id="poQuotationFields"></div></div></section>
+<section class="card"><h3>PO Items</h3><div class="table-wrap"><table id="itemsEditor"></table></div><div class="line-actions"><button id="addRow">+ Add Item</button><button id="removeRow">Remove Last</button></div></section>
+<section class="card"><h3>Terms &amp; Conditions</h3><div class="po-terms-fitting"><label>Terms font size<select id="termsFontSize"><option value="6.5">6.5 pt</option><option value="7">7 pt</option><option value="7.5">7.5 pt</option><option value="8">8 pt</option><option value="8.5">8.5 pt</option><option value="9">9 pt</option></select></label><label>Page fitting<select id="termsPageFit"><option value="flow">Continue across pages (complete lines) — Default</option><option value="auto">Auto Fit (minimum 6.5pt)</option><option value="normal">Normal size / add page</option></select></label></div><p id="termsFitStatus" class="muted" role="status" aria-live="polite">Checking how the terms fit on A4…</p><p class="muted">These controls affect the A4 preview and print layout, not the template wording. The six PO clauses remain specific to the selected template.</p><div id="termsEditor"></div></section>
+<section class="card"><h3>Signatures</h3><div class="po-signature-groups" id="signatureFields"></div></section>
+</div><div class="preview-container"><div class="preview-header"><strong>Live A4 Preview</strong><span id="pageCount" class="muted"></span></div><div id="paper"></div></div></div>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js';
+import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc,collection,query,where,limit,getDocs,serverTimestamp} from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js';
+import {savePresetCopy,readPresetCopy} from './preset-user-templates.js?v=20261101-copy-1';
+import {paginatePresetDocument} from './preset-pagination.js?v=20261101-single-controller1';
+import {sharedPresetSlot,expandPresetText} from './preset-shared.js?v=20261101-common2';
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const app=initializeApp({apiKey:"AIzaSyDPIAoqy9mbWU-4M4kPK9mfSjtVSSA2gI8",authDomain:"docsystem-c29ec.firebaseapp.com",projectId:"docsystem-c29ec",storageBucket:"docsystem-c29ec.firebasestorage.app",messagingSenderId:"25451628479",appId:"1:25451628479:web:ec00096fc84d744c48c30a"});
+const auth=getAuth(app),db=getFirestore(app);
+const params=new URLSearchParams(location.search);
+const embedded=params.get('embedded')==='1';
+if(embedded)document.body.classList.add('embedded');
+let user=null,role='user',profile=null,profiles=[],globalPlaceholders={},savedSnapshot=null,savedHeaderSnapshot=null,docId=params.get('docId')||null,template=null,manifest=null,state=null,loaded=false,renderBusy=false;
+const posted=(kind,extra={})=>{if(embedded&&window.parent!==window)window.parent.postMessage({type:'docsystem-preset-'+kind,...extra},location.origin)};
+const notify=message=>{$('status').textContent=message;posted('status',{status:message})};
+const money=n=>Number(n||0).toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=n=>Number.isFinite(Number(n))?Number(n):0;
+const fieldsByKey=new Map();
+function profileData(){const co=profile?.company||{};return {id:profile?.id||'',name:co.name||'',logo:co.logo||'',info:typeof co.headerText==='string'&&co.headerText.trim()?co.headerText:(co.fields||[]).filter(x=>x?.value&&x.place!=='footer').map(x=>(x.label?x.label+': ':'')+x.value).join('\n'),currencies:co.currencies||[],defaultCurrency:co.defaultCurrency||'MYR',placeholders:globalPlaceholders} }
+function business(){return savedSnapshot||profileData()}
+
+function poHeaderSettings(){return savedHeaderSnapshot||profile?.presetHeader||{}}
+function poRichMarkup(source){
+ let html=esc(source||'');
+ html=html.replace(/\[b\]([\s\S]*?)\[\/b\]/gi,'<strong>$1</strong>');
+ html=html.replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<em>$1</em>');
+ html=html.replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<u>$1</u>');
+ html=html.replace(/\[size=(\d{1,2})\]([\s\S]*?)\[\/size\]/gi,(_,n,v)=>'<span style="font-size:'+Math.max(6,Math.min(36,Number(n)))+'pt">'+v+'</span>');
+ html=html.replace(/\[font=(Arial|Georgia|Verdana|Tahoma|Courier New|Times New Roman)\]([\s\S]*?)\[\/font\]/gi,(_,n,v)=>'<span style="font-family:'+n+'">'+v+'</span>');
+ html=html.replace(/\[color=(#[0-9a-fA-F]{6})\]([\s\S]*?)\[\/color\]/gi,(_,n,v)=>'<span style="color:'+n+'">'+v+'</span>');
+ return html;
+}
+function poHeaderSlot(slot,co){
+ const cfg=poHeaderSettings();
+ const source=String(cfg[slot]||({logo:'{logo}',name:'{companyName}',details:'{companyInfo}'}[slot]));
+ const font=['Arial','Georgia','Verdana','Tahoma','Courier New','Times New Roman'].includes(cfg[slot+'Font'])?cfg[slot+'Font']:'Arial';
+ const size=Math.max(6,Math.min(36,Number(cfg[slot+'Size'])||(slot==='name'?13:slot==='details'?8:10)));
+ const align=['left','center','right'].includes(cfg[slot+'Align'])?cfg[slot+'Align']:'left';
+ const color=/^#[0-9a-fA-F]{6}$/.test(cfg[slot+'Color']||'')?cfg[slot+'Color']:'#111111';
+ const keys=[];
+ let html=poRichMarkup(source.replace(/\{([a-zA-Z][a-zA-Z0-9_]*)\}/g,(_,key)=>{
+  const index=keys.push(key)-1;return 'DOCSYSTEM_TOKEN_'+index+'_END';
+ }));
+ html=html.replace(/DOCSYSTEM_TOKEN_(\d+)_END/g,(_,i)=>{
+  const key=keys[Number(i)],values=co.placeholders||globalPlaceholders;
+  if(key==='logo')return co.logo?'<img src="'+esc(co.logo)+'" alt="Logo" style="width:'+Math.max(10,Math.min(70,Number(cfg.logoWidth)||35))+'mm;height:auto;max-width:100%">':'';
+  if(key==='companyName')return esc(co.name||'');
+  if(key==='companyInfo')return poRichMarkup(co.info||'');
+  if(Object.prototype.hasOwnProperty.call(values,key)){
+   const value=String(values[key]??'');
+   if(key==='website'){
+    try{const url=new URL(/^https?:\/\//i.test(value)?value:'https://'+value);if(['http:','https:'].includes(url.protocol)&&url.hostname.includes('.'))return '<a href="'+esc(url.href)+'" style="color:inherit;text-decoration:none">'+esc(value)+'</a>'}catch{}
+   }
+   return poRichMarkup(value);
+  }
+  return '{'+esc(key)+'}';
+ });
+ return '<div style="font-family:'+font+';font-size:'+size+'pt;text-align:'+align+';color:'+color+';white-space:pre-wrap">'+html+'</div>';
+}
+function formatPresetDate(value){if(!value)return '';const d=new Date(String(value).slice(0,10)+'T12:00:00');return Number.isNaN(d.getTime())?String(value):new Intl.DateTimeFormat('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(d)}
+function poHeaderTitle(){
+ const cfg=poHeaderSettings(),font=['Arial','Georgia','Verdana','Tahoma','Times New Roman','Courier New'].includes(cfg.titleFont)?cfg.titleFont:'Arial';
+ const size=Math.max(8,Math.min(36,Number(cfg.titleSize)||16));
+ const color=/^#[0-9a-fA-F]{6}$/.test(cfg.titleColor||'')?cfg.titleColor:'#d6a900';
+ const align=['left','center','right'].includes(cfg.titleAlign)?cfg.titleAlign:'right';
+ const source=String(cfg.titleText??'{documentTitle}').replace(/\{documentTitle\}/gi,'DOCSYSTEM_TITLE_TOKEN');
+ return '<div style="font-family:'+font+';font-size:'+size+'pt;color:'+color+';text-align:'+align+';font-weight:bold;white-space:pre-wrap">'+poRichMarkup(source).replaceAll('DOCSYSTEM_TITLE_TOKEN','PURCHASE ORDER')+'</div>';
+}
+
+async function chooseTemplate(id,clear=true){
+ const entry=manifest.templates.find(t=>t.id===id)||manifest.templates[0];
+ if(!entry)return;
+ const response=await fetch('./templates/po/'+entry.path,{cache:'no-cache'});
+ if(!response.ok)throw Error('Cannot load '+entry.path);
+ template=await response.json();
+ if(clear||!state){
+  state={poType:entry.id,fields:{},items:[],signatures:{},termsOverrides:{},omittedTerms:[],extraTerms:[],termsFontSize:8,termsPageFit:"flow"};
+  for(const f of template.fields)state.fields[f.key]=f.default??'';
+  state.fields.poDate=new Date().toISOString().slice(0,10);
+  state.fields.currency=business().defaultCurrency||'MYR';
+  state.items=Array.from({length:template.items.initialRows},()=>Object.fromEntries(template.items.columns.filter(c=>c.type!=='calculated').map(c=>[c.key,''])));
+ }
+ $('poTemplate').value=entry.id;
+ draw();
+ notify('PO template ready');
+}
+function draw(){
+ if(!state||!template)return;
+ $('poTemplate').value=state.poType;
+ $('termsFontSize').value=String(state.termsFontSize||8);
+ $('termsPageFit').value=['flow','auto','normal'].includes(state.termsPageFit)?state.termsPageFit:'flow';
+ const htmlField=f=>{
+  const value=state.fields[f.key]??'';
+  const options=f.key==='currency'?Array.from(new Set([...(business().currencies||[]).map(x=>x.code),'MYR','USD'])):f.options;
+  const control=f.type==='multiline'?'<textarea rows="'+(f.key==='vendorAddress'||f.key==='fulfillmentAddress'?4:3)+'" placeholder="'+(f.key==='vendorAddress'?'Address line 1&#10;Address line 2&#10;Address line 3':'')+'" data-po-field="'+esc(f.key)+'">'+esc(value)+'</textarea>':options?'<select data-po-field="'+esc(f.key)+'">'+options.map(o=>'<option value="'+esc(o)+'" '+(String(o)===String(value)?'selected':'')+'>'+esc(o==='pickup'?'Pick-up':o==='delivery'?'Delivery':o)+'</option>').join('')+'</select>':'<input data-po-field="'+esc(f.key)+'" type="'+(f.type==='date'?'date':f.type==='number'?'number':f.type==='email'?'email':'text')+'" value="'+esc(value)+'">';
+  const label=({poDate:'Date',poNumber:'Reference No.',vendorName:'Company',vendorAddress:'Address',vendorContact:'Contact Person',vendorPhone:'Tel',vendorEmail:'Email',vendorQuotationNo:'Quotation No.',vendorQuotationDate:'Quotation Date',currency:'Currency',sstRate:'SST (%)'})[f.key]||f.label;
+  return '<label class="'+(f.type==='multiline'?'wide':'')+'">'+esc(label)+control+'</label>';
+ };
+ const groups={
+  poReferenceFields:['poDate','poNumber'],
+  poVendorFields:['vendorName','vendorAddress','vendorContact','vendorPhone','vendorEmail'],
+  poQuotationFields:['vendorQuotationNo','vendorQuotationDate','currency','sstRate']
+ };
+ for(const [target,keys] of Object.entries(groups)){
+  $(target).innerHTML=keys.map(k=>template.fields.find(f=>f.key===k)).filter(Boolean).map(htmlField).join('');
+ }
+ drawRows();
+ $('termsEditor').innerHTML=template.terms.map(t=>{
+  const hidden=Array.isArray(state.omittedTerms)&&state.omittedTerms.includes(Number(t.number));
+  const toggle='<label style="display:flex;flex-direction:row;gap:8px;align-items:center;margin:10px 0 3px"><input type="checkbox" data-po-term-toggle="'+t.number+'" style="width:auto;flex:none" '+(hidden?'':'checked')+'><strong>Show · '+t.number+'. '+esc(t.title)+'</strong></label>';
+  // The source field remains unchanged; only its editor moves under the clause it drives.
+  const linkedKeys=t.number===2?['fulfillmentAddress']:t.number===3?['fulfillmentDate']:t.number===4?['fulfillmentMode']:[];
+  const linkedControls=linkedKeys.map(key=>template.fields.find(f=>f.key===key)).filter(Boolean).map(htmlField).join('');
+  const linkedBox=linkedControls?'<div class="po-clause-inline-fields" style="border-top:1px solid #e2e8f0;padding-top:9px;margin-top:9px;display:grid;gap:9px">'+linkedControls+'</div>':'';
+
+  if(t.number===6){
+   const contacts=[['a) Contact Name','welloraContactName','text'],['b) Contact Number','welloraContactPhone','tel'],['c) Contact Email','welloraContactEmail','email']];
+   return toggle+'<div class="po-terms-contact-editor"><strong>6. '+esc(t.title)+'</strong><div class="po-contact-edit-fields">'+contacts.map(([label,key,type])=>'<label>'+esc(label)+'<input type="'+type+'" data-po-field="'+key+'" value="'+esc(state.fields[key]||'')+'"></label>').join('')+'</div><label class="po-contact-notes">Additional notes (optional)<textarea data-term="6" rows="2" placeholder="Optional notes below a), b), c)">'+esc(state.termsOverrides?.[6]??'')+'</textarea></label></div>';
+  }
+  return toggle+'<div class="preset-locked-statement" style="border:1px solid #d9e2eb;border-radius:6px;padding:10px;margin-bottom:10px"><p class="muted" style="white-space:pre-wrap">'+esc(t.sourceText||'Original formula/field-linked clause')+'</p>'+linkedBox+(new URLSearchParams(location.search).get('configure')==='1'?'<label>Optional replacement clause text<textarea data-term="'+t.number+'" rows="3">'+esc(state.termsOverrides?.[t.number]??'')+'</textarea></label>':'')+'</div>';
+ }).join('')+('<h4>Additional statements</h4>'+(state.extraTerms||[]).map((t,i)=>'<div style="border:1px solid #d9e2eb;padding:10px;border-radius:6px;margin:8px 0"><label style="display:flex;flex-direction:row;align-items:center;gap:8px"><input type="checkbox" style="width:auto" data-po-extra-show="'+i+'" '+(t.enabled===false?'':'checked')+'>Show statement '+(i+1)+'</label><label>Heading<input data-po-extra-title="'+i+'" value="'+esc(t.title||'')+'"></label><label>Text<textarea data-po-extra-body="'+i+'" rows="3">'+esc(t.body||'')+'</textarea></label><button type="button" class="small" data-po-extra-remove="'+i+'">Remove added statement</button></div>').join('')+'<button type="button" class="small" id="poAddStatement">+ Add Statement</button>');
+ $('signatureFields').innerHTML=template.signatures.map(role=>'<fieldset class="po-signature-group"><legend>'+esc(role)+'</legend>'+['name','position','date'].map(k=>'<label>'+k[0].toUpperCase()+k.slice(1)+'<input type="'+(k==='date'?'date':'text')+'" data-sign="'+esc(role)+'" data-sign-key="'+k+'" value="'+esc(state.signatures?.[role]?.[k]||'')+'"></label>').join('')+'</fieldset>').join('');
+ render();
+}
+function drawRows(){
+ const cols=template.items.columns;
+ $('itemsEditor').innerHTML='<thead><tr>'+cols.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'<th></th></tr></thead><tbody>'+
+ state.items.map((row,i)=>'<tr>'+cols.map(c=>'<td>'+(c.type==='calculated'?'<span class="line-total">'+money(lineTotal(row))+'</span>':c.type==='multiline'?'<textarea data-row="'+i+'" data-key="'+esc(c.key)+'">'+esc(row[c.key])+'</textarea>':'<input data-row="'+i+'" data-key="'+esc(c.key)+'" type="'+(c.type==='number'||c.type==='money'?'number':'text')+'" step="'+(c.type==='number'||c.type==='money'?'any':'1')+'" value="'+esc(row[c.key])+'">')+'</td>').join('')+'<td><button class="danger" data-remove="'+i+'" title="Remove this row">×</button></td></tr>').join('')+'</tbody>';
+}
+function lineTotal(row){return num(row.quantity)*num(row.unitPrice)*(template.id==='rental'?num(row.rentalDays):1)}
+function moneyWords(amount){
+ const ones=['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+ const tens=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+ const say=n=>{n=Math.floor(n);if(n<20)return ones[n];if(n<100)return tens[Math.floor(n/10)]+(n%10?'-'+say(n%10):'');if(n<1000)return say(Math.floor(n/100))+' hundred'+(n%100?' and '+say(n%100):'');if(n<1000000)return say(Math.floor(n/1000))+' thousand'+(n%1000?' '+say(n%1000):'');if(n<1000000000)return say(Math.floor(n/1000000))+' million'+(n%1000000?' '+say(n%1000000):'');return String(n)};
+ const cents=Math.round((Math.abs(amount)%1)*100);return say(Math.floor(Math.abs(amount)))+(cents?' and '+say(cents)+' cents':' only');
+}
+function poPresetValue(v){
+ const f=state?.fields||{},co=business();
+ return expandPresetText(v,{...co,documentTitle:'PURCHASE ORDER',documentNumber:f.poNumber||'',documentDate:f.poDate||''},globalPlaceholders);
+}
+function expandedTerm(term){
+ const f=state.fields;
+ if(state.termsOverrides?.[term.number]?.trim())return poPresetValue(state.termsOverrides[term.number]);
+ if(term.clauses)return term.clauses.map(c=>c.label+' '+c.sourceText).join('\n');
+ const v=term.binding?String(f[term.binding]||''):'';
+ if(term.number===2||term.number===3)return term.sourceText+(v?'\n'+v:'');
+ if(term.number===4){
+  const delivery=f.fulfillmentMode!=='pickup';
+  return delivery?'Vendor must ensure to deliver all item(s) under this order to the Delivery Address by the Date of Receipt.':'Vendor must ensure that all item(s) under this order is/are ready to be picked up from the Pick-up Address by the Date of Collection.';
+ }
+ if(term.number===6)return ['a) Contact Name: '+(f.welloraContactName||''),'b) Contact Number: '+(f.welloraContactPhone||''),'c) Contact Email: '+(f.welloraContactEmail||'')].join('\n');
+ return term.sourceText||'';
+}
+function render(){
+ if(!state||!template||renderBusy)return;
+ renderBusy=true;
+ try{
+ const co=business(),f=state.fields,subtotal=state.items.reduce((v,row)=>v+lineTotal(row),0),sst=subtotal*num(f.sstRate)/100,grand=subtotal+sst;
+ const visible=state.items.filter(row=>template.items.columns.some(c=>c.type!=='calculated'&&String(row[c.key]??'').trim()));
+ const cols=template.items.columns;
+ const itemRows=(visible.length?visible:[{}]).map((row,i)=>'<tr>'+cols.map(c=>'<td class="'+(c.key==='description'?'description':'')+'">'+(c.type==='calculated'?money(lineTotal(row)):esc(poPresetValue(row[c.key]||'')))+'</td>').join('')+'</tr>').join('');
+ const headerCompany={...co,documentTitle:'PURCHASE ORDER',documentNumber:f.poNumber||'',documentDate:f.poDate||''};
+ const headerCfg=poHeaderSettings();
+ const metaRow=(label,value)=>'<div class="po-meta-row"><span class="po-meta-label">'+esc(label)+':</span><span class="po-meta-value">'+esc(value||'')+'</span></div>';
+ const companyMarkup='<div class="po-head"><div class="po-company-ident">'+sharedPresetSlot('logo',headerCompany,headerCfg,globalPlaceholders)+sharedPresetSlot('name',headerCompany,headerCfg,globalPlaceholders)+sharedPresetSlot('details',headerCompany,headerCfg,globalPlaceholders)+'</div><div class="po-right"><div class="po-title">'+poHeaderTitle()+'</div><div class="po-meta">'+metaRow('Date',formatPresetDate(f.poDate))+metaRow('Reference No',f.poNumber)+'</div></div></div>';
+ const vendorRow=(label,value,address=false)=>'<div class="po-vendor-row'+(address?' po-address-row':'')+'"><strong>'+esc(label)+':</strong><span>'+esc(poPresetValue(value||''))+'</span></div>';
+ const vendorMarkup='<section class="po-vendor-section"><div class="po-vendor-title">Vendor &amp; Quotation Information</div><div class="po-vendor">'+
+  '<div class="po-vendor-left">'+vendorRow('Company',f.vendorName)+vendorRow('Address',f.vendorAddress,true)+vendorRow('Contact Person',f.vendorContact)+vendorRow('Tel',f.vendorPhone)+vendorRow('Email',f.vendorEmail)+'</div>'+
+  '<div class="po-vendor-right">'+vendorRow('Quotation No',f.vendorQuotationNo)+vendorRow('Date',f.vendorQuotationDate)+vendorRow('Currency',f.currency||'MYR')+vendorRow('SST (%)',f.sstRate??0)+'</div></div></section>';
+ const table='<table class="po-items excel-table"><thead><tr>'+cols.map(c=>'<th>'+esc(c.label)+'</th>').join('')+'</tr></thead><tbody>'+itemRows+'</tbody></table>';
+ const totalTable='<table class="po-totals"><tr><td>Subtotal</td><td style="text-align:right">'+money(subtotal)+'</td></tr><tr><td>SST ('+esc(f.sstRate||0)+'%)</td><td style="text-align:right">'+money(sst)+'</td></tr><tr><td>Grand Total ('+esc(f.currency||'MYR')+')</td><td style="text-align:right">'+money(grand)+'</td></tr></table>';
+ const amountWords='<div class="po-words"><strong>Total Amount in Words: </strong>'+esc(f.currency||'MYR')+' '+esc(moneyWords(grand))+'</div>';
+ const clauseMarkup=t=>{
+  const override=state.termsOverrides?.[t.number];
+  // Clause 6 is a structured Excel field group, not a replaceable paragraph.
+  // Free text is an optional note below the permanent a/b/c rows.
+  const isContact=t.number===6;
+  const body=isContact?
+   '<div class="po-clause6-lines">'+[
+     ['a) Contact Name:',f.welloraContactName],
+     ['b) Contact Number:',f.welloraContactPhone],
+     ['c) Contact Email:',f.welloraContactEmail]
+   ].map(([label,value])=>'<div class="po-clause6-line"><span>'+esc(label)+'</span><span>'+esc(poPresetValue(value||''))+'</span></div>').join('')+
+   (String(override||'').trim()?'<div class="po-clause6-note">'+esc(poPresetValue(override))+'</div>':'')+'</div>':
+   '<span class="po-clause-body">'+esc(poPresetValue(expandedTerm(t)))+'</span>';
+  return '<div class="po-term excel-term'+(isContact?' po-contact-clause':'')+'"><span class="po-term-num term-num">'+(t.displayNumber||t.number)+'.</span><div class="term-text"><strong>'+esc(t.title)+':</strong>'+(isContact?body:' '+body)+'</div></div>';
+ };
+ const terms='<section class="po-terms-section excel-terms-section"><div class="po-terms-header excel-terms-header">TERMS &amp; CONDITIONS</div><div class="po-terms excel-terms" style="font-size:'+Math.max(6.5,Math.min(9,Number(state.termsFontSize)||8))+'pt">'+[...template.terms.filter(t=>!(Array.isArray(state.omittedTerms)&&state.omittedTerms.includes(Number(t.number)))).map(t=>({ ...t,additional:false})),...(state.extraTerms||[]).filter(t=>t.enabled!==false&&(t.title||t.body)).map(t=>({title:t.title||'Additional Statement',sourceText:t.body||'',additional:true}))].map((t,i)=>t.additional?
+ '<div class="po-term excel-term"><span class="po-term-num term-num">'+(i+1)+'.</span><div class="term-text"><strong>'+esc(t.title)+':</strong> '+esc(poPresetValue(t.sourceText))+'</div></div>':clauseMarkup({...t,displayNumber:i+1})).join('')+'</div></section>';
+ const sign='<table class="po-signatures"><colgroup><col style="width:14%"><col style="width:34%"><col style="width:23%"><col style="width:12%"><col style="width:17%"></colgroup><thead><tr><th></th><th>Name</th><th>Position</th><th>Date</th><th>Signature</th></tr></thead><tbody>'+template.signatures.map(x=>{const v=state.signatures?.[x]||{};return '<tr><th scope="row">'+esc(x)+'</th><td>'+esc(v.name||'')+'</td><td>'+esc(v.position||'')+'</td><td>'+esc(v.date||'')+'</td><td class="sign-blank"></td></tr>'}).join('')+'</tbody></table>';
+ $('paper').innerHTML='<article class="paper">'+companyMarkup+vendorMarkup+table+totalTable+amountWords+terms+sign+'</article>';
+ // Page fitting is evaluated on unscaled, physical A4 pages.
+ const paperRoot=$('paper');
+ const totalPages=paginatePresetDocument(paperRoot,{size:state.termsFontSize||8,fit:state.termsPageFit||'flow'});
+ $('pageCount').textContent=totalPages+' page(s)';
+ const termPages=Number(paperRoot.dataset.pageFitTermsPages)||0;
+ const termsStartPage=Number(paperRoot.dataset.pageFitTermsStartPage)||1;
+ const pages=Array.from(paperRoot.querySelectorAll('article.paper'));
+ const lastTermsPage=pages.findLastIndex(p=>p.querySelector('.excel-terms-section'))+1;
+ const signaturePage=pages.findIndex(p=>p.querySelector('table.po-signatures'))+1;
+ const fitMode=paperRoot.dataset.pageFitMode||'flow';
+ const effectivePx=Number(paperRoot.dataset.pageFitActualSizePx)||0;
+ const effectivePt=effectivePx ? Math.round(effectivePx*72/96*10)/10 : (state.termsFontSize||8);
+ const explanation=termPages<=1
+  ? (termsStartPage===1?'Terms fit on page 1; fitting modes may look identical until the terms overflow.':'Terms start on page '+termsStartPage+' and fit there without splitting.')
+  : 'Terms start on page '+termsStartPage+' and continue across '+termPages+' A4 pages.';
+ const detail=fitMode==='flow'?'Continue across pages':fitMode==='auto'?'Auto Fit':'Normal size / add page';
+ const signatureStatus=fitMode==='auto'
+  ? (signaturePage&&lastTermsPage===signaturePage
+    ? 'Signature block stays with Terms on A4 page '+signaturePage+'.'
+    : 'At the minimum Terms size, the signature block needs another A4 page.')
+  : '';
+ $('termsFitStatus').textContent=detail+' · '+(fitMode==='auto'?'Effective Terms font '+effectivePt+' pt. '+signatureStatus:explanation);
+ fitPreview();
+ posted('height',{height:document.documentElement.scrollHeight+8});
+ }finally{renderBusy=false}
+}
+function mobileA4AvailableWidth(holder){
+ const viewport=document.documentElement.clientWidth||window.innerWidth;
+ const frameWidth=window.frameElement?.getBoundingClientRect().width||viewport;
+ const container=holder?.getBoundingClientRect().width||viewport;
+ const left=holder?.getBoundingClientRect().left||0;
+ return Math.max(1,Math.min(container,frameWidth,viewport-left)-24);
+}
+function fitPreview(){
+ const holder=document.querySelector('.preview-container'),paper=$('paper');
+ if(!holder||!paper)return;
+ const available=mobileA4AvailableWidth(holder),a4=210*96/25.4,scale=Math.min(1,available/a4);
+ paper.querySelectorAll('.paper').forEach(p=>p.style.zoom=String(Math.round(scale*1000)/1000));
+}
+function newPo(){docId=null;savedSnapshot=null;savedHeaderSnapshot=null;if(activeCopyDefaults){state=structuredClone(activeCopyDefaults);state.fields.poNumber='';state.fields.poDate=new Date().toISOString().slice(0,10);chooseTemplate(state.poType,false).then(()=>{notify('New PO from saved template');ready()});return}chooseTemplate($('poTemplate').value,true)}
+async function save(){
+ if(!user)return alert('Sign in to DocSystem first');
+ if(!state.fields.poNumber?.trim())return alert('Enter PO Reference Number before saving.');
+ if(!business().id)return alert('Select a Business Profile first.');
+ try{
+  const snapshot=business();
+  if(!docId){
+   const hits=await getDocs(query(collection(db,'documents'),where('number','==',state.fields.poNumber.trim()),limit(100)));
+   const duplicate=hits.docs.find(d=>d.data().documentType==='Purchase Order'&&d.data().profileId===snapshot.id);
+   if(duplicate){alert('A Purchase Order with this reference already exists for the selected Business Profile. Open the existing PO instead.');return}
+  }
+  const ref=docId?doc(db,'documents',docId):doc(collection(db,'documents'));
+  const old=await getDoc(ref);
+  const record={templateSource:'preset',templateFamily:'purchase-order',templateId:template.id,templateVersion:1,documentType:'Purchase Order',number:state.fields.poNumber,date:state.fields.poDate||'',presetData:state,profileId:snapshot.id,companySnapshot:snapshot,presetHeaderSnapshot:savedHeaderSnapshot||structuredClone(profile?.presetHeader||{}),updatedAt:serverTimestamp(),updatedBy:user.uid,...(!old.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})};
+  await setDoc(ref,record,{merge:true});docId=ref.id;savedSnapshot=snapshot;notify('Saved PO '+state.fields.poNumber);ready();
+ }catch(error){alert('PO save failed: '+error.message)}
+}
+async function loadSaved(id){
+ if(!user||!id)return;
+ try{const snapshot=await getDoc(doc(db,'documents',id));if(!snapshot.exists())throw Error('Document not found');const data=snapshot.data();if(data.templateFamily!=='purchase-order')throw Error('Not a saved Purchase Order');docId=id;state=data.presetData;savedSnapshot=data.companySnapshot||null;savedHeaderSnapshot=data.presetHeaderSnapshot||null;profile=profiles.find(p=>p.id===data.profileId)||profile;await chooseTemplate(data.templateId,false);notify('Opened PO '+data.number);ready()}
+ catch(e){notify('Cannot open PO: '+e.message)}
+}
+function ready(){posted('ready',{profiles:profiles.map(p=>({id:p.id,name:p.company?.name||'Business'})),selected:business().id,locked:!!docId,status:$('status').textContent})}
+async function chooseBusiness(id){
+ if(docId){ready();return}const picked=profiles.find(p=>p.id===id);if(!picked)return;profile=picked;state.fields.currency=business().defaultCurrency||'MYR';draw();ready()
+}
+window.printDoc=()=>{document.body.classList.add('printing');render();window.print()};
+window.addEventListener('afterprint',()=>document.body.classList.remove('printing'));
+
+let presetCopyApplied=false,activeCopyDefaults=null;
+async function saveAsNewPresetTemplate(name){
+ if(new URLSearchParams(location.search).get('configure')!=='1')return;
+ if(!user||!state)return alert('Sign in and open a preset first');
+ if(!name||!name.trim())return;
+ try{
+  const saved=await savePresetCopy({user,family:'purchase-order',basePresetId:state.poType||template?.id||'purchase-credit',name,state,profileId:business().id});
+  notify('Template saved: '+saved.name);
+  posted('template-saved',{name:saved.name,id:saved.id});
+ }catch(error){alert('Could not save template copy: '+error.message)}
+}
+async function openSavedPresetCopy(){
+ const copyId=params.get('copyId');
+ if(presetCopyApplied||!copyId||docId||!user)return;
+ try{
+  const copy=await readPresetCopy({user,id:copyId,family:'purchase-order'});
+  presetCopyApplied=true;
+  docId=null;savedSnapshot=null;savedHeaderSnapshot=null;
+  const selected=profiles.find(p=>p.id===copy.profileId);
+  if(selected)profile=selected;
+  state=copy.defaults;
+  activeCopyDefaults=structuredClone(copy.defaults);
+  state.fields.poNumber='';state.fields.poDate=new Date().toISOString().slice(0,10);await chooseTemplate(copy.basePresetId,false);
+  draw();notify('Template copy ready: '+copy.name+' · New document');ready();
+ }catch(error){presetCopyApplied=true;notify('Template copy could not open: '+error.message)}
+}
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==window.parent||e.data?.type!=='docsystem-preset-command')return;
+ if(e.data.action==='save-template'){saveAsNewPresetTemplate(e.data.name);return}
+ if(e.data.action==='new'){newPo();return}
+ if(e.data.action==='save'){save();return}
+ if(e.data.action==='print'){window.printDoc();return}
+ if(e.data.action==='business'){chooseBusiness(e.data.profileId);return}
+ if(e.data.action==='view'){document.body.classList.toggle('printing',!!e.data.preview);render();return}
+});
+$('poTemplate').addEventListener('change',e=>{if(confirm('Switch PO type and clear unsaved changes?'))chooseTemplate(e.target.value,true);else $('poTemplate').value=state.poType});
+$('addRow').addEventListener('click',()=>{state.items.push(Object.fromEntries(template.items.columns.filter(c=>c.type!=='calculated').map(c=>[c.key,''])));drawRows();render()});
+$('removeRow').addEventListener('click',()=>{if(state.items.length>1){state.items.pop();drawRows();render()}});
+$('itemsEditor').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;state.items.splice(Number(b.dataset.remove),1);if(!state.items.length)state.items=[{}];drawRows();render()});
+$('termsFontSize').addEventListener('change',e=>{state.termsFontSize=Number(e.target.value)||8;render()});
+$('termsPageFit').addEventListener('change',e=>{state.termsPageFit=e.target.value;render()});
+document.addEventListener('input',e=>{
+ const d=e.target.dataset;
+ if(d.poExtraShow!==undefined){state.extraTerms[Number(d.poExtraShow)].enabled=e.target.checked;render();return}
+ if(d.poExtraTitle!==undefined){state.extraTerms[Number(d.poExtraTitle)].title=e.target.value;render();return}
+ if(d.poExtraBody!==undefined){state.extraTerms[Number(d.poExtraBody)].body=e.target.value;render();return}
+ if(d.poTermToggle!==undefined){const n=Number(d.poTermToggle);state.omittedTerms=Array.isArray(state.omittedTerms)?state.omittedTerms:[];state.omittedTerms=state.omittedTerms.filter(v=>Number(v)!==n);if(!e.target.checked)state.omittedTerms.push(n);render();return}if(d.poField){state.fields[d.poField]=e.target.value;render()}
+ else if(d.row!==undefined){state.items[Number(d.row)][d.key]=e.target.value;const tr=e.target.closest('tr'),v=tr?.querySelector('.line-total');if(v)v.textContent=money(lineTotal(state.items[Number(d.row)]));render()}
+ else if(d.term){state.termsOverrides[d.term]=e.target.value;render()}
+ else if(d.sign){state.signatures[d.sign]??={};state.signatures[d.sign][d.signKey]=e.target.value;render()}
+});
+document.addEventListener('click',e=>{if(e.target.id==='poAddStatement'){state.extraTerms??=[];state.extraTerms.push({title:'',body:'',enabled:true});draw();return}if(e.target.dataset.poExtraRemove!==undefined){state.extraTerms.splice(Number(e.target.dataset.poExtraRemove),1);draw()}});
+$('newBtn').onclick=newPo;$('saveBtn').onclick=save;$('printBtn').onclick=()=>window.printDoc();
+async function start(){
+ try{
+  const response=await fetch('./templates/po/index.json',{cache:'no-cache'});
+  if(!response.ok)throw Error('PO template catalog unavailable');
+  manifest=await response.json();
+  $('poTemplate').innerHTML=manifest.templates.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.title)+'</option>').join('');
+  await chooseTemplate(params.get('preset')||manifest.templates[0].id,true);
+  loaded=true;posted('height',{height:document.documentElement.scrollHeight+8});
+ }catch(e){notify('Could not load PO templates: '+e.message)}
+}
+onAuthStateChanged(auth,async u=>{
+ user=u;if(!u){notify('Sign in from DocSystem first');return}
+ try{const profileSnap=await getDoc(doc(db,'users',u.uid));role=profileSnap.data()?.role||'user'}catch{}
+ try{const snap=await getDoc(doc(db,'appSettings','main'));const settings=snap.data()?.settings||{};globalPlaceholders=settings.globalPlaceholders&&typeof settings.globalPlaceholders==='object'?settings.globalPlaceholders:{};profiles=Array.isArray(settings.profiles)?settings.profiles.filter(p=>p?.company):[];profile=profiles.find(p=>p.id===settings.activeProfileId)||profiles[0]||null;
+ if(!loaded)await start();
+ if(docId)await loadSaved(docId);else if(params.get('copyId'))await openSavedPresetCopy();else{state.fields.currency=business().defaultCurrency||'MYR';draw();notify('PO ready');ready()}
+ }catch(e){notify('Business profile loading failed: '+e.message)}
+});
+if(typeof ResizeObserver!=='undefined'){
+ const resize=new ResizeObserver(()=>{fitPreview();posted('height',{height:document.documentElement.scrollHeight+8})});
+ resize.observe(document.querySelector('.workspace'));
+}
+</script></body></html>
