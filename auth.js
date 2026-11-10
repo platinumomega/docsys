@@ -4,13 +4,13 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
-  measurementId: ""
+  "apiKey": "AIzaSyDDIPLpHgmy0psttnQnbemwiyNt0XWGmCc",
+  "authDomain": "docsys-a71f0.firebaseapp.com",
+  "projectId": "docsys-a71f0",
+  "storageBucket": "docsys-a71f0.firebasestorage.app",
+  "messagingSenderId": "579151020444",
+  "appId": "1:579151020444:web:c467d25c01bd612cf40859",
+  "measurementId": "G-QRB11ZM90K"
 };
 if (!firebaseConfig.apiKey || !firebaseConfig.projectId || !firebaseConfig.appId) {
   const message = document.getElementById("authMessage");
