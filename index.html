@@ -458,7 +458,7 @@ function newDoc(type){
   const nos={'Quotation':'','Invoice':'','Purchase Order':'','Delivery Order':'','Receiving Note':'','Payment Voucher':'','Receipt Voucher':'','Credit Note':'','Debit Note':'','Journal Voucher':''};
   if('docno'in fv)fv.docno=nos[type]||'';
   if('orderno'in fv)fv.orderno='';
-  if('terms'in fv)fv.terms=type==='Quotation'?'30 Days Validity':'30 Days';
+  if('terms'in fv)fv.terms='';
   if('ref'in fv)fv.ref=type==='Receiving Note'?'':type==='Credit Note'||type==='Debit Note'?'':'';
   if('paymentref'in fv)fv.paymentref='';
   if('reason'in fv)fv.reason='';
@@ -626,7 +626,7 @@ if(t.family==='journal'){
   return '<table class="totals"><tr><td>Total Debit</td><td>'+amount(debit)+'</td></tr><tr><td>Total Credit</td><td>'+amount(credit)+'</td></tr><tr class="grand"><td>'+(Math.abs(diff)<0.000001?'Balanced':'Difference')+'</td><td>'+(Math.abs(diff)<0.000001?'✓':amount(Math.abs(diff)))+'</td></tr></table>'
 }
 let b=baseTotal(),running=b,rows=[];(t.adjustments||[]).forEach(a=>{let v=Number(a.value||0),amt=a.mode==='fixed'?v:running*(v/100);if(a.operation==='subtract'){running-=amt}else{running+=amt}let label=esc(a.label||'Adjustment')+(a.mode==='percent'?' ('+v+'%)':'');rows.push('<tr><td>'+label+'</td><td>'+(a.operation==='subtract'?'-':'+')+amount(amt)+'</td></tr>')});if(!t.subtotal&&rows.length===0)return'';let s='<table class="totals">';if(t.subtotal)s+='<tr><td>Subtotal</td><td>'+amount(b)+'</td></tr>';s+=rows.join('');return s+'<tr class="grand"><td>Total</td><td>'+amount(running)+'</td></tr></table>'}
-function sigs(){let t=tpl();if(!(t.sigEnabled||[]).some(Boolean))return'';let intro=t.family==='movement'?'Please receive the following goods in good order and conditions.<br>Goods sold are not returnable.':'';return '<div class="ack">'+intro+'<div class="siggrid">'+t.sigs.map((s,i)=>t.sigEnabled[i]?'<div class="sig"><div class="sigtitle">'+esc(s)+'</div><div class="sigline">'+esc((t.sigNames||[])[i]||'Signature / Name')+'</div></div>':'<div class="sig sigempty" aria-hidden="true"></div>').join('')+'</div></div>'}
+function sigs(){let t=tpl();if(!(t.sigEnabled||[]).some(Boolean))return'';return '<div class="ack"><div class="siggrid">'+t.sigs.map((s,i)=>t.sigEnabled[i]?'<div class="sig"><div class="sigtitle">'+esc(s)+'</div><div class="sigline">'+esc((t.sigNames||[])[i]||'Signature / Name')+'</div></div>':'<div class="sig sigempty" aria-hidden="true"></div>').join('')+'</div></div>'}
 function footer(p,n){return '<div class="footer">'+layoutHtml('footer',p,n)+'</div>'}
 let paginationBusy=false;
 function renderPreview(){
