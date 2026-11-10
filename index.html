@@ -217,7 +217,7 @@ body.preset-current header #newBtn,body.preset-current header #saveBtn,body.pres
 <div class="card"><h2>Notes / Delivery Info</h2><textarea id="notes" rows="4"></textarea></div></div>
 </section>
 <section id="company" class="panel">
-<div class="card"><div class="between"><h2>Business Profiles</h2><span class="muted">Select the business to manage or delete an unwanted profile.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button id="deleteProfile" class="danger small">Delete Selected Business</button></div></div></div>
+<div class="card"><div class="between"><h2>Business Profile</h2><span class="muted">One company per DocSys. Create or replace the business identity here.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button type="button" id="createBusiness" class="small primary">Create Business</button><button type="button" id="deleteProfile" class="danger small">Delete Business</button></div></div><p id="businessSetupStatus" class="muted">Use Create Business to enter your company name. Existing saved documents are not deleted.</p></div>
 <div class="card"><h2>Currencies</h2><p class="muted">Set allowed currencies for this business. The default is selected for new documents; saved documents retain their selected currency.</p><div id="currencySettings"></div><div class="row"><label>Currency code (e.g. USD)<input id="newCurrencyCode" maxlength="3" placeholder="USD"></label><label>Display symbol (e.g. US$)<input id="newCurrencySymbol" placeholder="US$"></label></div><p><button type="button" id="addCurrency" class="small">+ Add Currency</button></p></div>
 <div class="card"><h2>Business Identity</h2><p class="muted">Shared company details used by all custom and preset documents. Enter the company name once here.</p><div class="row"><label>Company Name<input id="companyName"></label><label>Logo<input id="logoFile" type="file" accept="image/*"></label></div><div style="margin-top:8px"><button id="removeLogo" class="small">Remove Logo</button></div></div>
 
@@ -313,7 +313,7 @@ body.preset-current header #newBtn,body.preset-current header #saveBtn,body.pres
 </main>
 <script>
 const KEY='docfac.settings.v1',clone=o=>JSON.parse(JSON.stringify(o)),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),money=n=>Number(n||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),uid=()=>Math.random().toString(36).slice(2,8);
-const defaults={fonts:{header:'Arial, sans-serif',title:'Arial, sans-serif',body:'Arial, sans-serif',items:'Arial, sans-serif',footer:'Arial, sans-serif'},company:{name:'Sample Company Sdn Bhd',logo:'',fields:[{label:'Registration No.',value:'SAMPLE0001',place:'header',layout:'half'},{label:'Address',value:'Sample Address Line 1\nSample Address Line 2\nSample Address Line 3',place:'header',layout:'full'},{label:'Tel',value:'SAMPLE0002',place:'header',layout:'half'},{label:'Email',value:'sample@noagrp.github',place:'header',layout:'half'}],footer:''},templates:{
+const defaults={fonts:{header:'Arial, sans-serif',title:'Arial, sans-serif',body:'Arial, sans-serif',items:'Arial, sans-serif',footer:'Arial, sans-serif'},company:{name:'',logo:'',fields:[{label:'Registration No.',value:'',place:'header',layout:'half'},{label:'Address',value:'',place:'header',layout:'full'},{label:'Tel',value:'',place:'header',layout:'half'},{label:'Email',value:'',place:'header',layout:'half'}],footer:''},templates:{
 'Quotation':{family:'commercial',title:'QUOTATION',fields:[['customer','Customer','multiline','half'],['address','Address','multiline','full'],['docno','Quotation No.','text','half'],['date','Date','text','half'],['terms','Validity / Terms','text','half']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
 'Invoice':{family:'commercial',title:'INVOICE',fields:[['customer','Bill To','multiline','half'],['address','Address','multiline','full'],['docno','Invoice No.','text','half'],['date','Date','text','half'],['terms','Terms','text','half']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
 'Purchase Order':{family:'commercial',title:'PURCHASE ORDER',fields:[['supplier','Supplier','multiline','half'],['address','Address','multiline','full'],['docno','PO No.','text','half'],['date','Date','text','half'],['ref','Reference','text','half']],columns:[['item','Item','number',8],['description','Description','text',42],['qty','Qty','number',10],['unit_price','Unit Price','number',18],['amount','Amount','formula',22]],subtotal:true,sig:false,sigEnabled:[false,false,false],sigs:['','',''],sigNames:['','',''],adjustments:[]},
@@ -344,7 +344,7 @@ function migrateSettings(s){
 }
 settings=migrateSettings(settings);
 function profile(){return settings.profiles.find(p=>p.id===settings.activeProfileId)||settings.profiles[0]}
-function profileLabel(p){return (p&&p.company&&p.company.name)||'Untitled Business'}
+function profileLabel(p){return (p&&p.company&&p.company.name)||'No Business Configured'}
 function nextProfileId(){let n=1,used=new Set(settings.profiles.map(p=>p.id));while(used.has('business_'+String(n).padStart(3,'0')))n++;return'business_'+String(n).padStart(3,'0')}
 const CORE_KEYS=new Set(['customer','supplier','party','address','docno','date','orderno','terms','ref','paymentref','reason','account']);function normalizeTemplateFields(t,values){let extra=1,map={};t.fields=(t.fields||[]).map(f=>{let old=String(f[0]||''),key=CORE_KEYS.has(old)?old:'';if(!key){do{key='extra_'+String(extra++).padStart(3,'0')}while((t.fields||[]).some(x=>x[0]===key))}map[old]=key;return[key,f[1],key==='address'?'multiline':(f[2]||'text'),'full']});if(values){let nv={};Object.entries(values).forEach(([k,v])=>nv[map[k]||k]=v);Object.keys(values).forEach(k=>delete values[k]);Object.assign(values,nv)}if(!Array.isArray(t.sigEnabled))t.sigEnabled=[!!t.sig,!!t.sig,!!t.sig];if(!Array.isArray(t.sigNames))t.sigNames=['','',''];if(!Array.isArray(t.adjustments)){t.adjustments=[];if(t.discount)t.adjustments.push({label:'Discount',operation:'subtract',mode:'percent',value:Number(t.discountRate||0)});if(t.tax)t.adjustments.push({label:t.taxLabel||'Tax',operation:'add',mode:'percent',value:Number(t.taxRate||0)});}return t}
 const DEFAULT_CURRENCIES=[{code:'MYR',symbol:'RM'}];
@@ -372,7 +372,7 @@ function renderDocCurrency(){
 function normalizeProfiles(){
   settings.profiles.forEach(p=>{
     p.company=p.company||clone(defaults.company);normalizeCurrencies(p.company);p.company.fields=(p.company.fields||[]).map(f=>Object.assign({layout:String(f.label||'').trim().toLowerCase()==='address'?'full':'half'},f));
-    if(p.company.name==='SIN MATU SHIPYARD SDN. BHD.')p.company=clone(defaults.company);
+    // Preserve existing company information; never silently replace a configured business.
     p.fonts=Object.assign({},defaults.fonts,p.fonts||{});
     p.templates=Object.assign(clone(defaults.templates),p.templates||{});
     Object.values(p.templates).forEach(t=>normalizeTemplateFields(t));
@@ -416,21 +416,52 @@ function makeProfile(copyCurrent){
   if(frame)frame.removeAttribute('src');
   refresh()
 }
+// Platinum Omega is single-company: configure or clear the one profile in place.
+function setupBusiness(){
+ const current=profile();
+ const existingName=(current.company?.name||'').trim();
+ const name=prompt('Enter your business name',existingName==='Sample Company Sdn Bhd'?'':existingName);
+ if(name===null)return;
+ const clean=name.trim();
+ if(!clean){alert('Please enter a business name.');return}
+ if(existingName && existingName!=='Sample Company Sdn Bhd' && existingName!==clean &&
+    !confirm('Replace the current business name? This changes the company identity used by future documents and previews. Saved documents remain in Firestore.'))return;
+ if(existingName==='Sample Company Sdn Bhd'){
+   const fresh=clone(defaults.company);
+   current.company={...fresh,name:clean};
+ }else{
+   current.company.name=clean;
+ }
+ normalizeCurrencies(current.company);
+ window.DocSystemCloud?.changedDocument();
+ newDoc(Object.keys(current.templates)[0]);
+ refresh();
+}
+function clearBusiness(){
+ const existing=(profile().company?.name||'').trim();
+ if(!confirm('Clear the business profile settings'+(existing?' for "'+existing+'"':'')+'? Saved documents in Firestore will NOT be deleted.'))return;
+ const p=profile();
+ p.company=clone(defaults.company);
+ normalizeCurrencies(p.company);
+ window.DocSystemCloud?.changedDocument();
+ newDoc(Object.keys(p.templates)[0]);
+ refresh();
+}
 function newDoc(type){
   let t=profile().templates[type],fv={};
   t.fields.forEach(f=>fv[f[0]]='');
   if('date'in fv)fv.date=new Date().toISOString().slice(0,10);
-  if('customer'in fv)fv.customer='Sample Customer Sdn Bhd';
-  if('supplier'in fv)fv.supplier='Sample Supplier Sdn Bhd';
-  if('party'in fv)fv.party=type==='Payment Voucher'?'Sample Payee':type==='Receipt Voucher'?'Sample Payer':'Sample Party';
-  if('address'in fv)fv.address='Sample Address Line 1\nSample Address Line 2\nSample Address Line 3';
-  const nos={'Quotation':'SAMPLE-QUO-0001','Invoice':'SAMPLE-INV-0001','Purchase Order':'SAMPLE-PO-0001','Delivery Order':'SAMPLE-DO-0001','Receiving Note':'SAMPLE-GRN-0001','Payment Voucher':'SAMPLE-PV-0001','Receipt Voucher':'SAMPLE-RV-0001','Credit Note':'SAMPLE-CN-0001','Debit Note':'SAMPLE-DN-0001','Journal Voucher':'SAMPLE-JV-0001'};
-  if('docno'in fv)fv.docno=nos[type]||'SAMPLE-0001';
-  if('orderno'in fv)fv.orderno='SAMPLE-PO-0001';
+  if('customer'in fv)fv.customer='';
+  if('supplier'in fv)fv.supplier='';
+  if('party'in fv)fv.party='';
+  if('address'in fv)fv.address='';
+  const nos={'Quotation':'','Invoice':'','Purchase Order':'','Delivery Order':'','Receiving Note':'','Payment Voucher':'','Receipt Voucher':'','Credit Note':'','Debit Note':'','Journal Voucher':''};
+  if('docno'in fv)fv.docno=nos[type]||'';
+  if('orderno'in fv)fv.orderno='';
   if('terms'in fv)fv.terms=type==='Quotation'?'30 Days Validity':'30 Days';
-  if('ref'in fv)fv.ref=type==='Receiving Note'?'SAMPLE-PO-0001':type==='Credit Note'||type==='Debit Note'?'SAMPLE-INV-0001':'SAMPLE-REF-0001';
-  if('paymentref'in fv)fv.paymentref='SAMPLE-BANK-REF';
-  if('reason'in fv)fv.reason='Sample reason / reference';
+  if('ref'in fv)fv.ref=type==='Receiving Note'?'':type==='Credit Note'||type==='Debit Note'?'':'';
+  if('paymentref'in fv)fv.paymentref='';
+  if('reason'in fv)fv.reason='';
   doc={kind:'DocFacDocument',version:1,type,title:t.title,fieldValues:fv,items:[],notes:'',currency:profile().company.defaultCurrency,currencySymbol:profile().company.currencies.find(x=>x.code===profile().company.defaultCurrency)?.symbol||'RM'};
   doc.items.push(blankRow());
   let r=doc.items[0];
@@ -963,17 +994,8 @@ if(e.target.dataset.del!==undefined){doc.items.splice(+e.target.dataset.del,1);i
 
 
 
-if(e.target.id==='deleteProfile'){
-  if(settings.profiles.length===1){alert('At least one business profile is required.');return}
-  const selected=profile();
-  if(!confirm('Delete business profile "'+profileLabel(selected)+'" and its company/template settings? Saved documents will not be deleted.'))return;
-  const i=settings.profiles.findIndex(p=>p.id===selected.id);
-  settings.profiles.splice(i,1);
-  settings.activeProfileId=settings.profiles[Math.max(0,i-1)].id;
-  newDoc(Object.keys(profile().templates)[0]);
-  const frame=document.getElementById('presetWorkspaceFrame');if(frame)frame.removeAttribute('src');
-  refresh();
- }
+if(e.target.id==='createBusiness'){setupBusiness();return;}
+ if(e.target.id==='deleteProfile'){clearBusiness();return;}
  if(e.target.id==='addCompanyField'){profile().company.fields.push({label:'New Field',value:'',place:'header',layout:'half'});refresh()}
 if(e.target.dataset.cfup!==undefined){let i=+e.target.dataset.cfup,a=profile().company.fields;if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];refresh()}}
 if(e.target.dataset.cfdown!==undefined){let i=+e.target.dataset.cfdown,a=profile().company.fields;if(i<a.length-1){[a[i],a[i+1]]=[a[i+1],a[i]];refresh()}}
