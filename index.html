@@ -371,7 +371,7 @@ function renderDocCurrency(){
 }
 function normalizeProfiles(){
   settings.profiles.forEach(p=>{
-    p.company=p.company||clone(defaults.company);normalizeCurrencies(p.company);p.company.fields=(p.company.fields||[]).map(f=>Object.assign({layout:String(f.label||'').trim().toLowerCase()==='address'?'full':'half'},f));
+    p.company=p.company||clone(defaults.company);if(p.company.name==='Sample Company Sdn Bhd' && (p.company.fields||[]).some(f=>String(f.value||'').includes('SAMPLE')||String(f.value||'').includes('Sample Address')))p.company=clone(defaults.company);normalizeCurrencies(p.company);p.company.fields=(p.company.fields||[]).map(f=>Object.assign({layout:String(f.label||'').trim().toLowerCase()==='address'?'full':'half'},f));
     // Preserve existing company information; never silently replace a configured business.
     p.fonts=Object.assign({},defaults.fonts,p.fonts||{});
     p.templates=Object.assign(clone(defaults.templates),p.templates||{});
