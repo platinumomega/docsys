@@ -1,6 +1,6 @@
 import * as cloud from "./cloud.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -24,6 +24,7 @@ const screen = document.getElementById("authGate");
 const message = document.getElementById("authMessage");
 const form = document.getElementById("authForm");
 const submit = document.getElementById("authSubmit");
+const googleButton = document.getElementById("authGoogle");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const account = document.getElementById("authAccount");
@@ -54,6 +55,30 @@ form.addEventListener("submit", async event => {
     console.error("DocSystem sign-in failed:", error);
     message.textContent = "Sign-in failed: " + (error.code || error.message);
   } finally {
+    submit.disabled = false;
+  }
+});
+// Google sign-in uses the same Firestore users/{uid} approval and role checks.
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({prompt: "select_account"});
+googleButton.addEventListener("click", async () => {
+  googleButton.disabled = true;
+  submit.disabled = true;
+  message.textContent = "Signing in with Google...";
+  try {
+    await signInWithPopup(auth, googleProvider);
+  } catch (error) {
+    console.error("DocSystem Google sign-in failed:", error);
+    const help = {
+      "auth/popup-blocked": "Allow pop-ups for this website and try again.",
+      "auth/popup-closed-by-user": "Google sign-in was cancelled.",
+      "auth/unauthorized-domain": "Add platinumomega.github.io under Firebase Authentication authorized domains.",
+      "auth/operation-not-allowed": "Enable Google in Firebase Authentication > Sign-in method.",
+      "auth/account-exists-with-different-credential": "This email already has another sign-in method. Sign in with the existing method first; an administrator can help link Google sign-in."
+    };
+    message.textContent = help[error.code] || ("Google sign-in failed: " + (error.code || error.message));
+  } finally {
+    googleButton.disabled = false;
     submit.disabled = false;
   }
 });
