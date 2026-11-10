@@ -305,7 +305,7 @@ body.preset-current header #newBtn,body.preset-current header #saveBtn,body.pres
 <div class="card"><h2>Fonts</h2><div class="muted" style="margin-bottom:8px">Choose common system fonts for different document sections. These are also used when printing to PDF.</div><div class="row3"><label>Company Header<select id="fontHeader"></select></label><label>Document Title<select id="fontTitle"></select></label><label>Details / Body<select id="fontBody"></select></label><label>Item Table<select id="fontItems"></select></label><label>Footer<select id="fontFooter"></select></label></div></div>
 <div class="card"><div class="between"><h2>Column Order</h2><span class="muted">Drag to rearrange</span></div><div class="muted" style="margin-bottom:8px">The order here is used in the editor, preview and PDF.</div><div id="columnOrder" class="draglist"></div></div>
 <div class="card"><div class="between"><h2>Totals</h2><label class="check"><input id="subtotalOn" type="checkbox"> Show subtotal</label></div><div class="muted">Add as many additions or deductions as needed. Percentage adjustments are calculated in order from the running balance.</div><div class="presetbar"><button type="button" class="small" data-totalpreset="tax">+ Tax</button><button type="button" class="small" data-totalpreset="charge">+ Charge</button><button type="button" class="small" data-totalpreset="discount">+ Discount</button><button type="button" class="small" id="addTotalLine">+ Custom</button></div><div id="totalAdjustments" class="stack"></div></div>
-<div class="card"><div class="between" style="flex-wrap:wrap"><h2>Signature / Acknowledgement</h2><button type="button" class="small" id="applySignaturesToAll">Apply Signatures to All Custom Templates</button></div><div class="muted" style="margin-bottom:8px">Signature blocks are configured separately for each document type. Enable the blocks below, or use Apply Signatures to All to copy these settings to other custom document types.</div><div class="row3"><div><label class="check"><input id="sig1On" type="checkbox"> Show Block 1</label><label>Block 1<textarea id="sig1" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName1" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div><div><label class="check"><input id="sig2On" type="checkbox"> Show Block 2</label><label>Block 2<textarea id="sig2" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName2" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div><div><label class="check"><input id="sig3On" type="checkbox"> Show Block 3</label><label>Block 3<textarea id="sig3" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName3" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div></div></div>
+<div class="card"><h2>Signature / Acknowledgement</h2><div class="muted" style="margin-bottom:8px">Configure signatures for this document type only. Leave all blocks unchecked if no signature is required.</div><div class="row3"><div><label class="check"><input id="sig1On" type="checkbox"> Show Block 1</label><label>Block 1<textarea id="sig1" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName1" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div><div><label class="check"><input id="sig2On" type="checkbox"> Show Block 2</label><label>Block 2<textarea id="sig2" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName2" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div><div><label class="check"><input id="sig3On" type="checkbox"> Show Block 3</label><label>Block 3<textarea id="sig3" rows="3"></textarea></label><label style="margin-top:8px">Text below line (optional)<textarea id="sigName3" rows="2" placeholder="Leave blank for Signature / Name"></textarea></label></div></div></div>
 </section>
 <section id="backup" class="panel"><div class="notice">Business profiles and document templates are saved in Firestore for authorized users. JSON import/export is optional for migration and backups.</div><div class="card"><h2>Settings Backup</h2><div class="actions"><label class="filebtn">Open Custom Document JSON<input id="openFile" type="file" accept=".json,application/json"></label><button id="exportSettings">Export Settings</button><label class="filebtn">Import Settings<input id="importSettings" type="file" accept=".json,application/json"></label><button id="resetBtn" class="danger">Reset App</button></div></div></section>
 </section>
@@ -997,28 +997,6 @@ if(e.target.dataset.del!==undefined){doc.items.splice(+e.target.dataset.del,1);i
 
 if(e.target.id==='createBusiness'){setupBusiness();return;}
  if(e.target.id==='deleteProfile'){clearBusiness();return;}
- if(e.target.id==='applySignaturesToAll'){
-  const source=tpl();
-  const targets=Object.entries(profile().templates).filter(([type])=>type!==doc.type);
-  if(!targets.length){alert('There are no other custom document types.');return}
-  if(!confirm('Copy the signature block settings from '+doc.type+' to all '+targets.length+' other custom document types? Existing signature settings in those templates will be replaced.'))return;
-  const settingsToCopy={
-   sigEnabled:[...source.sigEnabled],
-   sigs:[...source.sigs],
-   sigNames:[...source.sigNames],
-   sig:source.sigEnabled.some(Boolean)
-  };
-  for(const [,target] of targets){
-   target.sigEnabled=[...settingsToCopy.sigEnabled];
-   target.sigs=[...settingsToCopy.sigs];
-   target.sigNames=[...settingsToCopy.sigNames];
-   target.sig=settingsToCopy.sig;
-  }
-  saveSettings();
-  renderPreview();
-  alert('Signature settings copied to all '+targets.length+' other custom document types.');
-  return;
- }
  if(e.target.id==='addCompanyField'){profile().company.fields.push({label:'New Field',value:'',place:'header',layout:'half'});refresh()}
 if(e.target.dataset.cfup!==undefined){let i=+e.target.dataset.cfup,a=profile().company.fields;if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];refresh()}}
 if(e.target.dataset.cfdown!==undefined){let i=+e.target.dataset.cfdown,a=profile().company.fields;if(i<a.length-1){[a[i],a[i+1]]=[a[i+1],a[i]];refresh()}}
