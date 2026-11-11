@@ -59,6 +59,11 @@ export function settingsChanged(){
   },900);
 }
 export function changedDocument(){currentId=null;}
+export async function businessHasDocuments(profileId){
+ if(!user||!profileId)return null;
+ try {const result=await getDocs(query(collection(db,"documents"),where("profileId","==",profileId),limit(1)));return !result.empty;}
+ catch(error){notify("Business check failed: "+error.message);return null}
+}
 export async function saveDocument(){
   if(!user)return;
   const payload=bridge().getDocument();
@@ -75,6 +80,7 @@ export async function saveDocument(){
       }
     }
     const prior=await getDoc(savedDoc);
+    if(prior.exists() && prior.data().profileId!==payload.profileId){alert('Cannot save a document under another business. Open it under its original business.');return}
     await setDoc(savedDoc,{...encode(payload),number:num,documentType:d.type,date:date||new Date().toISOString().slice(0,10),profileId:payload.profileId,updatedAt:serverTimestamp(),updatedBy:user.uid,...(!prior.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})},{merge:true});
     currentId=savedDoc.id;notify("Document saved online: "+num);await loadDocs();
   }catch(e){notify("Save failed: "+e.message);alert("Could not save document: "+e.message)}
@@ -82,23 +88,26 @@ export async function saveDocument(){
 export async function loadDocs(){
   if(!user)return;
   const month=el("cloudMonth").value;
-  const q=month?query(collection(db,"documents"),where("date",">=",month+"-01"),where("date","<=",month+"-31"),orderBy("date","desc"),limit(150)):query(collection(db,"documents"),orderBy("date","desc"),limit(150));
+  const businessId=bridge()?.getSettings()?.activeProfileId;
+  if(!businessId){el("cloudList").innerHTML="<p>Select a business to view documents.</p>";return}
+  const q=query(collection(db,"documents"),where("profileId","==",businessId),limit(500));
   try{
     const snaps=await getDocs(q);
+    const records=snaps.docs.filter(s=>!month||String(s.data().date||"").slice(0,7)===month).sort((a,b)=>String(b.data().date||"").localeCompare(String(a.data().date||""))).slice(0,150);
     const creators=new Map();
-    for(const s of snaps.docs){
+    for(const s of records){
       const d=s.data(),id=d.createdBy;
       if(!d.creatorRole && id && id!==user.uid && !creators.has(id)){
         try{const p=await getDoc(doc(db,"users",id));creators.set(id,p.exists()?p.data().role:null)}
         catch{creators.set(id,null)}
       }
     }
-    el("cloudList").innerHTML=snaps.empty?"<p>No documents found.</p>":snaps.docs.map(s=>{
+    el("cloudList").innerHTML=!records.length?"<p>No documents for this business and period.</p>":records.map(s=>{
       const d=s.data(),ownerRole=d.creatorRole||creators.get(d.createdBy);
       const canDelete=canAdmin()||role==="manager"||d.createdBy===user.uid;
       return '<div class="cloud-entry"><div><b>'+escape(d.number||"Untitled")+'</b><div class="muted">'+escape(d.documentType)+" · "+escape(d.date)+" · "+escape(d.profileName)+'</div></div><div class="actions"><button data-open-doc="'+escape(s.id)+'">Open</button><button data-copy-doc="'+escape(s.id)+'">Duplicate</button>'+(canDelete?'<button class="danger" data-delete-doc="'+escape(s.id)+'">Delete</button>':'')+'</div></div>';
     }).join("");
-    notify("Online · "+snaps.size+" documents loaded");
+    notify("Online · "+records.length+" documents loaded for selected business");
   }catch(e){notify("Document load failed: "+e.message)}
 }
 export async function deleteDocument(id){
@@ -107,6 +116,7 @@ export async function deleteDocument(id){
     const ref=doc(db,"documents",id),snap=await getDoc(ref);
     if(!snap.exists())return alert("Document no longer exists.");
     const record=snap.data();
+    if(record.profileId!==bridge().getSettings().activeProfileId){alert("Select the document\u0027s business before deleting it.");return}
     if(!canAdmin()&&role!=="manager"&&record.createdBy!==user.uid){
       alert("Only the document creator, a manager, or a superadmin can delete this document.");return;
     }
@@ -124,6 +134,7 @@ export async function openDocument(id,duplicate=false){
   try{
     const s=await getDoc(doc(db,"documents",id));
     if(!s.exists())throw Error("Document not found");
+    if(s.data().profileId!==bridge().getSettings().activeProfileId)throw Error("This document belongs to another business.");
     if(s.data().templateSource==="preset"){
       const data=s.data(),isPo=data.templateFamily==='purchase-order'||data.documentType==='Purchase Order',isDo=data.templateFamily==='delivery-ticket'||data.documentType==='Delivery Ticket',isReturn=data.templateFamily==='returning-ticket'||data.documentType==='Returning Ticket',isInvoice=data.templateFamily==='invoice'||data.documentType==='Invoice';
       const preset=encodeURIComponent(data.templateId||((isInvoice||isReturn||isDo)?'standard':isPo?'purchase-credit':'rental3'));
