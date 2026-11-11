@@ -422,7 +422,8 @@ function saveSettings(){
 }
 function tpl(){return profile().templates[doc.type]}
 function blankRow(){let r={};tpl().columns.forEach(c=>r[c[0]]=c[0]==='item'?String(doc?.items?.length+1||1):'');return r}
-function switchProfile(id,preferredType){
+async function switchProfile(id,preferredType){
+  if(!(await confirmDocumentChange())){renderSelectors();return;}
   if(!settings.profiles.some(p=>p.id===id))return;
   settings.activeProfileId=id;
   let types=Object.keys(profile().templates),type=profile().templates[preferredType]?preferredType:types[0];
@@ -472,6 +473,18 @@ const PLATINUM_INVOICE_TERMS=`NOTES:
   - BANK: MAYBANK BANKING BERHAD
   - ACC NO.: 5-15120-00022-5
   - ACC CURRENCY: MYR`;
+let cleanDocSnapshot=null;
+function documentSnapshot(){return JSON.stringify(doc)}
+function markDocumentSaved(){cleanDocSnapshot=documentSnapshot()}
+function hasUnsavedDocument(){return cleanDocSnapshot!==null&&documentSnapshot()!==cleanDocSnapshot}
+async function confirmDocumentChange(){
+ if(!hasUnsavedDocument())return true;
+ const choice=prompt('Unsaved changes. Type S to Save Online, D to Discard changes, or C to Cancel.','S');
+ if(choice===null||choice.trim().toUpperCase()==='C')return false;
+ if(choice.trim().toUpperCase()==='S')return (await window.DocSystemCloud?.saveDocument())===true;
+ return choice.trim().toUpperCase()==='D';
+}
+window.addEventListener('beforeunload',event=>{if(hasUnsavedDocument()){event.preventDefault();event.returnValue=''}});
 function newDoc(type){
   let t=profile().templates[type],fv={};
   t.fields.forEach(f=>fv[f[0]]='');
@@ -496,6 +509,7 @@ function newDoc(type){
   if('unit_price'in r)r.unit_price='1250';
   if(type==='Payment Voucher'||type==='Receipt Voucher')r.amount='2500';
   if(type==='Journal Voucher'){r.account='SAMPLE-1000';r.description='Sample journal entry';r.debit='1000';r.credit=''}
+  markDocumentSaved();
 }
 newDoc('Delivery Order');
 function currencyNumber(value){return Number(String(value??'').replace(/,/g,'').trim()||0)}
@@ -798,7 +812,7 @@ function workspaceAction(action){
    document.getElementById('workspaceStatus').textContent='Preset editor not ready to print';return;
   }
  }else{
-  if(action==='new'){if(confirm('Start a new custom document?')){newDoc(doc.type);window.DocSystemCloud?.changedDocument();refresh()}return}
+  if(action==='new'){void confirmDocumentChange().then(ok=>{if(ok){newDoc(doc.type);window.DocSystemCloud?.changedDocument();refresh()}});return}
   if(action==='save')return window.DocSystemCloud?.saveDocument();
   if(action==='print'){renderPreview();window.print();return}
  }
@@ -909,7 +923,7 @@ window.addEventListener('message',e=>{
   document.getElementById('presetWorkspaceFrame').style.height=Math.max(560,Math.min(20000,Math.ceil(e.data.height)))+'px';
  }
 });
-document.addEventListener('click',e=>{
+document.addEventListener('click',async e=>{
  const presetInline=e.target.closest('[data-preset-inline]');
  if(presetInline){
   const [slot,kind]=presetInline.dataset.presetInline.split(':');
@@ -973,7 +987,7 @@ document.addEventListener('click',e=>{
   return;
  }
  const customDoc=e.target.closest('[data-open-custom-doc]');
- if(customDoc){const type=customDoc.dataset.openCustomDoc;if(profile().templates[type]){newDoc(type);setWorkspaceSource('custom');showDocPage('create');}return}
+ if(customDoc){const type=customDoc.dataset.openCustomDoc;if(profile().templates[type]){if(!(await confirmDocumentChange()))return;newDoc(type);window.DocSystemCloud?.changedDocument();setWorkspaceSource('custom');showDocPage('create');}return}
  const customTemplate=e.target.closest('[data-open-custom-template]');
  if(customTemplate){showDocPage('template');return}
  const sub=e.target.closest('[data-subpage]');
@@ -1122,7 +1136,7 @@ document.addEventListener('change',async e=>{if(e.target.id==='presetHeaderProfi
  }
  if(e.target.id==='docCurrency'){doc.currency=e.target.value;doc.currencySymbol=profile().company.currencies.find(x=>x.code===doc.currency)?.symbol||doc.currency;renderPreview();return}
 if(e.target.id==='businessProfile'&&activeWorkspacePreset()){syncPresetBusiness();return}
- if(['businessProfile','companyProfile','tplBusinessProfile'].includes(e.target.id)){switchProfile(e.target.value,doc.type);return}if(e.target.dataset.dftype!==undefined){tpl().fields[+e.target.dataset.dftype][2]=e.target.value;saveSettings();renderCreate();renderPreview()}if(['fontHeader','fontTitle','fontBody','fontItems','fontFooter'].includes(e.target.id)){profile().fonts.header=fontHeader.value;profile().fonts.title=fontTitle.value;profile().fonts.body=fontBody.value;profile().fonts.items=fontItems.value;profile().fonts.footer=fontFooter.value;saveSettings();renderPreview()}if(e.target.id==='docType'||e.target.id==='tplType'){newDoc(e.target.value);window.DocSystemCloud?.changedDocument();refresh()}if(e.target.id==='logoFile'&&e.target.files[0]){
+ if(['businessProfile','companyProfile','tplBusinessProfile'].includes(e.target.id)){await switchProfile(e.target.value,doc.type);return}if(e.target.dataset.dftype!==undefined){tpl().fields[+e.target.dataset.dftype][2]=e.target.value;saveSettings();renderCreate();renderPreview()}if(['fontHeader','fontTitle','fontBody','fontItems','fontFooter'].includes(e.target.id)){profile().fonts.header=fontHeader.value;profile().fonts.title=fontTitle.value;profile().fonts.body=fontBody.value;profile().fonts.items=fontItems.value;profile().fonts.footer=fontFooter.value;saveSettings();renderPreview()}if(e.target.id==='docType'||e.target.id==='tplType'){if(!(await confirmDocumentChange())){renderSelectors();return;}newDoc(e.target.value);window.DocSystemCloud?.changedDocument();refresh()}if(e.target.id==='logoFile'&&e.target.files[0]){
  const file=e.target.files[0],businessId=settings.activeProfileId,status=document.getElementById('logoSyncStatus');
  const input=e.target;input.disabled=true;if(status)status.textContent='Preparing logo for online sync…';
  try{
@@ -1174,6 +1188,9 @@ window.DocSystemBridge={
   }
  },
  setSettings:s=>{settings=migrateSettings(clone(s));normalizeProfiles();newDoc(Object.keys(profile().templates)[0]);refresh();window.DocSystemCloud?.loadDocs()},
+ markDocumentSaved,
+ confirmDocumentChange,
+ setSavedDocumentNumber:number=>{doc.fieldValues.docno=number;renderCreate();renderPreview()},
  getDocument:()=>({kind:'DocFacDocument',profileId:settings.activeProfileId,profileName:profileLabel(profile()),doc:clone(doc),company:clone(profile().company),template:clone(tpl())}),
  setDocument:p=>{
    let target=settings.profiles.find(x=>x.id===p.profileId);
@@ -1181,7 +1198,7 @@ window.DocSystemBridge={
    if(!target&&p.company){target={id:nextProfileId(),company:clone(p.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates)};settings.profiles.push(target)}
    if(target)settings.activeProfileId=target.id;
    if(p.template&&p.doc){normalizeTemplateFields(p.template,p.doc.fieldValues);profile().templates[p.doc.type]=clone(p.template)}
-   doc=clone(p.doc);normalizeProfiles();refresh()
+   doc=clone(p.doc);normalizeProfiles();refresh();markDocumentSaved()
  }
 };
 
