@@ -3,7 +3,7 @@ import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/12.
 import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,collection,query,where,orderBy,limit,getDocs,deleteDoc,serverTimestamp,onSnapshot} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 let db=null;
-let user=null, role=null, currentId=null, writeTimer=null, loading=false, stopLogoSync=null; const rank={user:1,staff:1,manager:2,superadmin:3};
+let user=null, role=null, currentId=null, writeTimer=null, loading=false, stopLogoSync=null, stopDocumentSync=null; const rank={user:1,staff:1,manager:2,superadmin:3};
 const el=id=>document.getElementById(id);
 const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const notify=s=>{el("cloudStatus").textContent=s;};
@@ -32,6 +32,7 @@ function canManage(){return role==="superadmin"||role==="manager"}
 function canAdmin(){return role==="superadmin"}
 export async function startCloud(authUser,profile){
   if(stopLogoSync){stopLogoSync();stopLogoSync=null}
+  if(stopDocumentSync){stopDocumentSync();stopDocumentSync=null}
   db=getFirestore();user=authUser;role=profile.role;currentId=null;loading=true;
   el("cloudMenuUsers").hidden=!canManage();
   el("newSuperadminOption").hidden=!canAdmin();
@@ -50,7 +51,7 @@ export async function startCloud(authUser,profile){
   await loadSavedPresetCopies();
   if(canManage())await loadUsers();
 }
-export function clearCloud(){if(stopLogoSync){stopLogoSync();stopLogoSync=null}user=null;role=null;currentId=null;loading=true;el("cloudList").innerHTML="";el("userList").innerHTML="";const list=el("workspacePresetCopiesList");if(list)list.innerHTML="";const lib=el("presetCopyLibraryList");if(lib)lib.innerHTML="";notify("Not signed in");}
+export function clearCloud(){if(stopLogoSync){stopLogoSync();stopLogoSync=null}if(stopDocumentSync){stopDocumentSync();stopDocumentSync=null}clearTimeout(writeTimer);user=null;role=null;currentId=null;loading=true;el("cloudList").innerHTML="";el("userList").innerHTML="";const list=el("workspacePresetCopiesList");if(list)list.innerHTML="";const lib=el("presetCopyLibraryList");if(lib)lib.innerHTML="";notify("Not signed in");}
 export function settingsChanged(){
   if(!user||!canManage()||loading)return;
   clearTimeout(writeTimer);
@@ -72,52 +73,87 @@ export async function businessHasDocuments(profileId){
  catch(error){notify("Business check failed: "+error.message);return null}
 }
 export async function saveDocument(){
-  if(!user)return;
+  if(!user){notify("Sign in before saving a document");return}
   const payload=bridge().getDocument();
   const d=payload.doc, num=String(d.fieldValues?.docno||"").trim(), date=String(d.fieldValues?.date||"").slice(0,10);
   if(!num){alert("Enter a document number before saving.");return}
-  let savedDoc= currentId ? doc(db,"documents",currentId):doc(collection(db,"documents"));
+  let savedDoc=currentId?doc(db,"documents",currentId):doc(collection(db,"documents"));
+  let existingRecord=null, duplicateCheckUnavailable=false;
   try{
     if(!currentId){
-      // Restrict duplicate checks to the selected business. An unscoped query
-      // can be rejected by business-aware Firestore rules.
-      const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
-      const existing=matches.docs.find(x=>x.data().number===num && x.data().documentType===d.type);
-      if(existing){
-        if(!confirm("Document "+num+" exists. Update it instead of creating another?"))return;
-        savedDoc=doc(db,"documents",existing.id);
+      // The duplicate lookup is best-effort: a denied read must not prevent an otherwise authorized create.
+      try{
+        const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
+        const existing=matches.docs.find(x=>x.data().number===num && x.data().documentType===d.type);
+        if(existing){
+          if(!confirm("Document "+num+" already exists for this business. Update it instead of creating another?"))return;
+          savedDoc=doc(db,"documents",existing.id);
+          existingRecord=existing.data();
+        }
+      }catch(error){
+        duplicateCheckUnavailable=true;
+        console.warn("Document duplicate check unavailable; attempting save directly",error);
       }
     }
-    const prior=await getDoc(savedDoc);
-    if(prior.exists() && prior.data().profileId!==payload.profileId){alert('Cannot save a document under another business. Open it under its original business.');return}
-    await setDoc(savedDoc,{...encode(payload),number:num,documentType:d.type,date:date||new Date().toISOString().slice(0,10),profileId:payload.profileId,updatedAt:serverTimestamp(),updatedBy:user.uid,...(!prior.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})},{merge:true});
-    currentId=savedDoc.id;notify("Document saved online: "+num);await loadDocs();
-  }catch(e){const reason=(e.code?e.code+": ":"")+(e.message||String(e));notify("Save failed: "+reason);alert("Could not save document for "+payload.profileName+": "+reason+"\n\nIf permission-denied appears, review the Firestore rules for documents and appSettings.");}
+    // Never read a newly generated document ID: reading a nonexistent record can be disallowed by rules.
+    if(currentId){
+      const previous=await getDoc(savedDoc);
+      if(previous.exists())existingRecord=previous.data();
+    }
+    if(existingRecord && existingRecord.profileId!==payload.profileId){
+      alert("Cannot save under another business. Reopen the document in its original business.");return
+    }
+    const data={...encode(payload),number:num,documentType:d.type,date:date||new Date().toISOString().slice(0,10),
+      profileId:payload.profileId,updatedAt:serverTimestamp(),updatedBy:user.uid,
+      ...(!existingRecord?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})};
+    await setDoc(savedDoc,data,{merge:true});
+    currentId=savedDoc.id;
+    notify("Saved online: "+num+" · "+payload.profileName+(duplicateCheckUnavailable?" (duplicate check unavailable)":""));
+    // The document listener refreshes the list on this PC and on other signed-in PCs.
+    // Reattach if the current business has no active subscription.
+    if(!stopDocumentSync)await loadDocs();
+  }catch(e){
+    const reason=(e.code?e.code+": ":"")+(e.message||String(e));
+    notify("Save failed: "+reason);
+    alert("Document NOT saved online for "+payload.profileName+": "+reason+
+      "\n\nPlease keep your unsaved document open. If permission-denied appears, check Firebase Firestore rules for the documents collection.");
+  }
 }
 export async function loadDocs(){
+  if(stopDocumentSync){stopDocumentSync();stopDocumentSync=null}
   if(!user)return;
   const month=el("cloudMonth").value;
   const businessId=bridge()?.getSettings()?.activeProfileId;
   if(!businessId){el("cloudList").innerHTML="<p>Select a business to view documents.</p>";return}
   const q=query(collection(db,"documents"),where("profileId","==",businessId),limit(500));
-  try{
-    const snaps=await getDocs(q);
-    const records=snaps.docs.filter(s=>!month||String(s.data().date||"").slice(0,7)===month).sort((a,b)=>String(b.data().date||"").localeCompare(String(a.data().date||""))).slice(0,150);
+  const viewerId=user.uid;
+  stopDocumentSync=onSnapshot(q,async snaps=>{
+    // Reject stale responses if the user has switched businesses, signed out or changed month.
+    if(!user||user.uid!==viewerId||bridge()?.getSettings()?.activeProfileId!==businessId||el("cloudMonth").value!==month)return;
+    const records=snaps.docs.filter(s=>!month||String(s.data().date||"").slice(0,7)===month)
+      .sort((a,b)=>String(b.data().date||"").localeCompare(String(a.data().date||""))).slice(0,150);
     const creators=new Map();
     for(const s of records){
       const d=s.data(),id=d.createdBy;
-      if(!d.creatorRole && id && id!==user.uid && !creators.has(id)){
+      if(!d.creatorRole&&id&&id!==user.uid&&!creators.has(id)){
         try{const p=await getDoc(doc(db,"users",id));creators.set(id,p.exists()?p.data().role:null)}
         catch{creators.set(id,null)}
       }
     }
+    if(!user||user.uid!==viewerId||bridge()?.getSettings()?.activeProfileId!==businessId||el("cloudMonth").value!==month)return;
     el("cloudList").innerHTML=!records.length?"<p>No documents for this business and period.</p>":records.map(s=>{
-      const d=s.data(),ownerRole=d.creatorRole||creators.get(d.createdBy);
+      const d=s.data();
       const canDelete=canAdmin()||role==="manager"||d.createdBy===user.uid;
       return '<div class="cloud-entry"><div><b>'+escape(d.number||"Untitled")+'</b><div class="muted">'+escape(d.documentType)+" · "+escape(d.date)+" · "+escape(d.profileName)+'</div></div><div class="actions"><button data-open-doc="'+escape(s.id)+'">Open</button><button data-copy-doc="'+escape(s.id)+'">Duplicate</button>'+(canDelete?'<button class="danger" data-delete-doc="'+escape(s.id)+'">Delete</button>':'')+'</div></div>';
     }).join("");
-    notify("Online · "+records.length+" documents loaded for selected business");
-  }catch(e){notify("Document load failed: "+e.message)}
+    // Don't imply server synchronization if the snapshot is from the offline cache.
+    if(!snaps.metadata.fromCache)notify("Online · "+records.length+" documents for selected business");
+    else notify("Offline/cache · "+records.length+" documents (not yet verified online)");
+  },error=>{
+    notify("Document sync failed: "+(error.code?error.code+": ":"")+error.message);
+    el("cloudList").innerHTML='<p>Cannot sync this business\'s documents. Check Firestore permissions or network access.</p>';
+    stopDocumentSync=null;
+  });
 }
 export async function deleteDocument(id){
   if(!user)return;
