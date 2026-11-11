@@ -87,7 +87,7 @@ export async function saveDocument(){
         const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
         const existing=matches.docs.find(x=>x.data().number===num && x.data().documentType===d.type);
         if(existing){
-          if(!confirm("Document "+num+" already exists for this business. Update it instead of creating another?"))return;
+          // Ask once below using the Overwrite / Save as New / Cancel choice.
           savedDoc=doc(db,"documents",existing.id);
           existingRecord=existing.data();
         }
