@@ -546,9 +546,7 @@ function layoutConfig(area){
  if(!Array.isArray(layout.widths)||layout.widths.length!==layout.columns||
     layout.widths.some(n=>!Number.isFinite(Number(n))||Number(n)<10)||
     Math.abs(layout.widths.reduce((sum,n)=>sum+Number(n),0)-100)>0.01){
-  const base=Math.floor(100/layout.columns);
-  layout.widths=Array(layout.columns).fill(base);
-  layout.widths[0]+=100-base*layout.columns;
+  layout.widths=Array(layout.columns).fill(100/layout.columns);
  }
  return layout;
 }
@@ -556,7 +554,7 @@ function setPanelWidth(area,index,requested){
  const l=layoutConfig(area),count=l.columns;
  if(count===1){l.widths=[100];return}
  const max=100-10*(count-1);
- const value=Math.max(10,Math.min(max,Math.round(Number(requested)||10)));
+ const value=Math.max(10,Math.min(max,Math.round((Number(requested)||10)*100)/100));
  const remaining=100-value,other=l.widths.map((_,i)=>i).filter(i=>i!==index);
  const previous=other.reduce((sum,i)=>sum+l.widths[i],0);
  const next=Array(count).fill(0);
@@ -564,7 +562,7 @@ function setPanelWidth(area,index,requested){
  let left=remaining;
  other.forEach((i,n)=>{
   const future=other.length-n-1;
-  const weighted=previous>0?Math.round(remaining*l.widths[i]/previous):Math.round(remaining/other.length);
+  const weighted=previous>0?Math.round(remaining*l.widths[i]/previous*100)/100:Math.round(remaining/other.length*100)/100;
   const assigned=n===other.length-1?left:Math.max(10,Math.min(left-10*future,weighted));
   next[i]=assigned;left-=assigned;
  });
@@ -583,7 +581,7 @@ function panelStyleControls(area,i,p){
 function renderLayoutControls(){
  for(const area of ['header','footer']){
   const l=layoutConfig(area),root=document.getElementById(area+'LayoutControls');
-  root.innerHTML='<label>Layout<select data-layout-count="'+area+'">'+[1,2,3].map(n=>'<option value="'+n+'" '+(l.columns===n?'selected':'')+'>'+n+' column'+(n>1?'s':'')+'</option>').join('')+'</select></label><div class="row" style="margin-top:8px">'+l.widths.map((w,i)=>'<label>Panel '+(i+1)+' width (%)<input type="number" min="10" max="'+(100-10*(l.columns-1))+'" step="1" data-panel-width="'+area+':'+i+'" value="'+w+'" '+(l.columns===1?'disabled':'')+'></label>').join('')+'</div><p class="muted">Panel widths total 100%. Changing one adjusts the remaining panels. </p><p class="muted">Panel size is the default. Inline [size=14]...[/size] changes selected text only. Size tags in Business Profile text are ignored. The {logo} shortcode uses Logo width (mm). Available: {logo}, {companyName}, {companyInfo}, {documentType}, {footerText}, {pageNumber}.</p><div class="layout-settings">'+l.panels.slice(0,l.columns).map((p,i)=>'<div class="layout-panel"><strong>Panel '+(i+1)+'</strong><label>Alignment<select data-layout-align="'+area+':'+i+'">'+['left','center','right'].map(v=>'<option '+(p.align===v?'selected':'')+'>'+v+'</option>').join('')+'</select></label>'+panelStyleControls(area,i,p)+'<div class="panel-inline-tools"><button type="button" class="small" data-inline-format="'+area+':'+i+':bold">B</button><button type="button" class="small" data-inline-format="'+area+':'+i+':italic">I</button><button type="button" class="small" data-inline-format="'+area+':'+i+':underline">U</button><button type="button" class="small" data-inline-format="'+area+':'+i+':size">Size</button><button type="button" class="small" data-inline-format="'+area+':'+i+':font">Font</button><button type="button" class="small" data-inline-format="'+area+':'+i+':color">Color</button></div><textarea rows="6" class="panel-editor" data-panel-text="'+area+':'+i+'" spellcheck="false">'+esc(panelText(p))+'</textarea></div>').join('')+'</div>';
+  root.innerHTML='<label>Layout<select data-layout-count="'+area+'">'+[1,2,3].map(n=>'<option value="'+n+'" '+(l.columns===n?'selected':'')+'>'+n+' column'+(n>1?'s':'')+'</option>').join('')+'</select></label><div class="row" style="margin-top:8px">'+l.widths.map((w,i)=>'<label>Panel '+(i+1)+' width (%)<input type="number" min="10" max="'+(100-10*(l.columns-1))+'" step="0.01" data-panel-width="'+area+':'+i+'" value="'+(Math.round(w*100)/100)+'" '+(l.columns===1?'disabled':'')+'></label>').join('')+'</div><p class="muted">Panel widths total 100%. Changing one adjusts the remaining panels. </p><p class="muted">Panel size is the default. Inline [size=14]...[/size] changes selected text only. Size tags in Business Profile text are ignored. The {logo} shortcode uses Logo width (mm). Available: {logo}, {companyName}, {companyInfo}, {documentType}, {footerText}, {pageNumber}.</p><div class="layout-settings">'+l.panels.slice(0,l.columns).map((p,i)=>'<div class="layout-panel"><strong>Panel '+(i+1)+'</strong><label>Alignment<select data-layout-align="'+area+':'+i+'">'+['left','center','right'].map(v=>'<option '+(p.align===v?'selected':'')+'>'+v+'</option>').join('')+'</select></label>'+panelStyleControls(area,i,p)+'<div class="panel-inline-tools"><button type="button" class="small" data-inline-format="'+area+':'+i+':bold">B</button><button type="button" class="small" data-inline-format="'+area+':'+i+':italic">I</button><button type="button" class="small" data-inline-format="'+area+':'+i+':underline">U</button><button type="button" class="small" data-inline-format="'+area+':'+i+':size">Size</button><button type="button" class="small" data-inline-format="'+area+':'+i+':font">Font</button><button type="button" class="small" data-inline-format="'+area+':'+i+':color">Color</button></div><textarea rows="6" class="panel-editor" data-panel-text="'+area+':'+i+'" spellcheck="false">'+esc(panelText(p))+'</textarea></div>').join('')+'</div>';
  }
 }
 function panelCss(p){
@@ -1050,7 +1048,7 @@ document.addEventListener('change',e=>{if(e.target.id==='presetHeaderProfileSele
  if(e.target.dataset.layoutCount){
   const l=layoutConfig(e.target.dataset.layoutCount);l.columns=Number(e.target.value);
   while(l.panels.length<l.columns)l.panels.push({align:'left',blocks:[]});
-  const base=Math.floor(100/l.columns);l.widths=Array(l.columns).fill(base);l.widths[0]+=100-base*l.columns;
+  l.widths=Array(l.columns).fill(100/l.columns);
   saveSettings();renderLayoutControls();renderPreview();return;
  }
  if(e.target.dataset.panelWidth){
