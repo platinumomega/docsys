@@ -72,8 +72,10 @@ export async function saveDocument(){
   let savedDoc= currentId ? doc(db,"documents",currentId):doc(collection(db,"documents"));
   try{
     if(!currentId){
-      const matches=await getDocs(query(collection(db,"documents"),where("number","==",num),limit(100)));
-      const existing=matches.docs.find(x=>x.data().profileId===payload.profileId && x.data().documentType===d.type);
+      // Restrict duplicate checks to the selected business. An unscoped query
+      // can be rejected by business-aware Firestore rules.
+      const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
+      const existing=matches.docs.find(x=>x.data().number===num && x.data().documentType===d.type);
       if(existing){
         if(!confirm("Document "+num+" exists. Update it instead of creating another?"))return;
         savedDoc=doc(db,"documents",existing.id);
@@ -83,7 +85,7 @@ export async function saveDocument(){
     if(prior.exists() && prior.data().profileId!==payload.profileId){alert('Cannot save a document under another business. Open it under its original business.');return}
     await setDoc(savedDoc,{...encode(payload),number:num,documentType:d.type,date:date||new Date().toISOString().slice(0,10),profileId:payload.profileId,updatedAt:serverTimestamp(),updatedBy:user.uid,...(!prior.exists()?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})},{merge:true});
     currentId=savedDoc.id;notify("Document saved online: "+num);await loadDocs();
-  }catch(e){notify("Save failed: "+e.message);alert("Could not save document: "+e.message)}
+  }catch(e){const reason=(e.code?e.code+": ":"")+(e.message||String(e));notify("Save failed: "+reason);alert("Could not save document for "+payload.profileName+": "+reason+"\n\nIf permission-denied appears, review the Firestore rules for documents and appSettings.");}
 }
 export async function loadDocs(){
   if(!user)return;
