@@ -214,7 +214,7 @@ body.preset-current header #newBtn,body.preset-current header #saveBtn,body.pres
 <div class="card"><div class="row3"><label>Document Title<input id="docTitle"></label></div><div class="row" style="margin-top:10px"><label>Document Currency<select id="docCurrency"></select></label><div class="muted" style="align-self:end">Currencies available for the selected business profile</div></div></div>
 <div class="card"><h2>Document Details</h2><div id="docFields" class="stack"></div></div>
 <div class="card"><div class="between"><h2>Items</h2><button id="addItem" class="small">+ Add Row</button></div><div class="tblwrap"><table id="items" class="editTable"></table></div></div>
-<div class="card"><h2>Terms &amp; Conditions</h2><p class="muted">Optional free text. Line breaks, blank lines and repeated spaces are preserved in the document.</p><textarea id="documentTerms" rows="8" spellcheck="true" style="white-space:pre-wrap;tab-size:4;font-family:monospace"></textarea></div></div>
+<div class="card"><h2>Terms &amp; Conditions</h2><p class="muted">Select a saved template for this business, or edit these terms for this document. Editing the document does not change the saved template.</p><div class="row" style="align-items:end;margin-bottom:8px"><label>Saved Terms Template<select id="termsTemplateSelect"><option value="">No template</option></select></label><div class="actions"><button type="button" id="termsSaveNew" class="small cloud-admin-only">+ Save as New Template</button><button type="button" id="termsUpdate" class="small cloud-admin-only">Update Template</button><button type="button" id="termsDelete" class="small danger cloud-admin-only">Delete Template</button></div></div><p id="termsTemplateStatus" class="muted" role="status"></p><textarea id="documentTerms" rows="10" spellcheck="true" style="white-space:pre-wrap;tab-size:4;font-family:monospace"></textarea></div></div>
 </section>
 <section id="company" class="panel">
 <div class="card"><div class="between"><h2>Business Profile</h2><span class="muted">Each business has independent company details, headers, templates, and saved documents.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button type="button" id="createBusiness" class="small primary">+ Add Business</button><button type="button" id="deleteProfile" class="danger small">Delete Selected Business</button></div></div><p id="businessSetupStatus" class="muted">Each new business starts with blank company identity and separate settings. Only businesses without saved documents can be deleted.</p></div>
@@ -470,9 +470,37 @@ const PLATINUM_INVOICE_TERMS=`NOTES:
 3) THIS INVOICE IS TO BE CONSIDERED ACCEPTABLE IN FULL IF NO COMPLAINT MADE WITHIN SEVEN (7) DAYS FROM THE DATE HEREOF.
 4) ALL CHEQUES SHOULD BE CROSSED BY "A/C PAYEE ONLY" AND MADE PAYABLE TO "PLATINUM OMEGA SDN. BHD."
 5) PAYMENT MAY ALSO BE MADE VIA ONLINE BANKING TO OUR BANK ACCOUNT:
-  - BANK: MAYBANK BANKING BERHAD
-  - ACC NO.: 5-15120-00022-5
+  - BANK:
+  - ACC NO.:
   - ACC CURRENCY: MYR`;
+// A one-time starter template, copied to the Platinum business settings.
+ // Thereafter all terms are user-managed business data in Firebase.
+function termsLibrary(){
+ const p=profile();
+ if(!Array.isArray(p.termsLibrary))p.termsLibrary=[];
+ if(!p.defaultTermsByType||typeof p.defaultTermsByType!=='object')p.defaultTermsByType={};
+ if(!p.termsLibraryInitialized){
+   if(/platinum\s+omega/i.test(p.company?.name||'')&&!p.termsLibrary.length){
+     p.termsLibrary.push({id:'platinum_invoice_standard',name:'Invoice — Standard Terms',text:PLATINUM_INVOICE_TERMS});
+     p.defaultTermsByType.Invoice='platinum_invoice_standard';
+   }
+   p.termsLibraryInitialized=true;
+ }
+ return p.termsLibrary;
+}
+function renderTermsTemplates(){
+ const list=termsLibrary(),picker=document.getElementById('termsTemplateSelect');
+ const selected=doc.termsTemplateId||'';
+ picker.innerHTML='<option value="">No template / custom terms</option>'+list.map(t=>'<option value="'+esc(t.id)+'">'+esc(t.name)+'</option>').join('');
+ picker.value=list.some(t=>t.id===selected)?selected:'';
+ const administrator=['manager','superadmin'].includes(window.DocSystemRole);
+ for(const id of ['termsSaveNew','termsUpdate','termsDelete']){
+   const button=document.getElementById(id);if(button)button.hidden=!administrator;
+ }
+ document.getElementById('termsUpdate').disabled=!picker.value;
+ document.getElementById('termsDelete').disabled=!picker.value;
+}
+function termsStatus(message){document.getElementById('termsTemplateStatus').textContent=message}
 let cleanDocSnapshot=null;
 function documentSnapshot(){return JSON.stringify(doc)}
 function markDocumentSaved(){cleanDocSnapshot=documentSnapshot()}
@@ -500,7 +528,9 @@ function newDoc(type){
   if('ref'in fv)fv.ref=type==='Receiving Note'?'':type==='Credit Note'||type==='Debit Note'?'':'';
   if('paymentref'in fv)fv.paymentref='';
   if('reason'in fv)fv.reason='';
-  doc={kind:'DocFacDocument',version:1,type,title:t.title,fieldValues:fv,items:[],notes:'',terms:type==='Invoice'?PLATINUM_INVOICE_TERMS:'',currency:profile().company.defaultCurrency,currencySymbol:profile().company.currencies.find(x=>x.code===profile().company.defaultCurrency)?.symbol||'RM'};
+  const selectedTermsId=profile().defaultTermsByType?.[type]||'';
+   const selectedTerms=termsLibrary().find(t=>t.id===selectedTermsId);
+   doc={kind:'DocFacDocument',version:1,type,title:t.title,fieldValues:fv,items:[],notes:'',terms:selectedTerms?.text||'',termsTemplateId:selectedTerms?.id||'',currency:profile().company.defaultCurrency,currencySymbol:profile().company.currencies.find(x=>x.code===profile().company.defaultCurrency)?.symbol||'RM'};
   doc.items.push(blankRow());
   let r=doc.items[0];
   if('item'in r)r.item='1';
@@ -551,7 +581,7 @@ function renderSelectors(){
 function updateProfileLabels(){
   [businessProfile,companyProfile,tplBusinessProfile].forEach(sel=>{let o=sel&&sel.querySelector('option[value="'+CSS.escape(settings.activeProfileId)+'"]');if(o)o.textContent=profileLabel(profile())})
 }
-function renderCreate(){let t=tpl();renderDocCurrency();docTitle.value=doc.title;docFields.innerHTML=t.fields.map(f=>{let control=f[2]==='multiline'?'<textarea rows="3" data-field="'+f[0]+'">'+esc(doc.fieldValues[f[0]]||'')+'</textarea>':'<input data-field="'+f[0]+'" value="'+esc(doc.fieldValues[f[0]]||'')+'">';return '<label>'+esc(f[1])+control+'</label>'}).join('');let h='<thead><tr>'+t.columns.map(c=>'<th>'+esc(c[1])+'</th>').join('')+'<th></th></tr></thead><tbody>';doc.items.forEach((r,i)=>h+='<tr>'+t.columns.map(c=>'<td><input data-ri="'+i+'" data-key="'+c[0]+'" '+(c[0]==='item'||c[0]==='qty'?'class="item-number-input" style="text-align:center" ':'')+(c[2]==='formula'?'readonly':'')+' value="'+esc(c[2]==='formula'?formulaDisplay(r,c):quantityCell(r[c[0]],c))+'"></td>').join('')+'<td><button class="trash" data-del="'+i+'">×</button></td></tr>');items.innerHTML=h+'</tbody>';document.getElementById('documentTerms').value=doc.terms||''}
+function renderCreate(){let t=tpl();renderDocCurrency();docTitle.value=doc.title;docFields.innerHTML=t.fields.map(f=>{let control=f[2]==='multiline'?'<textarea rows="3" data-field="'+f[0]+'">'+esc(doc.fieldValues[f[0]]||'')+'</textarea>':'<input data-field="'+f[0]+'" value="'+esc(doc.fieldValues[f[0]]||'')+'">';return '<label>'+esc(f[1])+control+'</label>'}).join('');let h='<thead><tr>'+t.columns.map(c=>'<th>'+esc(c[1])+'</th>').join('')+'<th></th></tr></thead><tbody>';doc.items.forEach((r,i)=>h+='<tr>'+t.columns.map(c=>'<td><input data-ri="'+i+'" data-key="'+c[0]+'" '+(c[0]==='item'||c[0]==='qty'?'class="item-number-input" style="text-align:center" ':'')+(c[2]==='formula'?'readonly':'')+' value="'+esc(c[2]==='formula'?formulaDisplay(r,c):quantityCell(r[c[0]],c))+'"></td>').join('')+'<td><button class="trash" data-del="'+i+'">×</button></td></tr>');items.innerHTML=h+'</tbody>';document.getElementById('documentTerms').value=doc.terms||'';renderTermsTemplates()}
 function companyInfoText(c){
  return typeof c.headerText==='string'?c.headerText:(c.fields||[]).filter(f=>f.place!=='footer'&&f.value).map(f=>(f.label?f.label+': ':'')+f.value).join('\n');
 }
@@ -955,6 +985,34 @@ document.addEventListener('click',async e=>{
  if(e.target.id==='workspaceOpenSaved'){showDocPage('documents');return}
  if(e.target.id==='newBtn'){workspaceAction('new');return}
  if(e.target.id==='saveBtn'){workspaceAction('save');return}
+ if(e.target.id==='termsSaveNew'){
+  if(!['manager','superadmin'].includes(window.DocSystemRole))return alert('Only managers can manage shared terms templates.');
+  const value=document.getElementById('documentTerms').value;
+  if(!value.trim())return alert('Enter terms before saving a template.');
+  const name=prompt('Name this reusable Terms & Conditions template:','');
+  if(!name||!name.trim())return;
+  const library=termsLibrary();
+  if(library.some(t=>t.name.toLowerCase()===name.trim().toLowerCase()))return alert('This template name already exists for this business.');
+  const id='terms_'+Date.now().toString(36)+'_'+uid();
+  library.push({id,name:name.trim(),text:value});doc.termsTemplateId=id;
+  saveSettings();renderTermsTemplates();termsStatus('Template saved locally; syncing to Firebase.');return;
+ }
+ if(e.target.id==='termsUpdate'){
+  if(!['manager','superadmin'].includes(window.DocSystemRole))return;
+  const template=termsLibrary().find(t=>t.id===document.getElementById('termsTemplateSelect').value);
+  if(!template)return alert('Select a saved template first.');
+  if(!confirm('Update the shared template "'+template.name+'" with the current wording? Existing saved documents will keep their text.'))return;
+  template.text=document.getElementById('documentTerms').value;saveSettings();termsStatus('Template updated locally; syncing to Firebase.');return;
+ }
+ if(e.target.id==='termsDelete'){
+  if(!['manager','superadmin'].includes(window.DocSystemRole))return;
+  const id=document.getElementById('termsTemplateSelect').value;
+  const library=termsLibrary(),item=library.find(t=>t.id===id);if(!item)return;
+  if(!confirm('Delete reusable template "'+item.name+'"? Saved documents and current document wording will not be deleted.'))return;
+  profile().termsLibrary=library.filter(t=>t.id!==id);
+  for(const [type,defaultId] of Object.entries(profile().defaultTermsByType||{}))if(defaultId===id)delete profile().defaultTermsByType[type];
+  doc.termsTemplateId='';saveSettings();renderTermsTemplates();termsStatus('Template removed locally; syncing to Firebase.');return;
+ }
  if(e.target.id==='togglePresetConfigurator'){const panel=document.getElementById('presetConfigWorkspace');panel.hidden=!panel.hidden;if(!panel.hidden&&!document.getElementById('presetConfigureFrame').getAttribute('src'))loadPresetConfigurator();return}
  if(e.target.id==='presetConfigLoad'){loadPresetConfigurator();return}
  if(e.target.id==='presetConfigSave'){const name=document.getElementById('presetConfigureName').value.trim();if(!name)return alert('Enter a new template name');const frame=document.getElementById('presetConfigureFrame');if(!frame.getAttribute('src')||frame.dataset.family!==document.getElementById('presetConfigureFamily').value||frame.dataset.base!==document.getElementById('presetConfigureType').value)return alert('Click Load Original to load the selected preset before saving');frame.contentWindow.postMessage({type:'docsystem-preset-command',action:'save-template',name},location.origin);return}
@@ -1110,6 +1168,12 @@ document.addEventListener('focusout',e=>{
 });
 document.addEventListener('change',async e=>{if(e.target.id==='presetHeaderProfileSelect'){switchProfile(e.target.value,doc.type);return}
  if(e.target.id==='workspaceTemplateSource'){setWorkspaceSource(e.target.value);return;}
+ if(e.target.id==='termsTemplateSelect'){
+  const selected=termsLibrary().find(t=>t.id===e.target.value);
+  if(doc.terms.trim()&&selected&&doc.terms!==selected.text&&!confirm('Replace the current Terms & Conditions with "'+selected.name+'"?')){renderTermsTemplates();return}
+  doc.terms=selected?.text||doc.terms;doc.termsTemplateId=selected?.id||'';
+  document.getElementById('documentTerms').value=doc.terms;renderTermsTemplates();renderPreview();termsStatus(selected?'Loaded "'+selected.name+'" into this document.':'Custom document terms; template unlinked.');return;
+ }
  if(e.target.id==='workspacePresetFamily'){fillPresetTypes();setWorkspaceSource('preset',true);return;}
  if(e.target.id==='workspacePresetSelect'){setWorkspaceSource('preset',true);return;}
  if(e.target.id==='presetConfigureFamily'){presetConfiguratorTypes();document.getElementById('presetConfigStatus').textContent='Selection changed. Click Load Original before editing or saving.';return;}
