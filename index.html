@@ -219,7 +219,7 @@ body.preset-current header #newBtn,body.preset-current header #saveBtn,body.pres
 <section id="company" class="panel">
 <div class="card"><div class="between"><h2>Business Profile</h2><span class="muted">Each business has independent company details, headers, templates, and saved documents.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button type="button" id="createBusiness" class="small primary">+ Add Business</button><button type="button" id="deleteProfile" class="danger small">Delete Selected Business</button></div></div><p id="businessSetupStatus" class="muted">Each new business starts with blank company identity and separate settings. Only businesses without saved documents can be deleted.</p></div>
 <div class="card"><h2>Currencies</h2><p class="muted">Set allowed currencies for this business. The default is selected for new documents; saved documents retain their selected currency.</p><div id="currencySettings"></div><div class="row"><label>Currency code (e.g. USD)<input id="newCurrencyCode" maxlength="3" placeholder="USD"></label><label>Display symbol (e.g. US$)<input id="newCurrencySymbol" placeholder="US$"></label></div><p><button type="button" id="addCurrency" class="small">+ Add Currency</button></p></div>
-<div class="card"><h2>Business Identity</h2><p class="muted">Shared company details used by all custom and preset documents. Enter the company name once here.</p><div class="row"><label>Company Name<input id="companyName"></label><label>Logo<input id="logoFile" type="file" accept="image/*"></label></div><div style="margin-top:8px"><button id="removeLogo" class="small">Remove Logo</button></div></div>
+<div class="card"><h2>Business Identity</h2><p class="muted">Shared company details used by all custom and preset documents. Enter the company name once here.</p><div class="row"><label>Company Name<input id="companyName"></label><label>Logo<input id="logoFile" type="file" accept="image/*"></label><span id="logoSyncStatus" class="muted" role="status">Logo is saved with business settings in Firebase.</span></div><div style="margin-top:8px"><button id="removeLogo" class="small">Remove Logo</button></div></div>
 
 <div class="card"><h2>Company Details</h2><div class="muted" style="margin-bottom:8px">Registration number, address, telephone, website and other details only. Do not repeat the company name; both custom and preset documents use the Business Identity name automatically. Formatting and line breaks are preserved.</div><div class="panel-inline-tools"><button type="button" class="small" data-company-format="bold">B</button><button type="button" class="small" data-company-format="italic">I</button><button type="button" class="small" data-company-format="underline">U</button><button type="button" class="small" data-company-format="size">Size</button><button type="button" class="small" data-company-format="font">Font</button></div><textarea id="companyInfo" rows="7" spellcheck="false" style="min-height:170px;white-space:pre-wrap" placeholder="Registration No.: 123456-A&#10;Address line 1&#10;Tel: 123          Fax: 456"></textarea></div>
 <div class="card"><h2>Footer Text</h2><textarea id="companyFooter" rows="3"></textarea></div>
@@ -388,7 +388,32 @@ function nextExtraKey(t){let used=new Set((t.fields||[]).map(f=>f[0]));for(let n
  const note=document.getElementById('customLayoutSaveStatus');
  if(!note)return;
  note.textContent=event.detail?.ok?'Saved online in Firebase':'Online save failed: '+(event.detail?.message||'Unknown error');
+ const logoStatus=document.getElementById('logoSyncStatus');
+ if(logoStatus && logoStatus.textContent.includes('Saving to Firebase')){
+  logoStatus.textContent=event.detail?.ok?'Logo saved online in Firebase.':'Logo was NOT saved online: '+(event.detail?.message||'Unknown error');
+ }
 });
+async function compactBusinessLogo(file){
+ const bitmap=await createImageBitmap(file);
+ try{
+  // Data URLs are stored with settings in Firestore; large originals can exceed its 1 MiB document limit.
+  const widths=[900,700,500,350],maxDataUrlLength=125000;
+  for(const side of widths){
+   const scale=Math.min(1,side/Math.max(bitmap.width,bitmap.height));
+   const canvas=document.createElement('canvas');
+   canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+   canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+   canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+   for(const quality of [0.82,0.65,0.5]){
+    const webp=canvas.toDataURL('image/webp',quality);
+    if(webp.startsWith('data:image/webp;')&&webp.length<=maxDataUrlLength)return webp;
+   }
+   const png=canvas.toDataURL('image/png');
+   if(png.length<=maxDataUrlLength)return png;
+  }
+  throw Error('The logo is too complex to fit safely in online settings. Try a simpler or smaller image.');
+ }finally{bitmap.close()}
+}
 function saveSettings(){
  localStorage.setItem(KEY,JSON.stringify(settings));
  window.DocSystemCloud?.settingsChanged();
@@ -1039,7 +1064,7 @@ if(e.target.dataset.placeholderKey){globals()[e.target.dataset.placeholderKey]=e
  }
  if(e.target.dataset.defaultCurrency){profile().company.defaultCurrency=e.target.dataset.defaultCurrency;saveSettings();renderCurrencies();renderDocCurrency();return}
 if(e.target.id==='docTitle'){doc.title=e.target.value;renderPreview()}if(e.target.dataset.field){doc.fieldValues[e.target.dataset.field]=e.target.value;renderPreview()}if(e.target.dataset.ri!==undefined){let ri=+e.target.dataset.ri;doc.items[ri][e.target.dataset.key]=e.target.value;updateFormulaInputs(ri);renderPreview()}if(e.target.id==='notes'){doc.notes=e.target.value;renderPreview()}if(e.target.id==='documentTerms'){doc.terms=e.target.value;renderPreview()}if(e.target.id==='companyName'){profile().company.name=e.target.value;saveSettings();updateProfileLabels();renderPreview()}if(e.target.id==='companyFooter'){profile().company.footer=e.target.value;saveSettings();renderPreview()}if(e.target.id==='companyInfo'){profile().company.headerText=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.cflabel!==undefined){profile().company.fields[+e.target.dataset.cflabel].label=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.cfvalue!==undefined){profile().company.fields[+e.target.dataset.cfvalue].value=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.dflabel!==undefined){tpl().fields[+e.target.dataset.dflabel][1]=e.target.value;saveSettings();renderPreview()}if(e.target.id==='paperSize'||e.target.id==='pageMargins'){tpl()[e.target.id]=e.target.value;saveSettings();renderPreview()}if(e.target.id==='dividerPosition'){tpl().dividerPosition=e.target.value;saveSettings();renderPreview()}if(e.target.id==='tplTitle'){tpl().title=e.target.value;doc.title=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjlabel!==undefined){tpl().adjustments[+e.target.dataset.adjlabel].label=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjvalue!==undefined){tpl().adjustments[+e.target.dataset.adjvalue].value=Number(e.target.value||0);saveSettings();renderPreview()}if(['sig1','sig2','sig3'].includes(e.target.id)){let t=tpl();t.sigs=[sig1.value,sig2.value,sig3.value];saveSettings();renderPreview()}if(['sigName1','sigName2','sigName3'].includes(e.target.id)){let t=tpl();t.sigNames=[sigName1.value,sigName2.value,sigName3.value];saveSettings();renderPreview()}});
-document.addEventListener('change',e=>{if(e.target.id==='presetHeaderProfileSelect'){switchProfile(e.target.value,doc.type);return}
+document.addEventListener('change',async e=>{if(e.target.id==='presetHeaderProfileSelect'){switchProfile(e.target.value,doc.type);return}
  if(e.target.id==='workspaceTemplateSource'){setWorkspaceSource(e.target.value);return;}
  if(e.target.id==='workspacePresetFamily'){fillPresetTypes();setWorkspaceSource('preset',true);return;}
  if(e.target.id==='workspacePresetSelect'){setWorkspaceSource('preset',true);return;}
@@ -1067,7 +1092,21 @@ document.addEventListener('change',e=>{if(e.target.id==='presetHeaderProfileSele
  }
  if(e.target.id==='docCurrency'){doc.currency=e.target.value;doc.currencySymbol=profile().company.currencies.find(x=>x.code===doc.currency)?.symbol||doc.currency;renderPreview();return}
 if(e.target.id==='businessProfile'&&activeWorkspacePreset()){syncPresetBusiness();return}
- if(['businessProfile','companyProfile','tplBusinessProfile'].includes(e.target.id)){switchProfile(e.target.value,doc.type);return}if(e.target.dataset.dftype!==undefined){tpl().fields[+e.target.dataset.dftype][2]=e.target.value;saveSettings();renderCreate();renderPreview()}if(['fontHeader','fontTitle','fontBody','fontItems','fontFooter'].includes(e.target.id)){profile().fonts.header=fontHeader.value;profile().fonts.title=fontTitle.value;profile().fonts.body=fontBody.value;profile().fonts.items=fontItems.value;profile().fonts.footer=fontFooter.value;saveSettings();renderPreview()}if(e.target.id==='docType'||e.target.id==='tplType'){newDoc(e.target.value);window.DocSystemCloud?.changedDocument();refresh()}if(e.target.id==='logoFile'&&e.target.files[0]){let r=new FileReader();r.onload=()=>{profile().company.logo=r.result;refresh()};r.readAsDataURL(e.target.files[0])}if(e.target.dataset.cfplace!==undefined){profile().company.fields[+e.target.dataset.cfplace].place=e.target.value;refresh()}if(e.target.dataset.cflayout!==undefined){profile().company.fields[+e.target.dataset.cflayout].layout=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjop!==undefined){tpl().adjustments[+e.target.dataset.adjop].operation=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjmode!==undefined){tpl().adjustments[+e.target.dataset.adjmode].mode=e.target.value;saveSettings();renderPreview()}if(['subtotalOn','sig1On','sig2On','sig3On'].includes(e.target.id)){let t=tpl();t.subtotal=subtotalOn.checked;t.sigEnabled=[sig1On.checked,sig2On.checked,sig3On.checked];t.sig=t.sigEnabled.some(Boolean);saveSettings();renderPreview()}if(e.target.id==='openFile'&&e.target.files[0]){let r=new FileReader();r.onload=()=>{try{let p=JSON.parse(r.result);if(!p.doc)throw 0;
+ if(['businessProfile','companyProfile','tplBusinessProfile'].includes(e.target.id)){switchProfile(e.target.value,doc.type);return}if(e.target.dataset.dftype!==undefined){tpl().fields[+e.target.dataset.dftype][2]=e.target.value;saveSettings();renderCreate();renderPreview()}if(['fontHeader','fontTitle','fontBody','fontItems','fontFooter'].includes(e.target.id)){profile().fonts.header=fontHeader.value;profile().fonts.title=fontTitle.value;profile().fonts.body=fontBody.value;profile().fonts.items=fontItems.value;profile().fonts.footer=fontFooter.value;saveSettings();renderPreview()}if(e.target.id==='docType'||e.target.id==='tplType'){newDoc(e.target.value);window.DocSystemCloud?.changedDocument();refresh()}if(e.target.id==='logoFile'&&e.target.files[0]){
+ const file=e.target.files[0],businessId=settings.activeProfileId,status=document.getElementById('logoSyncStatus');
+ const input=e.target;input.disabled=true;if(status)status.textContent='Preparing logo for online sync…';
+ try{
+  if(!file.type.startsWith('image/'))throw Error('Choose a PNG, JPG or WebP image.');
+  const data=await compactBusinessLogo(file);
+  const target=settings.profiles.find(p=>p.id===businessId);
+  if(!target)throw Error('The selected business changed or was removed.');
+  target.company.logo=data;
+  refresh();
+  if(status)status.textContent='Logo prepared. Saving to Firebase…';
+  if(!window.DocSystemCloud?.settingsChanged)throw Error('Not connected to Firebase. Sign in before uploading a logo.');
+ }catch(error){if(status)status.textContent='Logo not saved: '+error.message;alert('Logo upload failed: '+error.message)}
+ finally{input.disabled=false;input.value=''}
+}if(e.target.dataset.cfplace!==undefined){profile().company.fields[+e.target.dataset.cfplace].place=e.target.value;refresh()}if(e.target.dataset.cflayout!==undefined){profile().company.fields[+e.target.dataset.cflayout].layout=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjop!==undefined){tpl().adjustments[+e.target.dataset.adjop].operation=e.target.value;saveSettings();renderPreview()}if(e.target.dataset.adjmode!==undefined){tpl().adjustments[+e.target.dataset.adjmode].mode=e.target.value;saveSettings();renderPreview()}if(['subtotalOn','sig1On','sig2On','sig3On'].includes(e.target.id)){let t=tpl();t.subtotal=subtotalOn.checked;t.sigEnabled=[sig1On.checked,sig2On.checked,sig3On.checked];t.sig=t.sigEnabled.some(Boolean);saveSettings();renderPreview()}if(e.target.id==='openFile'&&e.target.files[0]){let r=new FileReader();r.onload=()=>{try{let p=JSON.parse(r.result);if(!p.doc)throw 0;
   let target=p.profileId&&settings.profiles.find(x=>x.id===p.profileId);
   if(!target&&p.company)target=settings.profiles.find(x=>profileLabel(x)===p.company.name);
   if(!target&&p.company){target={id:nextProfileId(),company:clone(p.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates)};settings.profiles.push(target)}
