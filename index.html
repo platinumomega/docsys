@@ -1127,6 +1127,22 @@ document.addEventListener('drop',e=>{const row=e.target.closest('.dragcol');if(!
 refresh();
 window.DocSystemBridge={
  getSettings:()=>clone(settings),
+ syncBusinessLogos:remoteProfiles=>{
+  const status=document.getElementById('logoSyncStatus');
+  if(status && /Preparing logo|Saving to Firebase/.test(status.textContent))return;
+  let changed=false;
+  for(const incoming of remoteProfiles){
+   const local=settings.profiles.find(p=>p.id===incoming.id);
+   if(local && typeof incoming.company?.logo==='string' && local.company.logo!==incoming.company.logo){
+    local.company.logo=incoming.company.logo;changed=true;
+   }
+  }
+  if(changed){
+   localStorage.setItem(KEY,JSON.stringify(settings));
+   renderPreview();
+   if(status)status.textContent='Logo updated from Firebase.';
+  }
+ },
  setSettings:s=>{settings=migrateSettings(clone(s));normalizeProfiles();newDoc(Object.keys(profile().templates)[0]);refresh();window.DocSystemCloud?.loadDocs()},
  getDocument:()=>({kind:'DocFacDocument',profileId:settings.activeProfileId,profileName:profileLabel(profile()),doc:clone(doc),company:clone(profile().company),template:clone(tpl())}),
  setDocument:p=>{
