@@ -217,7 +217,7 @@ body.preset-current header #newBtn,body.preset-current header #saveBtn,body.pres
 <div class="card"><h2>Notes / Delivery Info</h2><textarea id="notes" rows="4"></textarea></div><div class="card"><h2>Terms &amp; Conditions</h2><p class="muted">Optional free text. Line breaks, blank lines and repeated spaces are preserved in the document.</p><textarea id="documentTerms" rows="8" spellcheck="true" style="white-space:pre-wrap;tab-size:4;font-family:monospace"></textarea></div></div>
 </section>
 <section id="company" class="panel">
-<div class="card"><div class="between"><h2>Business Profile</h2><span class="muted">One company per DocSys. Create or replace the business identity here.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button type="button" id="createBusiness" class="small primary">Create Business</button><button type="button" id="deleteProfile" class="danger small">Delete Business</button></div></div><p id="businessSetupStatus" class="muted">Use Create Business to enter your company name. Existing saved documents are not deleted.</p></div>
+<div class="card"><div class="between"><h2>Business Profile</h2><span class="muted">Each business has independent company details, headers, templates, and saved documents.</span></div><div class="row"><label>Current Business<select id="companyProfile"></select></label><div class="actions" style="align-items:end"><button type="button" id="createBusiness" class="small primary">+ Add Business</button><button type="button" id="deleteProfile" class="danger small">Delete Selected Business</button></div></div><p id="businessSetupStatus" class="muted">Each new business starts with blank company identity and separate settings. Only businesses without saved documents can be deleted.</p></div>
 <div class="card"><h2>Currencies</h2><p class="muted">Set allowed currencies for this business. The default is selected for new documents; saved documents retain their selected currency.</p><div id="currencySettings"></div><div class="row"><label>Currency code (e.g. USD)<input id="newCurrencyCode" maxlength="3" placeholder="USD"></label><label>Display symbol (e.g. US$)<input id="newCurrencySymbol" placeholder="US$"></label></div><p><button type="button" id="addCurrency" class="small">+ Add Currency</button></p></div>
 <div class="card"><h2>Business Identity</h2><p class="muted">Shared company details used by all custom and preset documents. Enter the company name once here.</p><div class="row"><label>Company Name<input id="companyName"></label><label>Logo<input id="logoFile" type="file" accept="image/*"></label></div><div style="margin-top:8px"><button id="removeLogo" class="small">Remove Logo</button></div></div>
 
@@ -332,6 +332,7 @@ function migrateSettings(s){
     s={version:2,activeProfileId:p.id,profiles:[p]};
   }
   if(!s.activeProfileId||!s.profiles.some(p=>p.id===s.activeProfileId))s.activeProfileId=s.profiles[0].id;
+  if(s.globalPlaceholders){const original=s.profiles.find(p=>p.id===s.activeProfileId)||s.profiles[0];if(!original.globalPlaceholders)original.globalPlaceholders=clone(s.globalPlaceholders);if(s.presetPlaceholdersInitialized)original.presetPlaceholdersInitialized=true;delete s.globalPlaceholders;delete s.presetPlaceholdersInitialized;}
   // Replace the previous individual preset headers with one header per Business Profile.
   // Prefer the Rental (Qty 3) configuration already entered by the user.
   if(s.presetHeaders){
@@ -400,52 +401,42 @@ function switchProfile(id,preferredType){
   if(!settings.profiles.some(p=>p.id===id))return;
   settings.activeProfileId=id;
   let types=Object.keys(profile().templates),type=profile().templates[preferredType]?preferredType:types[0];
-  newDoc(type);window.DocSystemCloud?.changedDocument();refresh()
+  newDoc(type);window.DocSystemCloud?.changedDocument();refresh();window.DocSystemCloud?.loadDocs()
 }
-function makeProfile(copyCurrent){
-  let name=prompt('Business profile name',copyCurrent?profileLabel(profile())+' Copy':'New Business');
-  if(name===null)return;
-  name=name.trim()||'Untitled Business';
-  let p=copyCurrent?clone(profile()):{company:clone(defaults.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates)};
-  p.id=nextProfileId();p.company.name=name;
-  normalizeCurrencies(p.company);
-  Object.values(p.templates).forEach(t=>normalizeTemplateFields(t));
-  settings.profiles.push(p);settings.activeProfileId=p.id;
-  newDoc(Object.keys(p.templates)[0]);
-  const frame=document.getElementById('presetWorkspaceFrame');
-  if(frame)frame.removeAttribute('src');
-  refresh()
-}
-// Platinum Omega is single-company: configure or clear the one profile in place.
-function setupBusiness(){
- const current=profile();
- const existingName=(current.company?.name||'').trim();
- const name=prompt('Enter your business name',existingName==='Sample Company Sdn Bhd'?'':existingName);
+// A new business receives a fresh configuration, never a copy of another business.
+function makeProfile(){
+ const name=prompt('New business name');
  if(name===null)return;
  const clean=name.trim();
- if(!clean){alert('Please enter a business name.');return}
- if(existingName && existingName!=='Sample Company Sdn Bhd' && existingName!==clean &&
-    !confirm('Replace the current business name? This changes the company identity used by future documents and previews. Saved documents remain in Firestore.'))return;
- if(existingName==='Sample Company Sdn Bhd'){
-   const fresh=clone(defaults.company);
-   current.company={...fresh,name:clean};
- }else{
-   current.company.name=clean;
+ if(!clean){alert('Business name is required.');return}
+ if(settings.profiles.some(p=>profileLabel(p).toLowerCase()===clean.toLowerCase())){alert('Business name already exists.');return}
+ let p=settings.profiles.length===1&&!profile().company.name.trim()?profile():null;
+ if(!p){
+  p={id:nextProfileId(),company:clone(defaults.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates),globalPlaceholders:{}};
+  settings.profiles.push(p);
  }
- normalizeCurrencies(current.company);
- window.DocSystemCloud?.changedDocument();
- newDoc(Object.keys(current.templates)[0]);
- refresh();
-}
-function clearBusiness(){
- const existing=(profile().company?.name||'').trim();
- if(!confirm('Clear the business profile settings'+(existing?' for "'+existing+'"':'')+'? Saved documents in Firestore will NOT be deleted.'))return;
- const p=profile();
- p.company=clone(defaults.company);
+ p.company.name=clean;
  normalizeCurrencies(p.company);
- window.DocSystemCloud?.changedDocument();
+ Object.values(p.templates).forEach(t=>normalizeTemplateFields(t));
+ settings.activeProfileId=p.id;
  newDoc(Object.keys(p.templates)[0]);
- refresh();
+ window.DocSystemCloud?.changedDocument();
+ refresh();window.DocSystemCloud?.loadDocs();
+}
+function setupBusiness(){makeProfile()}
+async function clearBusiness(){
+ const p=profile();
+ if(!p.company.name.trim()){alert('This business is already blank.');return}
+ const hasDocs=await window.DocSystemCloud?.businessHasDocuments?.(p.id);
+ if(hasDocs!==false){alert(hasDocs===true?'This business contains saved documents and cannot be deleted.':'Cannot verify whether this business contains saved documents. No changes made.');return}
+ if(!confirm('Permanently delete the business settings for "'+profileLabel(p)+'"?'))return;
+ const i=settings.profiles.indexOf(p);
+ settings.profiles.splice(i,1);
+ if(!settings.profiles.length)settings.profiles.push({id:'business_001',company:clone(defaults.company),fonts:clone(defaults.fonts),templates:clone(defaults.templates),globalPlaceholders:{}});
+ settings.activeProfileId=settings.profiles[Math.min(i,settings.profiles.length-1)].id;
+ newDoc(Object.keys(profile().templates)[0]);
+ window.DocSystemCloud?.changedDocument();
+ refresh();window.DocSystemCloud?.loadDocs();
 }
 function newDoc(type){
   let t=profile().templates[type],fv={};
@@ -519,13 +510,14 @@ const PRESET_PLACEHOLDERS={
  paymentInstructions:'',businessHours:'',referenceNote:''
 };
 function globals(){
- if(!settings.globalPlaceholders||typeof settings.globalPlaceholders!=='object')settings.globalPlaceholders={};
- if(!settings.presetPlaceholdersInitialized){
+ const p=profile();
+ if(!p.globalPlaceholders||typeof p.globalPlaceholders!=='object')p.globalPlaceholders={};
+ if(!p.presetPlaceholdersInitialized){
   for(const [key,value] of Object.entries(PRESET_PLACEHOLDERS))
-   if(!Object.prototype.hasOwnProperty.call(settings.globalPlaceholders,key))settings.globalPlaceholders[key]=value;
-  settings.presetPlaceholdersInitialized=true;
+   if(!Object.prototype.hasOwnProperty.call(p.globalPlaceholders,key))p.globalPlaceholders[key]=value;
+  p.presetPlaceholdersInitialized=true;
  }
- return settings.globalPlaceholders;
+ return p.globalPlaceholders;
 }
 function renderGlobalPlaceholders(){
  const root=document.getElementById('globalPlaceholders');if(!root)return;
@@ -996,7 +988,7 @@ if(e.target.dataset.del!==undefined){doc.items.splice(+e.target.dataset.del,1);i
 
 
 if(e.target.id==='createBusiness'){setupBusiness();return;}
- if(e.target.id==='deleteProfile'){clearBusiness();return;}
+ if(e.target.id==='deleteProfile'){void clearBusiness();return;}
  if(e.target.id==='addCompanyField'){profile().company.fields.push({label:'New Field',value:'',place:'header',layout:'half'});refresh()}
 if(e.target.dataset.cfup!==undefined){let i=+e.target.dataset.cfup,a=profile().company.fields;if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];refresh()}}
 if(e.target.dataset.cfdown!==undefined){let i=+e.target.dataset.cfdown,a=profile().company.fields;if(i<a.length-1){[a[i],a[i+1]]=[a[i+1],a[i]];refresh()}}
@@ -1063,7 +1055,7 @@ document.addEventListener('drop',e=>{const row=e.target.closest('.dragcol');if(!
 refresh();
 window.DocSystemBridge={
  getSettings:()=>clone(settings),
- setSettings:s=>{settings=migrateSettings(clone(s));normalizeProfiles();newDoc(Object.keys(profile().templates)[0]);refresh()},
+ setSettings:s=>{settings=migrateSettings(clone(s));normalizeProfiles();newDoc(Object.keys(profile().templates)[0]);refresh();window.DocSystemCloud?.loadDocs()},
  getDocument:()=>({kind:'DocFacDocument',profileId:settings.activeProfileId,profileName:profileLabel(profile()),doc:clone(doc),company:clone(profile().company),template:clone(tpl())}),
  setDocument:p=>{
    let target=settings.profiles.find(x=>x.id===p.profileId);
