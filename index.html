@@ -689,7 +689,9 @@ function renderPreview(){
     const pw=pageSize==='Letter'?216:210, ph=pageSize==='Letter'?279:297;
     const margin=narrow?8:15;
     const layout='--page-w:'+pw+'mm;--page-h:'+ph+'mm;--page-m:'+margin+'mm;';
-    document.getElementById('printPaperRule').textContent='@page {size: '+(pageSize==='Letter'?'letter':'A4')+' portrait; margin: 0;}';
+    const paperRules=document.getElementById('printPaperRule');
+    // Update only @page: replacing the whole stylesheet would erase the shared header/footer grid rules.
+    paperRules.textContent=paperRules.textContent.replace(/^@page\s*\{[^}]*\}/,'@page {size: '+(pageSize==='Letter'?'letter':'A4')+' portrait; margin: 0;}');
     const fonts=layout+'--font-header:'+profile().fonts.header+';--font-title:'+profile().fonts.title+';--font-body:'+profile().fonts.body+';--font-items:'+profile().fonts.items+';--font-footer:'+profile().fonts.footer;
     const segments=[];
     // Document sequence: items, notes, totals, free-text terms, then signatures.
