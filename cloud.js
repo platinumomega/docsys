@@ -133,7 +133,8 @@ export async function saveDocument(){
     currentId=savedDoc.id;
     if(saveAsNew)bridge().setSavedDocumentNumber?.(finalNum);
     bridge().markDocumentSaved?.();
-    notify("Saved online: "+finalNum+" · "+payload.profileName+(duplicateCheckUnavailable?" (duplicate check unavailable)":""));
+    notify("Saved online: "+finalNum+" · "+payload.profileName+" · ID "+savedDoc.id+(duplicateCheckUnavailable?" (duplicate check unavailable)":""));
+    const ws=el("workspaceStatus");if(ws)ws.textContent="Saved in Firebase: "+finalNum+" · "+payload.profileName;
     // The document listener refreshes the list on this PC and on other signed-in PCs.
     // Reattach if the current business has no active subscription.
     if(!stopDocumentSync)await loadDocs();
@@ -141,6 +142,7 @@ export async function saveDocument(){
   }catch(e){
     const reason=(e.code?e.code+": ":"")+(e.message||String(e));
     notify("Save failed: "+reason);
+    const ws=el("workspaceStatus");if(ws)ws.textContent="Save FAILED: "+reason;
     alert("Document NOT saved online for "+payload.profileName+": "+reason+
       "\n\nPlease keep your unsaved document open. If permission-denied appears, check Firebase Firestore rules for the documents collection.");
     return false;
@@ -152,13 +154,16 @@ export async function loadDocs(){
   const month=el("cloudMonth").value;
   const businessId=bridge()?.getSettings()?.activeProfileId;
   if(!businessId){el("cloudList").innerHTML="<p>Select a business to view documents.</p>";return}
-  const q=query(collection(db,"documents"),where("profileId","==",businessId),limit(500));
+  const q=query(collection(db,"documents"),where("profileId","==",businessId));
   const viewerId=user.uid;
   stopDocumentSync=onSnapshot(q,async snaps=>{
     // Reject stale responses if the user has switched businesses, signed out or changed month.
     if(!user||user.uid!==viewerId||bridge()?.getSettings()?.activeProfileId!==businessId||el("cloudMonth").value!==month)return;
     const records=snaps.docs.filter(s=>!month||String(s.data().date||"").slice(0,7)===month)
-      .sort((a,b)=>String(b.data().date||"").localeCompare(String(a.data().date||""))).slice(0,150);
+      .sort((a,b)=>{
+        const updated=record=>record.data().updatedAt?.toMillis?.()||record.data().createdAt?.toMillis?.()||0;
+        return updated(b)-updated(a)||String(b.data().date||"").localeCompare(String(a.data().date||""));
+      }).slice(0,150);
     const creators=new Map();
     for(const s of records){
       const d=s.data(),id=d.createdBy;
@@ -174,7 +179,7 @@ export async function loadDocs(){
       return '<div class="cloud-entry"><div><b>'+escape(d.number||"Untitled")+'</b><div class="muted">'+escape(d.documentType)+" · "+escape(d.date)+" · "+escape(d.profileName)+'</div></div><div class="actions"><button data-open-doc="'+escape(s.id)+'">Open</button><button data-copy-doc="'+escape(s.id)+'">Duplicate</button>'+(canDelete?'<button class="danger" data-delete-doc="'+escape(s.id)+'">Delete</button>':'')+'</div></div>';
     }).join("");
     // Don't imply server synchronization if the snapshot is from the offline cache.
-    if(!snaps.metadata.fromCache)notify("Online · "+records.length+" documents for selected business");
+    if(!snaps.metadata.fromCache)notify("Online · "+records.length+" documents for selected business"+(month?" · "+month:" · all months"));
     else notify("Offline/cache · "+records.length+" documents (not yet verified online)");
   },error=>{
     notify("Document sync failed: "+(error.code?error.code+": ":"")+error.message);
@@ -305,5 +310,5 @@ document.addEventListener("click",e=>{
   if(e.target.id==="cloudSave")saveDocument();
   if(e.target.id==="cloudUserAdd")addUser();
 });
-el("cloudMonth").value=new Date().toISOString().slice(0,7);
+el("cloudMonth").value=""; // Default to All Months; recently saved older-dated documents stay visible.
 el("cloudMonth").addEventListener("change",loadDocs);
