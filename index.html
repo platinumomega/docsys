@@ -1096,11 +1096,14 @@ if(e.target.id==='businessProfile'&&activeWorkspacePreset()){syncPresetBusiness(
  const file=e.target.files[0],businessId=settings.activeProfileId,status=document.getElementById('logoSyncStatus');
  const input=e.target;input.disabled=true;if(status)status.textContent='Preparing logo for online sync…';
  try{
+  if(!['manager','superadmin'].includes(window.DocSystemRole)||!window.DocSystemCloud)throw Error('Only an approved manager or superadmin can save company logos online.');
   if(!file.type.startsWith('image/'))throw Error('Choose a PNG, JPG or WebP image.');
   const data=await compactBusinessLogo(file);
   const target=settings.profiles.find(p=>p.id===businessId);
   if(!target)throw Error('The selected business changed or was removed.');
+  const oldLogo=target.company.logo;
   target.company.logo=data;
+  if(new Blob([JSON.stringify(settings)]).size>900000){target.company.logo=oldLogo;throw Error('Combined business settings are too large for one Firestore document. Please reduce other existing logo sizes first.');}
   refresh();
   if(status)status.textContent='Logo prepared. Saving to Firebase…';
   if(!window.DocSystemCloud?.settingsChanged)throw Error('Not connected to Firebase. Sign in before uploading a logo.');
