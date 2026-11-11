@@ -1,9 +1,9 @@
 import {listPresetCopies} from "./preset-user-templates.js?v=20261101-copy-1";
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,setDoc,collection,query,where,orderBy,limit,getDocs,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,doc,getDoc,setDoc,collection,query,where,orderBy,limit,getDocs,deleteDoc,serverTimestamp,onSnapshot} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 let db=null;
-let user=null, role=null, currentId=null, writeTimer=null, loading=false; const rank={user:1,staff:1,manager:2,superadmin:3};
+let user=null, role=null, currentId=null, writeTimer=null, loading=false, stopLogoSync=null; const rank={user:1,staff:1,manager:2,superadmin:3};
 const el=id=>document.getElementById(id);
 const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const notify=s=>{el("cloudStatus").textContent=s;};
@@ -31,6 +31,7 @@ const decode = value => {
 function canManage(){return role==="superadmin"||role==="manager"}
 function canAdmin(){return role==="superadmin"}
 export async function startCloud(authUser,profile){
+  if(stopLogoSync){stopLogoSync();stopLogoSync=null}
   db=getFirestore();user=authUser;role=profile.role;currentId=null;loading=true;
   el("cloudMenuUsers").hidden=!canManage();
   el("newSuperadminOption").hidden=!canAdmin();
@@ -39,11 +40,17 @@ export async function startCloud(authUser,profile){
   if(snap.exists() && snap.data().settings)bridge().setSettings(decode(snap.data().settings));
   else if(canManage())await setDoc(doc(db,"appSettings","main"),{settings:encode(bridge().getSettings()),updatedAt:serverTimestamp(),updatedBy:user.uid});
   loading=false;notify("Online · "+profile.role);
+  // Observe logo changes only, leaving document editing and all other local settings intact.
+  stopLogoSync=onSnapshot(doc(db,"appSettings","main"),snap=>{
+    if(!user||!snap.exists()||snap.metadata.hasPendingWrites)return;
+    const remote=decode(snap.data().settings||{});
+    if(Array.isArray(remote.profiles))bridge()?.syncBusinessLogos?.(remote.profiles);
+  },err=>notify("Logo sync failed: "+err.message));
   await loadDocs();
   await loadSavedPresetCopies();
   if(canManage())await loadUsers();
 }
-export function clearCloud(){user=null;role=null;currentId=null;loading=true;el("cloudList").innerHTML="";el("userList").innerHTML="";const list=el("workspacePresetCopiesList");if(list)list.innerHTML="";const lib=el("presetCopyLibraryList");if(lib)lib.innerHTML="";notify("Not signed in");}
+export function clearCloud(){if(stopLogoSync){stopLogoSync();stopLogoSync=null}user=null;role=null;currentId=null;loading=true;el("cloudList").innerHTML="";el("userList").innerHTML="";const list=el("workspacePresetCopiesList");if(list)list.innerHTML="";const lib=el("presetCopyLibraryList");if(lib)lib.innerHTML="";notify("Not signed in");}
 export function settingsChanged(){
   if(!user||!canManage()||loading)return;
   clearTimeout(writeTimer);
