@@ -79,6 +79,7 @@ export async function saveDocument(){
   if(!num){alert("Enter a document number before saving.");return}
   let savedDoc=currentId?doc(db,"documents",currentId):doc(collection(db,"documents"));
   let existingRecord=null, duplicateCheckUnavailable=false;
+  let saveAsNew=false;
   try{
     if(!currentId){
       // The duplicate lookup is best-effort: a denied read must not prevent an otherwise authorized create.
@@ -100,23 +101,49 @@ export async function saveDocument(){
       const previous=await getDoc(savedDoc);
       if(previous.exists())existingRecord=previous.data();
     }
+    if(existingRecord){
+      // Office-style choice on every save of an existing document.
+      const choice=prompt('Document '+num+' already exists. Type O to Overwrite, N to Save as New, or C to Cancel.','O');
+      if(choice===null||choice.trim().toUpperCase()==='C')return false;
+      const action=choice.trim().toUpperCase();
+      if(action==='N'){
+        const newNumber=prompt('Save as New: enter a NEW document number (the existing number will remain unchanged).','');
+        if(newNumber===null||!newNumber.trim())return false;
+        const freshNumber=newNumber.trim();
+        if(freshNumber===num){alert('Save as New requires a different document number.');return false}
+        // Read must succeed to ensure we never silently create the same name.
+        try{
+          const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
+          if(matches.docs.some(x=>x.data().number===freshNumber && x.data().documentType===d.type)){
+            alert('That document number already exists. Choose another number.');return false;
+          }
+        }catch(error){alert('Cannot verify the new document number online. Nothing was saved: '+error.message);return false}
+        d.fieldValues.docno=freshNumber;
+        savedDoc=doc(collection(db,"documents"));existingRecord=null;saveAsNew=true;
+      }else if(action!=='O'){alert('Choose O, N, or C. No changes saved.');return false}
+    }
     if(existingRecord && existingRecord.profileId!==payload.profileId){
       alert("Cannot save under another business. Reopen the document in its original business.");return
     }
-    const data={...encode(payload),number:num,documentType:d.type,date:date||new Date().toISOString().slice(0,10),
+    const finalNum=String(d.fieldValues.docno||'').trim();
+    const data={...encode({...payload,doc:d}),number:finalNum,documentType:d.type,date:date||new Date().toISOString().slice(0,10),
       profileId:payload.profileId,updatedAt:serverTimestamp(),updatedBy:user.uid,
       ...(!existingRecord?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})};
     await setDoc(savedDoc,data,{merge:true});
     currentId=savedDoc.id;
-    notify("Saved online: "+num+" · "+payload.profileName+(duplicateCheckUnavailable?" (duplicate check unavailable)":""));
+    if(saveAsNew)bridge().setSavedDocumentNumber?.(finalNum);
+    bridge().markDocumentSaved?.();
+    notify("Saved online: "+finalNum+" · "+payload.profileName+(duplicateCheckUnavailable?" (duplicate check unavailable)":""));
     // The document listener refreshes the list on this PC and on other signed-in PCs.
     // Reattach if the current business has no active subscription.
     if(!stopDocumentSync)await loadDocs();
+    return true;
   }catch(e){
     const reason=(e.code?e.code+": ":"")+(e.message||String(e));
     notify("Save failed: "+reason);
     alert("Document NOT saved online for "+payload.profileName+": "+reason+
       "\n\nPlease keep your unsaved document open. If permission-denied appears, check Firebase Firestore rules for the documents collection.");
+    return false;
   }
 }
 export async function loadDocs(){
@@ -176,6 +203,7 @@ export async function deleteDocument(id){
   }
 }
 export async function openDocument(id,duplicate=false){
+  if(!(await bridge()?.confirmDocumentChange?.()))return;
   try{
     const s=await getDoc(doc(db,"documents",id));
     if(!s.exists())throw Error("Document not found");
