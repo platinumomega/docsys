@@ -849,7 +849,19 @@ function workspaceAction(action){
  }else{
   if(action==='new'){void confirmDocumentChange().then(ok=>{if(ok){newDoc(doc.type);window.DocSystemCloud?.changedDocument();refresh()}});return}
   if(action==='save')return window.DocSystemCloud?.saveDocument();
-  if(action==='print'){renderPreview();window.print();return}
+  if(action==='print'){
+   renderPreview();
+   // Browsers commonly use the page title as the default Save as PDF filename.
+   // Keep the user's exact reference, replacing only invalid filename characters.
+   const reference=String(doc.fieldValues?.docno??'').trim();
+   const safeName=reference.replace(/[\\/<>:"|?*\\x00-\\x1F]/g,'_').replace(/[. ]+$/g,'').trim();
+   const previousTitle=document.title;
+   if(safeName)document.title=safeName;
+   const restoreTitle=()=>{document.title=previousTitle;window.removeEventListener('afterprint',restoreTitle)};
+   window.addEventListener('afterprint',restoreTitle,{once:true});
+   try{window.print()}catch(error){restoreTitle();throw error}
+   return;
+  }
  }
 }
 function showDocPage(page){
