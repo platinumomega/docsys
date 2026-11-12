@@ -72,60 +72,64 @@ export async function businessHasDocuments(profileId){
  try {const result=await getDocs(query(collection(db,"documents"),where("profileId","==",profileId),limit(1)));return !result.empty;}
  catch(error){notify("Business check failed: "+error.message);return null}
 }
+// Use the exact document reference as the online save name. Scope uniqueness
+// to a business and document type; never silently replace another document.
+async function findDocumentByReference(profileId,documentType,number,excludeId=null){
+  // Use the existing single-field business query, avoiding a new composite index.
+  // Do not cap this query: older records must also be protected from duplicates.
+  const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",profileId)));
+  return matches.docs.find(s=>s.id!==excludeId &&
+    s.data().documentType===documentType &&
+    String(s.data().number??"").trim()===number) || null;
+}
 export async function saveDocument(){
-  if(!user){notify("Sign in before saving a document");return}
+  if(!user){notify("Sign in before saving a document");return false}
   const payload=bridge().getDocument();
-  const d=payload.doc, num=String(d.fieldValues?.docno||"").trim(), date=String(d.fieldValues?.date||"").slice(0,10);
-  if(!num){alert("Enter a document number before saving.");return}
+  const d=payload.doc, num=String(d.fieldValues?.docno??"").trim(), date=String(d.fieldValues?.date??"").slice(0,10);
+  if(!num){alert("Enter the document reference number before saving.");return false}
+  if(!payload.profileId){alert("Select a business before saving.");return false}
   let savedDoc=currentId?doc(db,"documents",currentId):doc(collection(db,"documents"));
-  let existingRecord=null, duplicateCheckUnavailable=false;
-  let saveAsNew=false;
+  let existingRecord=null, saveAsNew=false;
   try{
-    if(!currentId){
-      // The duplicate lookup is best-effort: a denied read must not prevent an otherwise authorized create.
-      try{
-        const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
-        const existing=matches.docs.find(x=>x.data().number===num && x.data().documentType===d.type);
-        if(existing){
-          // Ask once below using the Overwrite / Save as New / Cancel choice.
-          savedDoc=doc(db,"documents",existing.id);
-          existingRecord=existing.data();
-        }
-      }catch(error){
-        duplicateCheckUnavailable=true;
-        console.warn("Document duplicate check unavailable; attempting save directly",error);
-      }
-    }
-    // Never read a newly generated document ID: reading a nonexistent record can be disallowed by rules.
+    // Check *all* existing references, including when a previously opened document
+    // has been renamed. An unavailable duplicate check must not create duplicates.
+    const duplicate=await findDocumentByReference(payload.profileId,d.type,num,currentId);
     if(currentId){
       const previous=await getDoc(savedDoc);
-      if(previous.exists())existingRecord=previous.data();
+      if(!previous.exists()){
+        alert("The saved document no longer exists. Nothing was saved. Use a new document number to create another.");
+        currentId=null;return false;
+      }
+      existingRecord=previous.data();
+      if(existingRecord.profileId!==payload.profileId){
+        alert("Cannot save under another business. Reopen the document in its original business.");return false;
+      }
+      if(duplicate){
+        alert("Document "+num+" already exists for this business and document type. Choose a different reference number.");return false;
+      }
+    }else if(duplicate){
+      savedDoc=doc(db,"documents",duplicate.id);
+      existingRecord=duplicate.data();
     }
     if(existingRecord){
-      // Office-style choice on every save of an existing document.
-      const choice=prompt('Document '+num+' already exists. Type O to Overwrite, N to Save as New, or C to Cancel.','O');
+      const choice=prompt('Document '+(existingRecord.number||num)+' already exists. Type O to Overwrite, N to Save as New, or C to Cancel.','O');
       if(choice===null||choice.trim().toUpperCase()==='C')return false;
       const action=choice.trim().toUpperCase();
       if(action==='N'){
-        const newNumber=prompt('Save as New: enter a NEW document number (the existing number will remain unchanged).','');
+        const newNumber=prompt('Save as New: enter a NEW document reference number.','');
         if(newNumber===null||!newNumber.trim())return false;
         const freshNumber=newNumber.trim();
-        if(freshNumber===num){alert('Save as New requires a different document number.');return false}
-        // Read must succeed to ensure we never silently create the same name.
-        try{
-          const matches=await getDocs(query(collection(db,"documents"),where("profileId","==",payload.profileId),limit(500)));
-          if(matches.docs.some(x=>x.data().number===freshNumber && x.data().documentType===d.type)){
-            alert('That document number already exists. Choose another number.');return false;
-          }
-        }catch(error){alert('Cannot verify the new document number online. Nothing was saved: '+error.message);return false}
+        if(freshNumber===num){alert('Save as New requires a different document reference number.');return false}
+        if(await findDocumentByReference(payload.profileId,d.type,freshNumber)){
+          alert('That document reference already exists. Choose another number.');return false;
+        }
         d.fieldValues.docno=freshNumber;
         savedDoc=doc(collection(db,"documents"));existingRecord=null;saveAsNew=true;
-      }else if(action!=='O'){alert('Choose O, N, or C. No changes saved.');return false}
+      }else if(action!=='O'){
+        alert('Choose O, N, or C. No changes saved.');return false;
+      }
     }
-    if(existingRecord && existingRecord.profileId!==payload.profileId){
-      alert("Cannot save under another business. Reopen the document in its original business.");return
-    }
-    const finalNum=String(d.fieldValues.docno||'').trim();
+    const finalNum=String(d.fieldValues.docno??'').trim();
     const data={...encode({...payload,doc:d}),number:finalNum,documentType:d.type,date:date||new Date().toISOString().slice(0,10),
       profileId:payload.profileId,updatedAt:serverTimestamp(),updatedBy:user.uid,
       ...(!existingRecord?{createdAt:serverTimestamp(),createdBy:user.uid,creatorRole:role}:{})};
@@ -133,10 +137,8 @@ export async function saveDocument(){
     currentId=savedDoc.id;
     if(saveAsNew)bridge().setSavedDocumentNumber?.(finalNum);
     bridge().markDocumentSaved?.();
-    notify("Saved online: "+finalNum+" · "+payload.profileName+" · ID "+savedDoc.id+(duplicateCheckUnavailable?" (duplicate check unavailable)":""));
+    notify("Saved online: "+finalNum+" · "+payload.profileName);
     const ws=el("workspaceStatus");if(ws)ws.textContent="Saved in Firebase: "+finalNum+" · "+payload.profileName;
-    // The document listener refreshes the list on this PC and on other signed-in PCs.
-    // Reattach if the current business has no active subscription.
     if(!stopDocumentSync)await loadDocs();
     return true;
   }catch(e){
