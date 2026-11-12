@@ -385,6 +385,10 @@ function nextExtraKey(t){let used=new Set((t.fields||[]).map(f=>f[0]));for(let n
   const frame=document.getElementById('presetWorkspaceFrame');
   if(frame&&!frame.getAttribute('src'))setWorkspaceSource('preset',true);
  }
+ const termsNote=document.getElementById('termsTemplateStatus');
+ if(termsNote&&/syncing to Firebase/i.test(termsNote.textContent)){
+  termsNote.textContent=event.detail?.ok?'Terms template saved online in Firebase.':'Terms template NOT synced: '+(event.detail?.message||'Unknown error');
+ }
  const note=document.getElementById('customLayoutSaveStatus');
  if(!note)return;
  note.textContent=event.detail?.ok?'Saved online in Firebase':'Online save failed: '+(event.detail?.message||'Unknown error');
@@ -1236,6 +1240,30 @@ document.addEventListener('drop',e=>{const row=e.target.closest('.dragcol');if(!
 refresh();
 window.DocSystemBridge={
  getSettings:()=>clone(settings),
+ syncTermsLibraries:remoteProfiles=>{
+  if(!Array.isArray(remoteProfiles))return;
+  let changed=false;
+  for(const incoming of remoteProfiles){
+   const local=settings.profiles.find(p=>p.id===incoming.id);
+   if(!local)continue;
+   // Update only reusable terms. Keep the current document and its wording intact.
+   const nextLibrary=Array.isArray(incoming.termsLibrary)?incoming.termsLibrary:[];
+   const nextDefaults=incoming.defaultTermsByType&&typeof incoming.defaultTermsByType==='object'?incoming.defaultTermsByType:{};
+   if(JSON.stringify(local.termsLibrary||[])!==JSON.stringify(nextLibrary)||
+      JSON.stringify(local.defaultTermsByType||{})!==JSON.stringify(nextDefaults)||
+      Boolean(local.termsLibraryInitialized)!==Boolean(incoming.termsLibraryInitialized)){
+    local.termsLibrary=clone(nextLibrary);
+    local.defaultTermsByType=clone(nextDefaults);
+    local.termsLibraryInitialized=Boolean(incoming.termsLibraryInitialized);
+    changed=true;
+   }
+  }
+  if(changed){
+   localStorage.setItem(KEY,JSON.stringify(settings));
+   renderTermsTemplates();
+   termsStatus('Shared terms templates updated from Firebase. Current document wording is unchanged.');
+  }
+ },
  syncBusinessLogos:remoteProfiles=>{
   const status=document.getElementById('logoSyncStatus');
   if(status && /Preparing logo|Saving to Firebase/.test(status.textContent))return;
