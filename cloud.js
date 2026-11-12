@@ -41,12 +41,16 @@ export async function startCloud(authUser,profile){
   if(snap.exists() && snap.data().settings)bridge().setSettings(decode(snap.data().settings));
   else if(canManage())await setDoc(doc(db,"appSettings","main"),{settings:encode(bridge().getSettings()),updatedAt:serverTimestamp(),updatedBy:user.uid});
   loading=false;notify("Online · "+profile.role);
-  // Observe logo changes only, leaving document editing and all other local settings intact.
+  // Observe shared business logos and Terms libraries across signed-in PCs.
+  // Never replace the current working document or unrelated settings.
   stopLogoSync=onSnapshot(doc(db,"appSettings","main"),snap=>{
     if(!user||!snap.exists()||snap.metadata.hasPendingWrites)return;
     const remote=decode(snap.data().settings||{});
-    if(Array.isArray(remote.profiles))bridge()?.syncBusinessLogos?.(remote.profiles);
-  },err=>notify("Logo sync failed: "+err.message));
+    if(Array.isArray(remote.profiles)){
+      bridge()?.syncBusinessLogos?.(remote.profiles);
+      if(!writeTimer)bridge()?.syncTermsLibraries?.(remote.profiles);
+    }
+  },err=>notify("Shared settings sync failed: "+err.message));
   await loadDocs();
   await loadSavedPresetCopies();
   if(canManage())await loadUsers();
@@ -56,6 +60,7 @@ export function settingsChanged(){
   if(!user||!canManage()||loading)return;
   clearTimeout(writeTimer);
   writeTimer=setTimeout(async()=>{
+    writeTimer=null;
     try {
       await setDoc(doc(db,"appSettings","main"),{settings:encode(bridge().getSettings()),updatedBy:user.uid,updatedAt:serverTimestamp()});
       notify("Settings saved online");
